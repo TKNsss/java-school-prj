@@ -4,6 +4,8 @@
  */
 package com.myschoolprj.employeems;
 
+import java.awt.Color;
+
 /**
  *
  * @author FPTSHOP
@@ -26,32 +28,188 @@ public class loginForm extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        jSlider1 = new javax.swing.JSlider();
+        lfLeftPanel = new GradientPanels(Color.decode("#272b3f"), Color.decode("#256b51"));
+        lfLeftTitle = new javax.swing.JLabel();
+        lfLeftIcon = new javax.swing.JLabel();
+        lfRightPanel = new javax.swing.JPanel();
+        lfRightTitle = new javax.swing.JLabel();
+        usernameTF = new javax.swing.JTextField();
+        passwordTF = new javax.swing.JPasswordField();
+        loginBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(712, 500));
+        setResizable(false);
+        addWindowFocusListener(new java.awt.event.WindowFocusListener() {
+            public void windowGainedFocus(java.awt.event.WindowEvent evt) {
+                formWindowGainedFocus(evt);
+            }
+            public void windowLostFocus(java.awt.event.WindowEvent evt) {
+            }
+        });
 
-        jLabel1.setText("1234");
+        lfLeftPanel.setPreferredSize(new java.awt.Dimension(356, 500));
+
+        lfLeftTitle.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
+        lfLeftTitle.setForeground(new java.awt.Color(255, 255, 255));
+        lfLeftTitle.setText("Employee Management System");
+
+        lfLeftIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/multiple-users-silhouette.png"))); // NOI18N
+
+        javax.swing.GroupLayout lfLeftPanelLayout = new javax.swing.GroupLayout(lfLeftPanel);
+        lfLeftPanel.setLayout(lfLeftPanelLayout);
+        lfLeftPanelLayout.setHorizontalGroup(
+            lfLeftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(lfLeftPanelLayout.createSequentialGroup()
+                .addGap(113, 113, 113)
+                .addComponent(lfLeftIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, lfLeftPanelLayout.createSequentialGroup()
+                .addContainerGap(24, Short.MAX_VALUE)
+                .addComponent(lfLeftTitle)
+                .addGap(18, 18, 18))
+        );
+        lfLeftPanelLayout.setVerticalGroup(
+            lfLeftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(lfLeftPanelLayout.createSequentialGroup()
+                .addGap(95, 95, 95)
+                .addComponent(lfLeftIcon)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lfLeftTitle)
+                .addContainerGap(246, Short.MAX_VALUE))
+        );
+
+        lfRightPanel.setBackground(new java.awt.Color(255, 255, 255));
+        lfRightPanel.setPreferredSize(new java.awt.Dimension(356, 500));
+
+        lfRightTitle.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
+        lfRightTitle.setForeground(new java.awt.Color(37, 103, 81));
+        lfRightTitle.setText("Welcome back Admin!");
+
+        usernameTF.setForeground(new java.awt.Color(153, 153, 153));
+        usernameTF.setText("Enter User name");
+        usernameTF.setPreferredSize(new java.awt.Dimension(200, 40));
+        usernameTF.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                usernameTFFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                usernameTFFocusLost(evt);
+            }
+        });
+        usernameTF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                usernameTFActionPerformed(evt);
+            }
+        });
+
+        passwordTF.setForeground(new java.awt.Color(153, 153, 153));
+        passwordTF.setText("Enter Password");
+        passwordTF.setEchoChar('\u0000');
+        passwordTF.setPreferredSize(new java.awt.Dimension(240, 40));
+        passwordTF.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                passwordTFFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                passwordTFFocusLost(evt);
+            }
+        });
+
+        loginBtn.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        loginBtn.setText("Login");
+        loginBtn.setPreferredSize(new java.awt.Dimension(240, 40));
+
+        javax.swing.GroupLayout lfRightPanelLayout = new javax.swing.GroupLayout(lfRightPanel);
+        lfRightPanel.setLayout(lfRightPanelLayout);
+        lfRightPanelLayout.setHorizontalGroup(
+            lfRightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(lfRightPanelLayout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addComponent(lfRightTitle)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, lfRightPanelLayout.createSequentialGroup()
+                .addGap(0, 62, Short.MAX_VALUE)
+                .addGroup(lfRightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(loginBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(lfRightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(usernameTF, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(passwordTF, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(54, 54, 54))
+        );
+        lfRightPanelLayout.setVerticalGroup(
+            lfRightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(lfRightPanelLayout.createSequentialGroup()
+                .addGap(119, 119, 119)
+                .addComponent(lfRightTitle)
+                .addGap(45, 45, 45)
+                .addComponent(usernameTF, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(passwordTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
+                .addComponent(loginBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(150, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(153, 153, 153)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(210, Short.MAX_VALUE))
+                .addComponent(lfLeftPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lfRightPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(jLabel1)
-                .addContainerGap(263, Short.MAX_VALUE))
+            .addComponent(lfLeftPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(lfRightPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void usernameTFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameTFActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_usernameTFActionPerformed
+
+    private void usernameTFFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_usernameTFFocusGained
+        if (usernameTF.getText().equals("Enter User name")) {
+            usernameTF.setText(null);
+            usernameTF.requestFocus();
+            usernameTF.setForeground(Color.black);
+        }
+    }//GEN-LAST:event_usernameTFFocusGained
+
+    private void passwordTFFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_passwordTFFocusGained
+        if (passwordTF.getText().equals("Enter Password")) {
+            passwordTF.setText(null);
+            passwordTF.requestFocus();
+            passwordTF.setForeground(Color.black);
+            // set password character
+            passwordTF.setEchoChar('*');
+        }
+    }//GEN-LAST:event_passwordTFFocusGained
+
+    private void passwordTFFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_passwordTFFocusLost
+        if (passwordTF.getText().length() == 0) {
+            passwordTF.setText("Enter Password");
+            passwordTF.setForeground(new Color(153, 153, 153));
+            passwordTF.setEchoChar('\u0000');
+        }
+    }//GEN-LAST:event_passwordTFFocusLost
+
+    private void usernameTFFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_usernameTFFocusLost
+        if (usernameTF.getText().length() == 0) {
+            usernameTF.setText("Enter User name");
+            usernameTF.setForeground(new Color(153, 153, 153));
+        }
+    }//GEN-LAST:event_usernameTFFocusLost
+
+    private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
+        this.requestFocusInWindow();
+    }//GEN-LAST:event_formWindowGainedFocus
 
     /**
      * @param args the command line arguments
@@ -89,6 +247,14 @@ public class loginForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JSlider jSlider1;
+    private javax.swing.JLabel lfLeftIcon;
+    private javax.swing.JPanel lfLeftPanel;
+    private javax.swing.JLabel lfLeftTitle;
+    private javax.swing.JPanel lfRightPanel;
+    private javax.swing.JLabel lfRightTitle;
+    private javax.swing.JButton loginBtn;
+    private javax.swing.JPasswordField passwordTF;
+    private javax.swing.JTextField usernameTF;
     // End of variables declaration//GEN-END:variables
 }
