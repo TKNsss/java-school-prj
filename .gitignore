@@ -1,0 +1,28 @@
+# Maven
+target/                           # Ignore Maven build directory (compiled code and dependencies)
+pom.xml.tag                       # Temporary tag file for POM
+pom.xml.releaseBackup              # Backup file for release
+pom.xml.versionsBackup             # Backup file for versions
+pom.xml.next                       # Temporary file for POM versions
+release.properties                  # Release properties file
+dependency-reduced-pom.xml         # POM for the shaded/uber JAR
+buildNumber.properties              # Build number properties
+.mvn/timing.properties              # Timing properties for Maven builds
+.mvn/wrapper/maven-wrapper.jar      # Maven Wrapper JAR (can be generated during setup)
+
+*.class                           # Ignore compiled class files
+*.log                             # Ignore log files
+*.ctxt                            # Ignore BlueJ files
+.mtj.tmp/                         # Ignore temporary files for J2ME
+
+# Package Files
+*.jar                             # Ignore JAR files
+*.war                             # Ignore WAR files
+*.nar                             # Ignore NAR files
+*.ear                             # Ignore EAR files
+*.zip                             # Ignore ZIP archives
+*.tar.gz                          # Ignore TAR.GZ archives
+*.rar 
+
+# Ignore sensitive database configuration
+src/main/resources/database.properties
