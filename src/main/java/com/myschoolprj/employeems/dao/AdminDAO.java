@@ -5,7 +5,7 @@ import com.myschoolprj.employeems.model.Admin;
 
 import java.sql.*;
 
-public class AdminDAO {
+public class AdminDAO implements AutoCloseable {
     private Connection connection;
     
     public AdminDAO() {
@@ -32,5 +32,10 @@ public class AdminDAO {
             }
         }
         return null;  // Return null if no match is found
+    }
+    
+    @Override
+    public void close() throws Exception {
+        connectDB.closeConnection();
     }
 }

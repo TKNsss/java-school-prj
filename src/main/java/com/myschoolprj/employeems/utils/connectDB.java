@@ -22,7 +22,7 @@ public class connectDB {
                 
                 // Create the database connection using the properties
                 connection = DriverManager.getConnection(url, user, password);
-                System.out.println("Database connection established.");
+                System.out.println("Database connection established");
             } catch (SQLException e) {
                 System.out.println("SQL Exception: " + e.getMessage()); 
             } catch (Exception e) {
@@ -37,7 +37,7 @@ public class connectDB {
         if (connection != null) {
             try {
                 connection.close();
-                System.out.println("Database connection closed.");
+                System.out.println("Database connection closed ");
             } catch (SQLException e) {
                 e.printStackTrace();
             }

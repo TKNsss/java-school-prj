@@ -12,16 +12,54 @@
     </properties>
     
     <dependencies>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-sqlserver</artifactId>
+            <version>10.20.1</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc -->
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>mssql-jdbc</artifactId>
             <version>12.8.1.jre11</version>
+<<<<<<< Updated upstream
         </dependency>
         <dependency>
             <groupId>org.jfree</groupId>
             <artifactId>jfreechart</artifactId>
             <version>1.0.19</version> <!-- Hoặc phiên bản mới nhất nếu có -->
         </dependency>
+=======
+        </dependency>       
+>>>>>>> Stashed changes
     </dependencies>
-</project>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>10.20.1</version>
+                
+                <configuration>
+                    <url>jdbc:sqlserver://localhost:1433;databaseName=employeeMS;encrypt=true;trustServerCertificate=true</url>
+                    <user>sa</user>
+                    <password>nguyen2004</password>
+                    <locations>
+                        <location>src/main/resources/db/migration</location>
+                    </locations>
+                    <baselineOnMigrate>true</baselineOnMigrate>
+                </configuration>
+                
+                <dependencies>
+                    <!-- https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc -->
+                    <dependency>
+                        <groupId>com.microsoft.sqlserver</groupId>
+                        <artifactId>mssql-jdbc</artifactId>
+                        <version>12.8.1.jre11</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+</project>  

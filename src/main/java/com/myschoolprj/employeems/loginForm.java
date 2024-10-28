@@ -248,8 +248,7 @@ public class loginForm extends javax.swing.JFrame {
             return;  
         }
 
-        try {
-            AdminDAO adD = new AdminDAO();
+        try (AdminDAO adD = new AdminDAO()) {
             // Get the matching Admin object
             Admin admin = adD.getAdminByCredentials(userName, password);
 
@@ -257,7 +256,6 @@ public class loginForm extends javax.swing.JFrame {
                 // valid credential
                 JOptionPane.showMessageDialog(this, "Login successful! Welcome " + admin.getName(), "Success", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                // invalid 
                 JOptionPane.showMessageDialog(this, "Invalid username or password!", "Login Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (SQLException e) {
@@ -266,7 +264,7 @@ public class loginForm extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "An unexpected error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();  
-        }
+        } 
     }//GEN-LAST:event_loginBtnActionPerformed
 
     public static void main(String args[]) {
