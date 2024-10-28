@@ -22,16 +22,13 @@
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>mssql-jdbc</artifactId>
             <version>12.8.1.jre11</version>
-<<<<<<< Updated upstream
         </dependency>
+        
         <dependency>
             <groupId>org.jfree</groupId>
             <artifactId>jfreechart</artifactId>
-            <version>1.0.19</version> <!-- Hoặc phiên bản mới nhất nếu có -->
-        </dependency>
-=======
-        </dependency>       
->>>>>>> Stashed changes
+            <version>1.0.19</version>
+        </dependency>     
     </dependencies>
     
     <build>
