@@ -8,7 +8,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>23</maven.compiler.release>
-        <exec.mainClass>com.myschoolprj.employeems.loginForm</exec.mainClass>
+        <exec.mainClass>com.myschoolprj.employeems.Frame_final</exec.mainClass>
     </properties>
     
     <dependencies>
@@ -17,6 +17,11 @@
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>mssql-jdbc</artifactId>
             <version>12.8.1.jre11</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jfree</groupId>
+            <artifactId>jfreechart</artifactId>
+            <version>1.0.19</version> <!-- Hoặc phiên bản mới nhất nếu có -->
         </dependency>
     </dependencies>
 </project>
