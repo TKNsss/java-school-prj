@@ -15,12 +15,12 @@ import com.myschoolprj.employeems.Barchart;
  *
  * @author ADMIN
  */
-public class Frame_final extends javax.swing.JFrame {
+public class MainForm extends javax.swing.JFrame {
 
     /**
      * Creates new form Frame_final
      */
-    public Frame_final() {
+    public MainForm() {
         initComponents();
         this.setLocationRelativeTo(null); // Đặt JFrame ở giữa màn hình
         Barchart barchart = new Barchart(); // Khởi tạo Barchart
@@ -503,7 +503,7 @@ public class Frame_final extends javax.swing.JFrame {
         );
 
         jPanel11.add(jPanel12);
-        jPanel12.setBounds(0, 0, 910, 289);
+        jPanel12.setBounds(0, 0, 910, 0);
 
         jPanel13.setBorder(new com.myschoolprj.employeems.border(5,3)); // Thay đổi bán kính bo góc nếu cần
 
@@ -922,20 +922,23 @@ public class Frame_final extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Frame_final.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MainForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Frame_final.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MainForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Frame_final.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MainForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Frame_final.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MainForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Frame_final().setVisible(true);
+                new MainForm().setVisible(true);
             }
         });
     }

@@ -8,7 +8,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>23</maven.compiler.release>
-        <exec.mainClass>com.myschoolprj.employeems.Frame_final</exec.mainClass>
+        <exec.mainClass>com.myschoolprj.employeems.LoginForm</exec.mainClass>
     </properties>
     
     <dependencies>
@@ -28,7 +28,7 @@
             <groupId>org.jfree</groupId>
             <artifactId>jfreechart</artifactId>
             <version>1.0.19</version>
-        </dependency>     
+        </dependency>    
     </dependencies>
     
     <build>
@@ -39,12 +39,7 @@
                 <version>10.20.1</version>
                 
                 <configuration>
-                    <url>jdbc:sqlserver://localhost:1433;databaseName=employeeMS;encrypt=true;trustServerCertificate=true</url>
-                    <user>sa</user>
-                    <password>nguyen2004</password>
-                    <locations>
-                        <location>src/main/resources/db/migration</location>
-                    </locations>
+                    <configFiles>src/main/resources/flyway.properties</configFiles>
                     <baselineOnMigrate>true</baselineOnMigrate>
                 </configuration>
                 

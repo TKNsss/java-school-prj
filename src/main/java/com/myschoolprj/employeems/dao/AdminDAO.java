@@ -31,11 +31,11 @@ public class AdminDAO implements AutoCloseable {
                 }
             }
         }
-        return null;  // Return null if no match is found
+        return null;  
     }
     
     @Override
-    public void close() throws Exception {
-        connectDB.closeConnection();
+    public void close() {
+        connectDB.closeConnection(this.connection);
     }
 }

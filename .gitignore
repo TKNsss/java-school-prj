@@ -26,3 +26,6 @@ buildNumber.properties              # Build number properties
 
 # Ignore sensitive database configuration
 src/main/resources/database.properties
+
+# Ignore Flyway properties with sensitive data
+src/main/resources/flyway.properties
