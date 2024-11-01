@@ -13,6 +13,12 @@
     
     <dependencies>
         <dependency>
+            <groupId>com.toedter</groupId>
+            <artifactId>jcalendar</artifactId>
+            <version>1.4</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-sqlserver</artifactId>
             <version>10.20.1</version>
@@ -39,9 +45,9 @@
                 <version>10.20.1</version>
                 
                 <configuration>
-                    <url>jdbc:sqlserver://localhost:1433;databaseName=employeeMS;encrypt=true;trustServerCertificate=true</url>
+                    <url>jdbc:sqlserver://localhost:1433;databaseName=EmployeeMS;encrypt=true;trustServerCertificate=true</url>
                     <user>sa</user>
-                    <password>nguyen2004</password>
+                    <password>matkhaudongian</password>
                     <locations>
                         <location>src/main/resources/db/migration</location>
                     </locations>

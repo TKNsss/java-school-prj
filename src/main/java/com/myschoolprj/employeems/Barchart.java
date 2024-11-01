@@ -26,7 +26,7 @@ public Barchart() {
 
         // Tạo biểu đồ
         JFreeChart chart = ChartFactory.createBarChart(
-                "EmPloyees Salaries", // Tiêu đề
+                "Employees Salaries", // Tiêu đề
                 "List", // Trục X
                 "Values", // Trục Y
                 dataset // Dataset
