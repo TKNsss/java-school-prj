@@ -8,6 +8,6 @@ package com.myschoolprj.employeems;
  *
  * @author ADMIN
  */
-public class close_btton {
+public class addEmployees {
     
 }
