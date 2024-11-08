@@ -16,6 +16,9 @@ public class connectDB {
                 
                 props.load(connectDB.class.getResourceAsStream("/database.properties"));
                 
+                
+                
+               
                 String url = props.getProperty("URL");
                 String user = props.getProperty("USER_NAME");
                 String password = props.getProperty("PASSWORD");

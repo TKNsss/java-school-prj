@@ -38,6 +38,8 @@ public class Validator {
         }
         return true; 
     }
+        
+        
 
     public static boolean check_Phone(JTextField field, StringBuilder sb) {
         // Kiểm tra xem trường có rỗng không

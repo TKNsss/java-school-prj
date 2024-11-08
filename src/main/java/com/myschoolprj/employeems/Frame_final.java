@@ -4,15 +4,14 @@ package com.myschoolprj.employeems;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-import com.myschoolprj.employeems.Line;
-import com.myschoolprj.employeems.jPanelGradient2;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.File;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.text.*;
-import com.myschoolprj.employeems.Validator;
-//import com.myschoolprj.employeems.EmployeeDataType;
-//import com.myschoolprj.employeems.EmployeeList;
+import com.myschoolprj.employeems.EmployeeDataType;
 import java.awt.Color;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -25,16 +24,78 @@ import com.myschoolprj.employeems.utils.connectDB;
  */
 public class Frame_final extends javax.swing.JFrame {
 
+    private XFile xFile;
+
     public Frame_final() {
         initComponents();
-        this.setLocationRelativeTo(null); // Đặt JFrame ở giữa màn hình
-        Barchart barchart = new Barchart(); // Khởi tạo Barchart
+
+        xFile = new XFile(); // Tạo thể hiện của XFile
+        loadDataIntoTable();
+        loadSalaryIntoTable();
+
+        // Đặt JFrame ở giữa màn hình
+        this.setLocationRelativeTo(null);
+
+        // Khởi tạo Barchart
+        Barchart barchart = new Barchart();
         jPanel10.setLayout(new BorderLayout()); // Đặt layout cho jPanel7
         jPanel10.add(barchart, BorderLayout.CENTER); // Thêm biểu đồ vào jPanel7
         jPanel10.setPreferredSize(new Dimension(600, 300)); // Đặt kích thước cho jPanel7
         jPanel10.revalidate(); // Cập nhật lại panel
         jPanel10.repaint(); // Vẽ lại panel
 
+    }
+
+    private void loadSalaryIntoTable() {
+        try {
+            // Gọi phương thức không tĩnh từ thể hiện của LoadDataFromXFile
+            ArrayList<EmployeeSalary> salaries = xFile.readSalary(); // Đảm bảo biến này được định nghĩa
+            // Lấy model của JTable
+            DefaultTableModel model = (DefaultTableModel) tbl_salary.getModel();
+            model.setRowCount(0); // Xóa tất cả các hàng hiện có trong bảng
+
+            for (EmployeeSalary salary : salaries) {
+                Object[] rowData = {
+                    salary.getID(),
+                    salary.getFirstName(),
+                    salary.getLastName(),
+                    salary.getSalary()
+                };
+                model.addRow(rowData);
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error loading data: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void loadDataIntoTable() {
+        try {
+
+            // Gọi phương thức không tĩnh từ thể hiện của LoadDataFromXFile
+            ArrayList<EmployeeDataType> employees = xFile.readEmployees();
+            // Lấy model của JTable
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            model.setRowCount(0); // Xóa tất cả các hàng hiện có trong bảng
+
+            // Thêm dữ liệu vào bảng
+            for (EmployeeDataType employee : employees) {
+                Object[] rowData = {
+                    employee.getID(),
+                    employee.getStatus(),
+                    employee.getFirstName(),
+                    employee.getLastName(),
+                    employee.getGender(),
+                    employee.getPhone(),
+                    employee.getAddress(),
+                    employee.getPosition(),
+                    new SimpleDateFormat("dd/MM/yyyy").format(employee.getDateOfBirth())
+                };
+                model.addRow(rowData);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error loading data: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     /**
@@ -48,7 +109,6 @@ public class Frame_final extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
         jPanel2 = new GradientPanels(Color.decode("#272b3f"), Color.decode("#256b51"));
         jButton1 = new javax.swing.JButton();
         Logout_button = new javax.swing.JLabel();
@@ -101,30 +161,32 @@ public class Frame_final extends javax.swing.JFrame {
         bttnUpdate = new javax.swing.JButton();
         bttnDelete = new javax.swing.JButton();
         jPanel14 = new javax.swing.JPanel();
-        jLabel21 = new javax.swing.JLabel();
+        lblImage = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
         jLabel28 = new javax.swing.JLabel();
         cbPosition = new javax.swing.JComboBox<>();
         jDate = new com.toedter.calendar.JDateChooser();
         jLabel29 = new javax.swing.JLabel();
-        cbGender1 = new javax.swing.JComboBox<>();
+        cbStatus = new javax.swing.JComboBox<>();
         jLabel30 = new javax.swing.JLabel();
         jPanel15 = new javax.swing.JPanel();
         jPanel16 = new javax.swing.JPanel();
-        jLabel22 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
         jLabel23 = new javax.swing.JLabel();
-        jLabel24 = new javax.swing.JLabel();
+        lbl_first_name = new javax.swing.JLabel();
         jLabel25 = new javax.swing.JLabel();
-        jLabel26 = new javax.swing.JLabel();
+        lbl_last_name = new javax.swing.JLabel();
         jLabel27 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        jButton8 = new javax.swing.JButton();
-        jButton9 = new javax.swing.JButton();
+        txt_salary = new javax.swing.JTextField();
+        bttn_clear_salary = new javax.swing.JButton();
+        bttn_update_salary = new javax.swing.JButton();
+        txt_s1 = new javax.swing.JTextField();
+        jLabel21 = new javax.swing.JLabel();
+        jLabel24 = new javax.swing.JLabel();
+        lbl_ID = new javax.swing.JLabel();
         jPanel17 = new javax.swing.JPanel();
         jPanel18 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
+        tbl_salary = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -140,13 +202,6 @@ public class Frame_final extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         jLabel4.setText("Employee Management System  ");
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/close.png"))); // NOI18N
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -154,17 +209,13 @@ public class Frame_final extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -231,7 +282,7 @@ public class Frame_final extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jPanel19.setBorder(BorderFactory.createMatteBorder(0, 0, 3, 0, Color.BLACK));
+        jPanel19.setBorder(BorderFactory.createMatteBorder(0, 0, 3, 0, Color.WHITE));
         jPanel19.setOpaque(false);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-user-100 (1).png"))); // NOI18N
@@ -519,18 +570,19 @@ public class Frame_final extends javax.swing.JFrame {
                 txt_sActionPerformed(evt);
             }
         });
+        txt_s.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_sKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_sKeyReleased(evt);
+            }
+        });
 
         jTable1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null}
+
             },
             new String [] {
                 "Employee ID", "Status", "First name", "Last name", "Gender", "Phone #", "Position", "Address", "Date member"
@@ -542,8 +594,12 @@ public class Frame_final extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(1).setPreferredWidth(25);
+            jTable1.getColumnModel().getColumn(4).setPreferredWidth(25);
+        }
 
-        lblStatus.setText("Trạng thái:");
+        lblStatus.setText("Status: Add/ Update");
 
         javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
         jPanel12.setLayout(jPanel12Layout);
@@ -639,8 +695,6 @@ public class Frame_final extends javax.swing.JFrame {
 
         jPanel14.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        jLabel21.setText("jLabel6");
-
         jButton3.setText("Import");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -654,7 +708,7 @@ public class Frame_final extends javax.swing.JFrame {
             jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel14Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel21, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
             .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
         );
@@ -662,7 +716,7 @@ public class Frame_final extends javax.swing.JFrame {
             jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel14Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblImage, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton3)
                 .addGap(55, 55, 55))
@@ -681,10 +735,10 @@ public class Frame_final extends javax.swing.JFrame {
         jLabel29.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel29.setText("Date:");
 
-        cbGender1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Active", "Inactive" }));
-        cbGender1.addActionListener(new java.awt.event.ActionListener() {
+        cbStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Active", "Inactive" }));
+        cbStatus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbGender1ActionPerformed(evt);
+                cbStatusActionPerformed(evt);
             }
         });
 
@@ -696,61 +750,60 @@ public class Frame_final extends javax.swing.JFrame {
         jPanel13Layout.setHorizontalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel13Layout.createSequentialGroup()
-                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel13Layout.createSequentialGroup()
-                        .addGap(328, 328, 328)
-                        .addComponent(bttnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(bttnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel13Layout.createSequentialGroup()
                         .addGap(36, 36, 36)
-                        .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel19)
+                            .addComponent(jLabel18)
+                            .addComponent(jLabel15)
+                            .addComponent(jLabel20)
+                            .addComponent(jLabel30))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel13Layout.createSequentialGroup()
-                                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel19)
-                                    .addComponent(jLabel20)
-                                    .addComponent(jLabel18)
-                                    .addComponent(jLabel15))
-                                .addGap(18, 18, 18)
                                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(txtFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txtEmployeeID, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txtLastName, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(cbGender, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
                                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(jPanel13Layout.createSequentialGroup()
-                                            .addComponent(jLabel16)
-                                            .addGap(12, 12, 12)
-                                            .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel13Layout.createSequentialGroup()
-                                                .addComponent(jLabel28, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(cbPosition, 0, 1, Short.MAX_VALUE))
-                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel13Layout.createSequentialGroup()
+                                    .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(jPanel13Layout.createSequentialGroup()
+                                                .addComponent(jLabel16)
+                                                .addGap(12, 12, 12)
+                                                .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(jPanel13Layout.createSequentialGroup()
                                                 .addGap(4, 4, 4)
-                                                .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(cbAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
-                                        .addComponent(jLabel29)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jDate, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                                .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
+                                            .addComponent(jLabel29)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                            .addComponent(jDate, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(cbAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel13Layout.createSequentialGroup()
+                                            .addComponent(jLabel28, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                            .addComponent(cbPosition, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                             .addGroup(jPanel13Layout.createSequentialGroup()
-                                .addGap(35, 35, 35)
-                                .addComponent(jLabel30)
-                                .addGap(18, 18, 18)
-                                .addComponent(cbGender1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))))
-                .addGap(18, 18, 18)
+                                .addComponent(cbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(12, 12, 12))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(bttnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(bttnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addComponent(bttnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(bttnDelete, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
                     .addComponent(jPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(42, Short.MAX_VALUE))
+                .addContainerGap(60, Short.MAX_VALUE))
         );
         jPanel13Layout.setVerticalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -789,100 +842,149 @@ public class Frame_final extends javax.swing.JFrame {
                                     .addComponent(cbPosition, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel28)))))
                     .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(cbGender1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(22, 22, 22)
+                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel30))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(bttnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(bttnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(bttnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(bttnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(bttnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         jPanel11.add(jPanel13);
-        jPanel13.setBounds(0, 285, 910, 270);
+        jPanel13.setBounds(0, 285, 910, 290);
 
         jPanel3.add(jPanel11, "tab2");
 
         jPanel16.setBorder(new com.myschoolprj.employeems.border(5,1)); // Thay đổi bán kính bo góc nếu cần
 
-        jLabel22.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        jLabel22.setText("Employee ID:");
-
-        jTextField2.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-
         jLabel23.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         jLabel23.setText("First name:");
 
-        jLabel24.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        jLabel24.setText("label");
+        lbl_first_name.setBackground(new java.awt.Color(255, 255, 255));
+        lbl_first_name.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        lbl_first_name.setBorder(javax.swing.BorderFactory.createEtchedBorder(new java.awt.Color(51, 51, 51), null));
 
         jLabel25.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         jLabel25.setText("Last name:");
 
-        jLabel26.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        jLabel26.setText("label");
+        lbl_last_name.setBackground(new java.awt.Color(255, 255, 255));
+        lbl_last_name.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        lbl_last_name.setBorder(javax.swing.BorderFactory.createEtchedBorder(new java.awt.Color(51, 51, 51), null));
 
         jLabel27.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         jLabel27.setText("Salary $:");
 
-        jTextField3.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        txt_salary.setBackground(new java.awt.Color(255, 255, 255));
+        txt_salary.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        txt_salary.setBorder(javax.swing.BorderFactory.createEtchedBorder(new java.awt.Color(51, 51, 51), null));
 
-        jButton8.setText("Clear");
+        bttn_clear_salary.setText("Clear");
+        bttn_clear_salary.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bttn_clear_salaryActionPerformed(evt);
+            }
+        });
 
-        jButton9.setText("Update");
+        bttn_update_salary.setText("Update");
+        bttn_update_salary.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bttn_update_salaryActionPerformed(evt);
+            }
+        });
+
+        txt_s1.setText("Search");
+        txt_s1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txt_s1FocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txt_s1FocusLost(evt);
+            }
+        });
+        txt_s1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_s1ActionPerformed(evt);
+            }
+        });
+        txt_s1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_s1KeyReleased(evt);
+            }
+        });
+
+        jLabel21.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-search-26.png"))); // NOI18N
+
+        jLabel24.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jLabel24.setText("ID:");
+
+        lbl_ID.setBackground(new java.awt.Color(255, 255, 255));
+        lbl_ID.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        lbl_ID.setBorder(javax.swing.BorderFactory.createEtchedBorder(new java.awt.Color(51, 51, 51), null));
 
         javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
         jPanel16.setLayout(jPanel16Layout);
         jPanel16Layout.setHorizontalGroup(
             jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel16Layout.createSequentialGroup()
-                .addContainerGap(28, Short.MAX_VALUE)
-                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+            .addGroup(jPanel16Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel16Layout.createSequentialGroup()
+                        .addGap(0, 22, Short.MAX_VALUE)
+                        .addComponent(bttn_clear_salary, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+                        .addComponent(bttn_update_salary, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(20, 20, 20))
                     .addGroup(jPanel16Layout.createSequentialGroup()
-                        .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel21)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txt_s1))
                     .addGroup(jPanel16Layout.createSequentialGroup()
-                        .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel22)
+                        .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel24)
                             .addComponent(jLabel23)
                             .addComponent(jLabel25)
                             .addComponent(jLabel27))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jTextField3)
-                            .addComponent(jLabel24, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel26, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(24, 24, 24))
+                        .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txt_salary)
+                            .addComponent(lbl_last_name, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lbl_first_name, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lbl_ID, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap())
         );
         jPanel16Layout.setVerticalGroup(
             jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel16Layout.createSequentialGroup()
-                .addGap(26, 26, 26)
+                .addContainerGap()
+                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel21)
+                    .addComponent(txt_s1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel24, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_ID, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lbl_first_name, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel23, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel23, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel25, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbl_last_name, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel25, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel27, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(txt_salary, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(28, 28, 28)
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(20, Short.MAX_VALUE))
+                    .addComponent(bttn_clear_salary, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(bttn_update_salary, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         jPanel17.setBorder(new com.myschoolprj.employeems.border(5,1)); // Thay đổi bán kính bo góc nếu cần
@@ -895,13 +997,13 @@ public class Frame_final extends javax.swing.JFrame {
         );
         jPanel17Layout.setVerticalGroup(
             jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 304, Short.MAX_VALUE)
+            .addGap(0, 289, Short.MAX_VALUE)
         );
 
         jPanel18.setBorder(new com.myschoolprj.employeems.border(5,1)); // Thay đổi bán kính bo góc nếu cần
         jPanel18.setLayout(null);
 
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+        tbl_salary.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -909,13 +1011,18 @@ public class Frame_final extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Employee ID", "First name", "Last name", "Salary $"
             }
         ));
-        jScrollPane3.setViewportView(jTable3);
+        tbl_salary.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbl_salaryMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(tbl_salary);
 
         jPanel18.add(jScrollPane3);
-        jScrollPane3.setBounds(10, 10, 560, 530);
+        jScrollPane3.setBounds(10, 10, 570, 560);
 
         javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
         jPanel15.setLayout(jPanel15Layout);
@@ -926,7 +1033,7 @@ public class Frame_final extends javax.swing.JFrame {
                 .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jPanel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(0, 0, 0)
                 .addComponent(jPanel18, javax.swing.GroupLayout.PREFERRED_SIZE, 584, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -1007,6 +1114,7 @@ public class Frame_final extends javax.swing.JFrame {
             Validator.check_Empty1(txtLastName, sb, "Last name cannot be blank !");
             Validator.check_Empty2(cbGender, sb, "Gender cannot be blank !");
             Validator.check_Phone(txtPhone, sb);
+            Validator.check_Empty2(cbStatus, sb, "Status cannot be blank !");
             Validator.check_Empty2(cbPosition, sb, "Position cannot be blank !");
             Validator.check_Empty2(cbAddress, sb, "Address cannot be blank !");
 
@@ -1022,24 +1130,59 @@ public class Frame_final extends javax.swing.JFrame {
                 dateStr = dateFormat.format(date);
             }
 
-            String employeeID = txtEmployeeID.getText();
-            String firstName = txtFirstName.getText();
-            String lastName = txtLastName.getText();
-            String gender = cbGender.getSelectedItem().toString();
-            String phone = txtPhone.getText();
-            String position = cbPosition.getSelectedItem().toString();
-            String address = cbAddress.getSelectedItem().toString();
+            String employeeID = txtEmployeeID.getText().trim();
+            String status = cbStatus.getSelectedItem().toString().trim();
+            String firstName = txtFirstName.getText().trim();
+            String lastName = txtLastName.getText().trim();
+            String gender = cbGender.getSelectedItem().toString().trim();
+            String phone = txtPhone.getText().trim();
+            String position = cbPosition.getSelectedItem().toString().trim();
+            String address = cbAddress.getSelectedItem().toString().trim();
+            float salary = 0;
 
-            Object[] rowData = {employeeID, firstName, lastName, gender, phone, position, address, dateStr};
+            // tao doi tuong datatype
+            EmployeeDataType newEmployee = new EmployeeDataType();
+            newEmployee.setID(employeeID);
+            newEmployee.setStatus(status);
+            newEmployee.setFirstName(firstName);
+            newEmployee.setLastName(lastName);
+            newEmployee.setGender(gender);
+            newEmployee.setPhone(phone);
+            newEmployee.setPosition(position);
+            newEmployee.setAddress(address);
+            newEmployee.setDateOfBirth(date);
+
+            // khoi tao XFile de ghi du lieu
+            XFile xFile = new XFile();
+            ArrayList<EmployeeDataType> employees = new ArrayList<>();
+            employees.add(newEmployee);
+
+            xFile.writeEmployees(employees);
+
+            Object[] EmployeerowData = {employeeID, status, firstName, lastName, gender, phone, position, address, dateStr};
             // Thêm dữ liệu vào bảng
-            DefaultTableModel model = (DefaultTableModel) jTable1.getModel(); // Lấy tableModel từ jTable1
-            model.insertRow(0, rowData); // Thêm hàng mới vào tableModel
-            
+            DefaultTableModel model1 = (DefaultTableModel) jTable1.getModel(); // Lấy tableModel từ jTable1
+            model1.insertRow(0, EmployeerowData); // Thêm hàng mới vào tableModel
+
+            // Tạo danh sách salaries
+            ArrayList<EmployeeSalary> salaries = new ArrayList<>();
+            EmployeeSalary newSalary = new EmployeeSalary(employeeID, firstName, lastName, salary);
+            salaries.add(newSalary);
+
+            // Ghi dữ liệu vào bảng employees_salaries trong cơ sở dữ liệu
+            xFile.writeSalary(salaries);
+
+            Object[] SalaryrowData = {employeeID, firstName, lastName, salary};
+            // Thêm dữ liệu vào bảng
+            DefaultTableModel model2 = (DefaultTableModel) tbl_salary.getModel(); // Lấy tableModel từ jTable1
+            model2.insertRow(0, SalaryrowData); // Thêm hàng mới vào tableModel
+
             // Xóa dữ liệu trong các trường nhập sau khi thêm vào bảng
             txtEmployeeID.setText("");
             txtFirstName.setText("");
             txtLastName.setText("");
             txtPhone.setText("");
+            cbStatus.setSelectedItem(null);
             cbGender.setSelectedItem(null);
             cbAddress.setSelectedItem(null);
             cbPosition.setSelectedItem(null);
@@ -1048,78 +1191,165 @@ public class Frame_final extends javax.swing.JFrame {
 
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
         }
-        lblStatus.setText("Trạng thái: Thêm mới");
+        lblStatus.setText("Status: Add new");
 
     }//GEN-LAST:event_bttnAddActionPerformed
 
     private void bttnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttnUpdateActionPerformed
-        // TODO add your handling code here:
-        // TODO add your handling code here:
-    try {
-        StringBuilder sb = new StringBuilder();
-        
-        // Kiểm tra các trường nhập liệu
-        Validator.check_Empty1(txtEmployeeID, sb, "Employee ID cannot be blank !");
-        Validator.check_Empty1(txtFirstName, sb, "First name cannot be blank !");
-        Validator.check_Empty1(txtLastName, sb, "Last name cannot be blank !");
-        Validator.check_Empty2(cbGender, sb, "Gender cannot be blank !");
-        Validator.check_Phone(txtPhone, sb);
-        Validator.check_Empty2(cbPosition, sb, "Position cannot be blank !");
-        Validator.check_Empty2(cbAddress, sb, "Address cannot be blank !");
-        boolean isAgeValid = Validator.check_Age(jDate, sb);
+        // TODO add your handling code here:                                         
+        try {
+            StringBuilder sb = new StringBuilder();
 
-        // Kiểm tra xem có lỗi nào không
-        if (sb.length() > 0) {
-            JOptionPane.showMessageDialog(this, sb.toString(), "Input Error", JOptionPane.ERROR_MESSAGE);
-            return; // Dừng thực hiện nếu có lỗi
+            // Kiểm tra các trường nhập liệu
+            Validator.check_Empty1(txtEmployeeID, sb, "Employee ID cannot be blank !");
+            Validator.check_Empty1(txtFirstName, sb, "First name cannot be blank !");
+            Validator.check_Empty1(txtLastName, sb, "Last name cannot be blank !");
+            Validator.check_Empty2(cbGender, sb, "Gender cannot be blank !");
+            Validator.check_Phone(txtPhone, sb);
+            Validator.check_Empty2(cbStatus, sb, "Status cannot be blank !");
+            Validator.check_Empty2(cbPosition, sb, "Position cannot be blank !");
+            Validator.check_Empty2(cbAddress, sb, "Address cannot be blank !");
+            boolean isAgeValid = Validator.check_Age(jDate, sb);
+
+            // Kiểm tra xem có lỗi nào không
+            if (sb.length() > 0) {
+                JOptionPane.showMessageDialog(this, sb.toString(), "Input Error", JOptionPane.ERROR_MESSAGE);
+                return; // Dừng thực hiện nếu có lỗi
+            }
+
+            // Lấy thông tin từ các trường nhập liệu
+            String employeeID = txtEmployeeID.getText();
+            String firstName = txtFirstName.getText();
+            String lastName = txtLastName.getText();
+            String gender = cbGender.getSelectedItem().toString();
+            String phone = txtPhone.getText();
+            String status = cbStatus.getSelectedItem().toString();
+            String position = cbPosition.getSelectedItem().toString();
+            String address = cbAddress.getSelectedItem().toString();
+            java.util.Date date = jDate.getDate(); // Lấy ngày từ jDate
+
+            // Cập nhật hàng trong bảng
+            int selectedRow = jTable1.getSelectedRow();
+            if (selectedRow >= 0) {
+                DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+                model.setValueAt(employeeID, selectedRow, 0);
+                model.setValueAt(status, selectedRow, 1);
+                model.setValueAt(firstName, selectedRow, 2);
+                model.setValueAt(lastName, selectedRow, 3);
+                model.setValueAt(gender, selectedRow, 4);
+                model.setValueAt(phone, selectedRow, 5);
+                model.setValueAt(position, selectedRow, 6);
+                model.setValueAt(address, selectedRow, 7);
+                model.setValueAt(date != null ? new SimpleDateFormat("dd/MM/yyyy").format(date) : "", selectedRow, 8);
+
+                // Cập nhật thông tin trong cơ sở dữ liệu
+                EmployeeDataType employee = new EmployeeDataType();
+                employee.setID(employeeID);
+                employee.setStatus(status);
+                employee.setFirstName(firstName);
+                employee.setLastName(lastName);
+                employee.setGender(gender);
+                employee.setPhone(phone);
+                employee.setAddress(address);
+                employee.setPosition(position);
+
+                // Chuyển đổi ngày sang java.sql.Date
+                if (date != null) {
+                    java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+                    employee.setDateOfBirth(sqlDate);
+                } else {
+                    employee.setDateOfBirth(null); // Nếu ngày là null
+                }
+
+                // Gọi phương thức cập nhật trong lớp XFile
+                XFile xFile = new XFile();
+                xFile.updateEmployee(employee);
+
+                JOptionPane.showMessageDialog(this, "Employee updated successfully!");
+            } else {
+                JOptionPane.showMessageDialog(this, "Please select a row to update!", "Update Error", JOptionPane.WARNING_MESSAGE);
+            }
+
+            // Xóa dữ liệu trong các trường nhập sau khi cập nhật
+            txtEmployeeID.setText("");
+            txtFirstName.setText("");
+            txtLastName.setText("");
+            txtPhone.setText("");
+            cbStatus.setSelectedItem(null);
+            cbGender.setSelectedItem(null);
+            cbAddress.setSelectedItem(null);
+            cbPosition.setSelectedItem(null);
+            jDate.setDate(null);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
         }
-
-        // Lấy thông tin từ các trường nhập liệu
-        String employeeID = txtEmployeeID.getText();
-        String firstName = txtFirstName.getText();
-        String lastName = txtLastName.getText();
-        String gender = cbGender.getSelectedItem().toString();
-        String phone = txtPhone.getText();
-        String position = cbPosition.getSelectedItem().toString();
-        String address = cbAddress.getSelectedItem().toString();
-        String dateStr = new SimpleDateFormat("dd/MM/yyyy").format(jDate.getDate());
-
-        // Cập nhật hàng trong bảng
-        int selectedRow = jTable1.getSelectedRow();
-        if (selectedRow >= 0) {
-            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-            model.setValueAt(employeeID, selectedRow, 0);
-            model.setValueAt(firstName, selectedRow, 1);
-            model.setValueAt(lastName, selectedRow, 2);
-            model.setValueAt(gender, selectedRow, 3);
-            model.setValueAt(phone, selectedRow, 4);
-            model.setValueAt(position, selectedRow, 5);
-            model.setValueAt(address, selectedRow, 6);
-            model.setValueAt(dateStr, selectedRow, 7);
-        } else {
-            JOptionPane.showMessageDialog(this, "Please select a row to update!", "Update Error", JOptionPane.WARNING_MESSAGE);
-        }
-
-        // Xóa dữ liệu trong các trường nhập sau khi cập nhật
-        txtEmployeeID.setText("");
-        txtFirstName.setText("");
-        txtLastName.setText("");
-        txtPhone.setText("");
-        cbGender.setSelectedIndex(0);
-        cbAddress.setSelectedIndex(0);
-        cbPosition.setSelectedIndex(0);
-        jDate.setDate(null);
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
-    }
     }//GEN-LAST:event_bttnUpdateActionPerformed
 
     private void bttnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttnDeleteActionPerformed
         // TODO add your handling code here:
+// Lấy chỉ số hàng được chọn
+        int selectedRow = jTable1.getSelectedRow();
+
+        // Kiểm tra xem có hàng nào được chọn không
+        if (selectedRow >= 0) {
+            // Xác nhận trước khi xóa
+            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this record?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                // Lấy ID của nhân viên từ hàng được chọn
+                String employeeId = jTable1.getValueAt(selectedRow, 0).toString(); // Giả sử ID ở cột đầu tiên
+
+                // Xóa hàng khỏi DefaultTableModel
+                DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+                model.removeRow(selectedRow);
+
+                // Xóa bản ghi khỏi cơ sở dữ liệu
+                try {
+                    XFile xFile = new XFile(); // Tạo đối tượng XFile để truy cập cơ sở dữ liệu
+                    xFile.deleteEmployee(employeeId); // Gọi phương thức xóa
+                    JOptionPane.showMessageDialog(this, "Record deleted successfully.");
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(this, "Error deleting record from database: " + e.getMessage(), "Delete Error", JOptionPane.ERROR_MESSAGE);
+                }
+                txtEmployeeID.setText("");
+                txtFirstName.setText("");
+                txtLastName.setText("");
+                txtPhone.setText("");
+                cbStatus.setSelectedItem(null);
+                cbGender.setSelectedItem(null);
+                cbAddress.setSelectedItem(null);
+                cbPosition.setSelectedItem(null);
+                jDate.setDate(null);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a row to delete!", "Delete Error", JOptionPane.WARNING_MESSAGE);
+        }
+
     }//GEN-LAST:event_bttnDeleteActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
+        JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files", "jpg", "jpeg", "png", "gif");
+        fileChooser.setFileFilter(filter);
+
+        // Hiển thị hộp thoại chọn tệp
+        int result = fileChooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            // Lấy tệp đã chọn
+            File selectedFile = fileChooser.getSelectedFile();
+            try {
+                // Tạo ImageIcon từ tệp đã chọn
+                ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath());
+
+                // Tùy chọn: Thay đổi kích thước hình ảnh để vừa với JLabel
+                Image img = icon.getImage();
+                Image scaledImg = img.getScaledInstance(106, 106, Image.SCALE_SMOOTH); // Thay đổi kích thước theo ý muốn
+                lblImage.setIcon(new ImageIcon(scaledImg)); // Đặt hình ảnh đã thay đổi kích thước vào JLabel
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error loading image: " + ex.getMessage());
+            }
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void bttnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttnClearActionPerformed
@@ -1128,11 +1358,12 @@ public class Frame_final extends javax.swing.JFrame {
         txtFirstName.setText("");
         txtLastName.setText("");
         txtPhone.setText("");
+        cbStatus.setSelectedItem(null);
         cbGender.setSelectedItem(null);
         cbAddress.setSelectedItem(null);
         cbPosition.setSelectedItem(null);
         jDate.setDate(null);
-        lblStatus.setText("Trạng thái: Thêm mới");
+        lblStatus.setText("Status: Add new");
     }//GEN-LAST:event_bttnClearActionPerformed
 
     private void txt_sFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_sFocusGained
@@ -1171,26 +1402,73 @@ public class Frame_final extends javax.swing.JFrame {
 
     private void txt_sActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_sActionPerformed
         // TODO add your handling code here:
+        String searchID = txt_s.getText().trim(); // Lấy ID từ trường tìm kiếm
+        if (!searchID.isEmpty() && !searchID.equals("Search")) {
+            searchByID(searchID); // Gọi phương thức tìm kiếm
+        } else {
+            JOptionPane.showMessageDialog(this, "Please enter a valid ID to search.", "Input Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_txt_sActionPerformed
+
+    private void searchByID(String id) {
+        // Xóa tất cả các hàng hiện tại trong bảng
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
+
+        try {
+            // Gọi phương thức không tĩnh từ thể hiện của XFile để lấy danh sách nhân viên
+            ArrayList<EmployeeDataType> list = xFile.readEmployees(); // Giả sử bạn có phương thức loadData để lấy danh sách nhân viên
+            boolean found = false; // Biến để kiểm tra xem có tìm thấy không
+
+            for (EmployeeDataType employee : list) {
+                if (employee.getID().trim().equalsIgnoreCase(id.trim())) {
+                    // Nếu tìm thấy ID, thêm vào bảng
+                    Object[] rowData = {
+                        employee.getID(),
+                        employee.getStatus(),
+                        employee.getFirstName(),
+                        employee.getLastName(),
+                        employee.getGender(),
+                        employee.getPhone(),
+                        employee.getPosition(),
+                        employee.getAddress(),
+                        new SimpleDateFormat("dd/MM/yyyy").format(employee.getDateOfBirth())
+                    };
+                    model.addRow(rowData);
+                    found = true; // Đánh dấu là đã tìm thấy
+                    break;
+                }
+            }
+
+            // Nếu không tìm thấy, có thể hiển thị thông báo
+            if (!found) {
+                JOptionPane.showMessageDialog(this, "No employee found with ID: " + id, "Search Result", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error loading data: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
-        lblStatus.setText("Trạng thái: Chỉnh sửa");
+        lblStatus.setText("Status: Update");
 
         int selectedRow = jTable1.getSelectedRow();
         if (selectedRow >= 0) {
             // Lấy dữ liệu từ hàng đã chọn
             String employeeID = jTable1.getValueAt(selectedRow, 0).toString();
-            String firstName = jTable1.getValueAt(selectedRow, 1).toString();
-            String lastName = jTable1.getValueAt(selectedRow, 2).toString();
-            String gender = jTable1.getValueAt(selectedRow, 3).toString();
-            String phone = jTable1.getValueAt(selectedRow, 4).toString();
-            String position = jTable1.getValueAt(selectedRow, 5).toString();
-            String address = jTable1.getValueAt(selectedRow, 6).toString();
-            String dateStr = jTable1.getValueAt(selectedRow, 7).toString();
+            String status = jTable1.getValueAt(selectedRow, 1).toString();
+            String firstName = jTable1.getValueAt(selectedRow, 2).toString();
+            String lastName = jTable1.getValueAt(selectedRow, 3).toString();
+            String gender = jTable1.getValueAt(selectedRow, 4).toString();
+            String phone = jTable1.getValueAt(selectedRow, 5).toString();
+            String position = jTable1.getValueAt(selectedRow, 6).toString();
+            String address = jTable1.getValueAt(selectedRow, 7).toString();
+            String dateStr = jTable1.getValueAt(selectedRow, 8).toString();
 
             // Điền dữ liệu vào các trường nhập liệu
             txtEmployeeID.setText(employeeID);
+            cbStatus.setSelectedItem(status);
             txtFirstName.setText(firstName);
             txtLastName.setText(lastName);
             cbGender.setSelectedItem(gender);
@@ -1206,14 +1484,174 @@ public class Frame_final extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jTable1MouseClicked
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void cbStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbStatusActionPerformed
         // TODO add your handling code here:
-        System.exit(0);
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_cbStatusActionPerformed
 
-    private void cbGender1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbGender1ActionPerformed
+    private void bttn_clear_salaryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttn_clear_salaryActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cbGender1ActionPerformed
+        lbl_first_name.setText("");
+        lbl_last_name.setText("");
+        txt_salary.setText("");
+        lbl_ID.setText("");
+    }//GEN-LAST:event_bttn_clear_salaryActionPerformed
+
+    private void txt_s1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_s1FocusGained
+        // TODO add your handling code here:
+        if (txt_s1.getText().equals("Search")) {
+            txt_s1.setText("");
+            txt_s1.requestFocus();
+            txt_s1.setForeground(Color.DARK_GRAY);
+        }
+    }//GEN-LAST:event_txt_s1FocusGained
+
+    private void txt_s1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txt_s1FocusLost
+        // TODO add your handling code here:
+        if (txt_s1.getText().isEmpty()) {
+            txt_s1.setForeground(Color.DARK_GRAY);
+            txt_s1.setText("Search");
+
+        }
+    }//GEN-LAST:event_txt_s1FocusLost
+
+    private void bttn_update_salaryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttn_update_salaryActionPerformed
+        // TODO add your handling code here:
+        try {
+            StringBuilder sb = new StringBuilder();
+
+            // Validate salary input
+            Validator.check_Salary(txt_salary, sb);
+
+            // Check for validation errors
+            if (sb.length() > 0) {
+                JOptionPane.showMessageDialog(this, sb.toString(), "Input Error", JOptionPane.ERROR_MESSAGE);
+                return; // Stop execution if there are errors
+            }
+
+            // Retrieve information from input fields
+            String id = lbl_ID.getText();
+            String first_name = lbl_first_name.getText();
+            String last_name = lbl_last_name.getText();
+            float salary = Float.parseFloat(txt_salary.getText().trim()); // Convert string to float
+
+            // Update the selected row in the table
+            int selectedRow = tbl_salary.getSelectedRow();
+            if (selectedRow >= 0) {
+                DefaultTableModel model = (DefaultTableModel) tbl_salary.getModel();
+                model.setValueAt(id, selectedRow, 0); // Use the text from lbl_ID
+                model.setValueAt(first_name, selectedRow, 1); // Use the text from lbl_first_name
+                model.setValueAt(last_name, selectedRow, 2); // Use the text from lbl_last_name
+                model.setValueAt(salary, selectedRow, 3); // Set the salary
+
+                // Update information in the database
+                EmployeeSalary tble_salary = new EmployeeSalary();
+                tble_salary.setID(id);
+                tble_salary.setFirstName(first_name);
+                tble_salary.setLastName(last_name);
+                tble_salary.setSalary(salary); // Set the salary
+
+                // Call the update method in the XFile class
+                XFile xFile = new XFile();
+                xFile.updateSalary(tble_salary);
+
+                JOptionPane.showMessageDialog(this, "Employee updated successfully!");
+            } else {
+                JOptionPane.showMessageDialog(this, "Please select a row to update!", "Update Error", JOptionPane.WARNING_MESSAGE);
+            }
+
+            // Clear data in the input fields after updating
+            lbl_ID.setText("");
+            lbl_first_name.setText("");
+            lbl_last_name.setText("");
+            txt_salary.setText("");
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Invalid salary format: " + e.getMessage(), "Input Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }
+    }//GEN-LAST:event_bttn_update_salaryActionPerformed
+
+    private void tbl_salaryMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_salaryMouseClicked
+        // TODO add your handling code here:
+        int selectedRow = tbl_salary.getSelectedRow();
+        if (selectedRow >= 0) {
+            // Lấy dữ liệu từ hàng đã chọn
+            String id = tbl_salary.getValueAt(selectedRow, 0).toString(); // Giả sử ID ở cột 0
+            String first_name = tbl_salary.getValueAt(selectedRow, 1).toString(); // Giả sử tên đầu tiên ở cột 1
+            String last_name = tbl_salary.getValueAt(selectedRow, 2).toString(); // Giả sử tên cuối cùng ở cột 2
+            String salary = tbl_salary.getValueAt(selectedRow, 3).toString(); // Giả sử lương ở cột 3
+
+            // Điền dữ liệu vào các trường nhập liệu
+            lbl_ID.setText(id);
+            lbl_first_name.setText(first_name);
+            lbl_last_name.setText(last_name);
+            txt_salary.setText(salary);
+        }
+    }//GEN-LAST:event_tbl_salaryMouseClicked
+
+    private void txt_sKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_sKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_sKeyPressed
+
+    private void txt_sKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_sKeyReleased
+        // TODO add your handling code here:
+        if (txt_s.getText().isEmpty()) {
+            loadDataIntoTable(); // Gọi lại phương thức để tải lại dữ liệu vào bảng
+        }
+    }//GEN-LAST:event_txt_sKeyReleased
+
+    private void txt_s1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_s1ActionPerformed
+        // TODO add your handling code here:
+        // TODO add your handling code here:
+        String searchID = txt_s1.getText().trim(); // Lấy ID từ trường tìm kiếm
+        if (!searchID.isEmpty() && !searchID.equals("Search")) {
+            searchByID_1(searchID); // Gọi phương thức tìm kiếm
+        } else {
+            JOptionPane.showMessageDialog(this, "Please enter a valid ID to search.", "Input Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_txt_s1ActionPerformed
+
+    private void txt_s1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_s1KeyReleased
+        // TODO add your handling code here:
+        if (txt_s1.getText().isEmpty()) {
+            loadSalaryIntoTable(); // Gọi lại phương thức để tải lại dữ liệu vào bảng
+        }
+    }//GEN-LAST:event_txt_s1KeyReleased
+
+    private void searchByID_1(String id) {
+        // Xóa tất cả các hàng hiện tại trong bảng
+        DefaultTableModel model = (DefaultTableModel) tbl_salary.getModel();
+        model.setRowCount(0);
+
+        try {
+            // Gọi phương thức không tĩnh từ thể hiện của XFile để lấy danh sách nhân viên
+            ArrayList<EmployeeSalary> list = xFile.readSalary(); // Giả sử bạn có phương thức loadData để lấy danh sách nhân viên
+            boolean found = false; // Biến để kiểm tra xem có tìm thấy không
+
+            for (EmployeeSalary salary : list) {
+                if (salary.getID().trim().equalsIgnoreCase(id.trim())) {
+                    // Nếu tìm thấy ID, thêm vào bảng
+                    Object[] rowData = {
+                        salary.getID(),
+                        salary.getFirstName(),
+                        salary.getLastName(),
+                        salary.getSalary()
+                    };
+                    model.addRow(rowData);
+                    found = true; // Đánh dấu là đã tìm thấy
+                    break;
+                }
+            }
+
+            // Nếu không tìm thấy, có thể hiển thị thông báo
+            if (!found) {
+                JOptionPane.showMessageDialog(this, "No employee found with ID: " + id, "Search Result", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error loading data: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -1257,15 +1695,14 @@ public class Frame_final extends javax.swing.JFrame {
     private javax.swing.JButton bttnClear;
     private javax.swing.JButton bttnDelete;
     private javax.swing.JButton bttnUpdate;
+    private javax.swing.JButton bttn_clear_salary;
+    private javax.swing.JButton bttn_update_salary;
     private javax.swing.JComboBox<String> cbAddress;
     private javax.swing.JComboBox<String> cbGender;
-    private javax.swing.JComboBox<String> cbGender1;
     private javax.swing.JComboBox<String> cbPosition;
+    private javax.swing.JComboBox<String> cbStatus;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
     private com.toedter.calendar.JDateChooser jDate;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1281,11 +1718,9 @@ public class Frame_final extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
-    private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
@@ -1319,15 +1754,19 @@ public class Frame_final extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable3;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JLabel lblImage;
     private javax.swing.JLabel lblStatus;
+    private javax.swing.JLabel lbl_ID;
+    private javax.swing.JLabel lbl_first_name;
+    private javax.swing.JLabel lbl_last_name;
     private javax.swing.JButton salary_button;
+    private javax.swing.JTable tbl_salary;
     private javax.swing.JTextField txtEmployeeID;
     private javax.swing.JTextField txtFirstName;
     private javax.swing.JTextField txtLastName;
     private javax.swing.JTextField txtPhone;
     private javax.swing.JTextField txt_s;
+    private javax.swing.JTextField txt_s1;
+    private javax.swing.JTextField txt_salary;
     // End of variables declaration//GEN-END:variables
 }
