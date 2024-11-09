@@ -50,6 +50,4 @@ public Barchart() {
         dataset.addValue(3.6, "Salary", "ID-08");
         return dataset;
     }
-
-
 }

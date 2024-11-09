@@ -8,7 +8,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>23</maven.compiler.release>
-        <exec.mainClass>com.myschoolprj.employeems.LoginForm</exec.mainClass>
+        <exec.mainClass>com.myschoolprj.employeems.app.App</exec.mainClass>
     </properties>
     
     <dependencies>
@@ -45,18 +45,8 @@
                 <version>10.20.1</version>
                 
                 <configuration>
-                    <configFiles>src/main/resources/flyway.properties</configFiles>
-                    <baselineOnMigrate>true</baselineOnMigrate>
+                    <configFiles>src/main/resources/flyway.properties</configFiles>                      
                 </configuration>
-                
-                <dependencies>
-                    <!-- https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc -->
-                    <dependency>
-                        <groupId>com.microsoft.sqlserver</groupId>
-                        <artifactId>mssql-jdbc</artifactId>
-                        <version>12.8.1.jre11</version>
-                    </dependency>
-                </dependencies>
             </plugin>
         </plugins>
     </build>
