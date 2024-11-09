@@ -84,14 +84,14 @@ public class XFile {
 
             while (resultSet.next()) {
                 EmployeeDataType employee = new EmployeeDataType();
-                employee.setID(resultSet.getString("id")); // Thay thế 'id' bằng tên cột của bạn4
+                employee.setID(resultSet.getString("id")); // Thay thế 'id' bằng tên cột của bạn
                 employee.setStatus(resultSet.getString("status"));
-                employee.setFirstName(resultSet.getString("first_name")); // Thay thế 'first_name'
-                employee.setLastName(resultSet.getString("last_name")); // Thay thế 'last_name'
-                employee.setGender(resultSet.getString("gender")); // Thay thế 'gender'
-                employee.setPhone(resultSet.getString("phone")); // Thay thế 'gender'
+                employee.setFirstName(resultSet.getString("first_name")); 
+                employee.setLastName(resultSet.getString("last_name"));
+                employee.setGender(resultSet.getString("gender")); 
+                employee.setPhone(resultSet.getString("phone")); 
                 employee.setPosition(resultSet.getString("position"));
-                employee.setAddress(resultSet.getString("address")); // Thay thế 'address'
+                employee.setAddress(resultSet.getString("address"));
                 employee.setDateOfBirth(resultSet.getDate("date_of_birth"));
                 employees.add(employee);
             }

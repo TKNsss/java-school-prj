@@ -740,8 +740,8 @@
                             <Column editable="true" title="Last name" type="java.lang.Object"/>
                             <Column editable="true" title="Gender" type="java.lang.Object"/>
                             <Column editable="true" title="Phone #" type="java.lang.Object"/>
-                            <Column editable="true" title="Position" type="java.lang.Object"/>
                             <Column editable="true" title="Address" type="java.lang.Object"/>
+                            <Column editable="true" title="Position" type="java.lang.Object"/>
                             <Column editable="true" title="Date member" type="java.lang.Object"/>
                           </Table>
                         </Property>

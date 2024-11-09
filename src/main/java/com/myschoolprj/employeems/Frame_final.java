@@ -585,7 +585,7 @@ public class Frame_final extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Employee ID", "Status", "First name", "Last name", "Gender", "Phone #", "Position", "Address", "Date member"
+                "Employee ID", "Status", "First name", "Last name", "Gender", "Phone #", "Address", "Position", "Date member"
             }
         ));
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1110,11 +1110,11 @@ public class Frame_final extends javax.swing.JFrame {
         try {
             StringBuilder sb = new StringBuilder();
             Validator.check_Empty1(txtEmployeeID, sb, "Employee  cannot be blank !");
+            Validator.check_Empty2(cbStatus, sb, "Status cannot be blank !");
             Validator.check_Empty1(txtFirstName, sb, "First name cannot be blank !");
             Validator.check_Empty1(txtLastName, sb, "Last name cannot be blank !");
             Validator.check_Empty2(cbGender, sb, "Gender cannot be blank !");
             Validator.check_Phone(txtPhone, sb);
-            Validator.check_Empty2(cbStatus, sb, "Status cannot be blank !");
             Validator.check_Empty2(cbPosition, sb, "Position cannot be blank !");
             Validator.check_Empty2(cbAddress, sb, "Address cannot be blank !");
 
@@ -1159,10 +1159,10 @@ public class Frame_final extends javax.swing.JFrame {
 
             xFile.writeEmployees(employees);
 
-            Object[] EmployeerowData = {employeeID, status, firstName, lastName, gender, phone, position, address, dateStr};
+            Object[] EmployeerowData = {employeeID, status, firstName, lastName, gender, phone, address, position, dateStr};
             // Thêm dữ liệu vào bảng
             DefaultTableModel model1 = (DefaultTableModel) jTable1.getModel(); // Lấy tableModel từ jTable1
-            model1.insertRow(0, EmployeerowData); // Thêm hàng mới vào tableModel
+            model1.addRow(EmployeerowData); // Thêm hàng mới vào tableModel
 
             // Tạo danh sách salaries
             ArrayList<EmployeeSalary> salaries = new ArrayList<>();
@@ -1174,8 +1174,8 @@ public class Frame_final extends javax.swing.JFrame {
 
             Object[] SalaryrowData = {employeeID, firstName, lastName, salary};
             // Thêm dữ liệu vào bảng
-            DefaultTableModel model2 = (DefaultTableModel) tbl_salary.getModel(); // Lấy tableModel từ jTable1
-            model2.insertRow(0, SalaryrowData); // Thêm hàng mới vào tableModel
+            DefaultTableModel model2 = (DefaultTableModel) tbl_salary.getModel();
+            model2.addRow(SalaryrowData); // Thêm hàng mới vào tableModel
 
             // Xóa dữ liệu trong các trường nhập sau khi thêm vào bảng
             txtEmployeeID.setText("");
