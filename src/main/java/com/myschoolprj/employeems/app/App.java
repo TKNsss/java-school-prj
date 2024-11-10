@@ -1,7 +1,7 @@
 package com.myschoolprj.employeems.app;
 
 import com.myschoolprj.employeems.UI.LoginForm;
-import com.myschoolprj.employeems.utils.ConnectDB;
+import com.myschoolprj.employeems.utils.connectDB;
 
 import javax.swing.*;
 
@@ -17,7 +17,7 @@ public class App {
 
         // Register shutdown hook to close DB connection when application exits
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            ConnectDB.closeConnection();
+            connectDB.closeConnection();
             System.out.println("Database connection closed on application exit.");
         }));
 

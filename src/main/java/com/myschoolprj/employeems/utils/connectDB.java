@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class ConnectDB {
+public class connectDB {
 
     private static Connection connection = null;
     
@@ -14,7 +14,7 @@ public class ConnectDB {
         barricade against external attempts to create instances of the Singleton class. This ensures that 
         the class has control over its instantiation process.
     */ 
-    private ConnectDB() {} // Private constructor to prevent instantiation
+    private connectDB() {} // Private constructor to prevent instantiation
 
     // use static to call it without instantiating the class
     public static Connection getConnection() throws SQLException {
@@ -24,7 +24,7 @@ public class ConnectDB {
                 Properties props = new Properties();
 
                 // Load database configuration properties
-                try (var inputStream = ConnectDB.class.getResourceAsStream("/database.properties")) {
+                try (var inputStream = connectDB.class.getResourceAsStream("/database.properties")) {
                     if (inputStream == null) {
                         throw new SQLException("Database configuration file not found.");
                     }

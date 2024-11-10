@@ -4,8 +4,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class EmployeeDataType implements Serializable {
-    
+
     private String ID;
+    private String status;
     private String firstName;
     private String lastName;
     private String address;
@@ -13,23 +14,21 @@ public class EmployeeDataType implements Serializable {
     private String position;
     private String gender;
     private Date dateOfbirth;
-    private double salary;
-    private int age;
 
     // Constructor
-    public EmployeeDataType(String ID, String firstName, String lastName, String phone, String address, String position, String gender, Date dateOfbirth, double salary, int age) {
+    public EmployeeDataType(String ID, String Status, String firstName, String lastName, String gender, String phone, String address, String position, Date dateOfbirth) {
         this.ID = ID;
+        this.status = Status;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.gender = gender;
         this.phone = phone;
         this.address = address;
         this.position = position;
-        this.salary = salary;
-        this.age = age;
         this.dateOfbirth = dateOfbirth;
-        this.gender = gender;
-        
+
     }
+
     // Default constructor
     public EmployeeDataType() {
     }
@@ -41,6 +40,14 @@ public class EmployeeDataType implements Serializable {
 
     public void setID(String ID) {
         this.ID = ID;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getFirstName() {
@@ -75,22 +82,7 @@ public class EmployeeDataType implements Serializable {
         this.position = position;
     }
 
-    public double getSalary() {
-        return salary;
-    }
-
-    public void setSalary(double salary) {
-        this.salary = salary;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-     public Date getDateOfBirth() {
+    public Date getDateOfBirth() {
         return dateOfbirth;
     }
 
@@ -105,7 +97,7 @@ public class EmployeeDataType implements Serializable {
     public void setGender(String gender) {
         this.gender = gender;
     }
-    
+
     public String getPhone() {
         return phone;
     }

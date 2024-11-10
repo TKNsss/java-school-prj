@@ -105,4 +105,26 @@ public class Validator {
         dc.setBackground(Color.WHITE);
         return true;
     }
+    
+    public static boolean check_Salary(JTextField field, StringBuilder sb) {
+        if (!Validator.checkEmptyFields(field, sb, "Do not leave Salary blank !")) {
+            return false;
+        }
+
+        try {
+            double salary = Double.parseDouble(field.getText());
+
+            if (salary < 200) {
+                sb.append("Salary must be greater than 200 !\n");
+                field.setBackground(Color.yellow);
+                return false;
+            }
+        } catch (Exception e) {
+            sb.append("Salary value must be numeric !\n");
+            field.setBackground(Color.red);
+            return false;
+        }
+        field.setBackground(Color.white);
+        return true;
+    }
 }

@@ -1,6 +1,6 @@
 package com.myschoolprj.employeems.dao;
 
-import com.myschoolprj.employeems.utils.ConnectDB;
+import com.myschoolprj.employeems.utils.connectDB;
 import com.myschoolprj.employeems.model.Admin;
 
 import java.sql.Connection;
@@ -14,7 +14,7 @@ public class AdminDAO {
 
     public AdminDAO() throws SQLException {
         // Get the shared connection from ConnectDB
-        this.connection = ConnectDB.getConnection();
+        this.connection = connectDB.getConnection();
     }
 
     // Check if admin exists with the given username and password
