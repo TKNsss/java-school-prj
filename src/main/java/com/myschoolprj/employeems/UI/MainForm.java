@@ -5,7 +5,7 @@ import com.myschoolprj.employeems.utils.Validator;
 import com.myschoolprj.employeems.utils.GradientPanels;
 import com.myschoolprj.employeems.utils.jPanelGradient2;
 import com.myschoolprj.employeems.utils.PlaceholderUtils;
-import com.myschoolprj.employeems.XFile;
+import com.myschoolprj.employeems.dao.EmployeeDAO;
 import com.myschoolprj.employeems.EmployeeSalary;
 
 import javax.swing.*;
@@ -16,19 +16,28 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.text.*;
 
-import com.myschoolprj.employeems.EmployeeDataType;
+import com.myschoolprj.employeems.model.Employee;
 import java.awt.Color;
-import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class MainForm extends javax.swing.JFrame {
 
-    private XFile xFile;
+    private EmployeeDAO emDAO;
 
-    public MainForm() throws SQLException {
+    public MainForm() {
         initComponents();
-        xFile = new XFile(); // Tạo thể hiện của XFile
+        
+        try {
+            emDAO = new EmployeeDAO();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Failed to connect to the database. Please try again later", "Database Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "An unexpected error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+         // Tạo thể hiện của EmployeeDAO
         loadDataIntoTable();
         loadSalaryIntoTable();
 
@@ -52,10 +61,10 @@ public class MainForm extends javax.swing.JFrame {
 
             for (EmployeeSalary salary : salaries) {
                 Object[] rowData = {
-                        salary.getID(),
-                        salary.getFirstName(),
-                        salary.getLastName(),
-                        salary.getSalary()
+                    salary.getID(),
+                    salary.getFirstName(),
+                    salary.getLastName(),
+                    salary.getSalary()
                 };
                 model.addRow(rowData);
             }
@@ -70,23 +79,23 @@ public class MainForm extends javax.swing.JFrame {
         try {
 
             // Gọi phương thức không tĩnh từ thể hiện của LoadDataFromXFile
-            ArrayList<EmployeeDataType> employees = xFile.readEmployees();
+            ArrayList<Employee> employees = xFile.readEmployees();
             // Lấy model của JTable
             DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
             model.setRowCount(0); // Xóa tất cả các hàng hiện có trong bảng
 
             // Thêm dữ liệu vào bảng
-            for (EmployeeDataType employee : employees) {
+            for (Employee employee : employees) {
                 Object[] rowData = {
-                        employee.getID(),
-                        employee.getStatus(),
-                        employee.getFirstName(),
-                        employee.getLastName(),
-                        employee.getGender(),
-                        employee.getPhone(),
-                        employee.getAddress(),
-                        employee.getPosition(),
-                        new SimpleDateFormat("dd/MM/yyyy").format(employee.getDateOfBirth())
+                    employee.getID(),
+                    employee.getStatus(),
+                    employee.getFirstName(),
+                    employee.getLastName(),
+                    employee.getGender(),
+                    employee.getPhone(),
+                    employee.getAddress(),
+                    employee.getPosition(),
+                    new SimpleDateFormat("dd/MM/yyyy").format(employee.getDateOfBirth())
                 };
                 model.addRow(rowData);
             }
@@ -491,9 +500,9 @@ public class MainForm extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
+                .addGap(57, 57, 57)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(19, 19, 19))
         );
@@ -531,7 +540,7 @@ public class MainForm extends javax.swing.JFrame {
 
         jPanel3.add(jPanel4, "tab1");
 
-        jPanel12.setBorder(new com.myschoolprj.employeems.border(5,1)); // Thay đổi bán kính bo góc nếu cần
+        jPanel12.setBorder(new com.myschoolprj.employeems.utils.border(5,1)); // Thay đổi bán kính bo góc nếu cần
 
         jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-search-26.png"))); // NOI18N
 
@@ -587,7 +596,7 @@ public class MainForm extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jPanel13.setBorder(new com.myschoolprj.employeems.border(5,3)); // Thay đổi bán kính bo góc nếu cần
+        jPanel13.setBorder(new com.myschoolprj.employeems.utils.border(5,3)); // Thay đổi bán kính bo góc nếu cần
 
         jLabel15.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel15.setText("Employee ID:");
@@ -818,7 +827,7 @@ public class MainForm extends javax.swing.JFrame {
 
         jPanel3.add(jPanel11, "tab2");
 
-        jPanel16.setBorder(new com.myschoolprj.employeems.border(5,1)); // Thay đổi bán kính bo góc nếu cần
+        jPanel16.setBorder(new com.myschoolprj.employeems.utils.border(5,1)); // Thay đổi bán kính bo góc nếu cần
 
         jLabel23.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         jLabel23.setText("First name:");
@@ -945,7 +954,7 @@ public class MainForm extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jPanel17.setBorder(new com.myschoolprj.employeems.border(5,1)); // Thay đổi bán kính bo góc nếu cần
+        jPanel17.setBorder(new com.myschoolprj.employeems.utils.border(5,1)); // Thay đổi bán kính bo góc nếu cần
 
         javax.swing.GroupLayout jPanel17Layout = new javax.swing.GroupLayout(jPanel17);
         jPanel17.setLayout(jPanel17Layout);
@@ -958,7 +967,7 @@ public class MainForm extends javax.swing.JFrame {
             .addGap(0, 289, Short.MAX_VALUE)
         );
 
-        jPanel18.setBorder(new com.myschoolprj.employeems.border(5,1)); // Thay đổi bán kính bo góc nếu cần
+        jPanel18.setBorder(new com.myschoolprj.employeems.utils.border(5,1)); // Thay đổi bán kính bo góc nếu cần
         jPanel18.setLayout(null);
 
         tbl_salary.setModel(new javax.swing.table.DefaultTableModel(
@@ -1084,7 +1093,7 @@ public class MainForm extends javax.swing.JFrame {
             String address = cbAddress.getSelectedItem().toString().trim();
             float salary = 0;
 
-            EmployeeDataType newEmployee = new EmployeeDataType();
+            Employee newEmployee = new Employee();
             newEmployee.setID(employeeID);
             newEmployee.setStatus(status);
             newEmployee.setFirstName(firstName);
@@ -1095,15 +1104,15 @@ public class MainForm extends javax.swing.JFrame {
             newEmployee.setAddress(address);
             newEmployee.setDateOfBirth(date);
 
-            // khoi tao XFile de ghi du lieu
-            XFile xFile = new XFile();
-            ArrayList<EmployeeDataType> employees = new ArrayList<>();
+            // khoi tao EmployeeDAO de ghi du lieu
+            EmployeeDAO xFile = new EmployeeDAO();
+            ArrayList<Employee> employees = new ArrayList<>();
             employees.add(newEmployee);
 
             xFile.writeEmployees(employees);
 
-            Object[] EmployeerowData = { employeeID, status, firstName, lastName, gender, phone, address, position,
-                    dateStr };
+            Object[] EmployeerowData = {employeeID, status, firstName, lastName, gender, phone, address, position,
+                dateStr};
             // Thêm dữ liệu vào bảng
             DefaultTableModel model1 = (DefaultTableModel) jTable1.getModel(); // Lấy tableModel từ jTable1
             model1.addRow(EmployeerowData); // Thêm hàng mới vào tableModel
@@ -1116,7 +1125,7 @@ public class MainForm extends javax.swing.JFrame {
             // Ghi dữ liệu vào bảng employees_salaries trong cơ sở dữ liệu
             xFile.writeSalary(salaries);
 
-            Object[] SalaryrowData = { employeeID, firstName, lastName, salary };
+            Object[] SalaryrowData = {employeeID, firstName, lastName, salary};
             // Thêm dữ liệu vào bảng
             DefaultTableModel model2 = (DefaultTableModel) tbl_salary.getModel();
             model2.addRow(SalaryrowData); // Thêm hàng mới vào tableModel
@@ -1184,7 +1193,7 @@ public class MainForm extends javax.swing.JFrame {
                 model.setValueAt(date != null ? new SimpleDateFormat("dd/MM/yyyy").format(date) : "", selectedRow, 8);
 
                 // Cập nhật thông tin trong cơ sở dữ liệu
-                EmployeeDataType employee = new EmployeeDataType();
+                Employee employee = new Employee();
                 employee.setID(employeeID);
                 employee.setStatus(status);
                 employee.setFirstName(firstName);
@@ -1202,8 +1211,8 @@ public class MainForm extends javax.swing.JFrame {
                     employee.setDateOfBirth(null); // Nếu ngày là null
                 }
 
-                // Gọi phương thức cập nhật trong lớp XFile
-                XFile xFile = new XFile();
+                // Gọi phương thức cập nhật trong lớp EmployeeDAO
+                EmployeeDAO xFile = new EmployeeDAO();
                 xFile.updateEmployee(employee);
 
                 JOptionPane.showMessageDialog(this, "Employee updated successfully!");
@@ -1248,7 +1257,7 @@ public class MainForm extends javax.swing.JFrame {
 
                 // Xóa bản ghi khỏi cơ sở dữ liệu
                 try {
-                    XFile xFile = new XFile(); // Tạo đối tượng XFile để truy cập cơ sở dữ liệu
+                    EmployeeDAO xFile = new EmployeeDAO(); // Tạo đối tượng EmployeeDAO để truy cập cơ sở dữ liệu
                     xFile.deleteEmployee(employeeId); // Gọi phương thức xóa
                     JOptionPane.showMessageDialog(this, "Record deleted successfully.");
                 } catch (Exception e) {
@@ -1290,7 +1299,7 @@ public class MainForm extends javax.swing.JFrame {
                 // Tùy chọn: Thay đổi kích thước hình ảnh để vừa với JLabel
                 Image img = icon.getImage();
                 Image scaledImg = img.getScaledInstance(106, 106, Image.SCALE_SMOOTH); // Thay đổi kích thước theo ý
-                                                                                       // muốn
+                // muốn
                 lblImage.setIcon(new ImageIcon(scaledImg)); // Đặt hình ảnh đã thay đổi kích thước vào JLabel
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Error loading image: " + ex.getMessage());
@@ -1353,24 +1362,24 @@ public class MainForm extends javax.swing.JFrame {
         model.setRowCount(0);
 
         try {
-            // Gọi phương thức không tĩnh từ thể hiện của XFile để lấy danh sách nhân viên
-            ArrayList<EmployeeDataType> list = xFile.readEmployees(); // Giả sử bạn có phương thức loadData để lấy danh
-                                                                      // sách nhân viên
+            // Gọi phương thức không tĩnh từ thể hiện của EmployeeDAO để lấy danh sách nhân viên
+            ArrayList<Employee> list = xFile.readEmployees(); // Giả sử bạn có phương thức loadData để lấy danh
+            // sách nhân viên
             boolean found = false; // Biến để kiểm tra xem có tìm thấy không
 
-            for (EmployeeDataType employee : list) {
+            for (Employee employee : list) {
                 if (employee.getID().trim().equalsIgnoreCase(id.trim())) {
                     // Nếu tìm thấy ID, thêm vào bảng
                     Object[] rowData = {
-                            employee.getID(),
-                            employee.getStatus(),
-                            employee.getFirstName(),
-                            employee.getLastName(),
-                            employee.getGender(),
-                            employee.getPhone(),
-                            employee.getPosition(),
-                            employee.getAddress(),
-                            new SimpleDateFormat("dd/MM/yyyy").format(employee.getDateOfBirth())
+                        employee.getID(),
+                        employee.getStatus(),
+                        employee.getFirstName(),
+                        employee.getLastName(),
+                        employee.getGender(),
+                        employee.getPhone(),
+                        employee.getPosition(),
+                        employee.getAddress(),
+                        new SimpleDateFormat("dd/MM/yyyy").format(employee.getDateOfBirth())
                     };
                     model.addRow(rowData);
                     found = true; // Đánh dấu là đã tìm thấy
@@ -1490,8 +1499,8 @@ public class MainForm extends javax.swing.JFrame {
                 tble_salary.setLastName(last_name);
                 tble_salary.setSalary(salary); // Set the salary
 
-                // Call the update method in the XFile class
-                XFile xFile = new XFile();
+                // Call the update method in the EmployeeDAO class
+                EmployeeDAO xFile = new EmployeeDAO();
                 xFile.updateSalary(tble_salary);
 
                 JOptionPane.showMessageDialog(this, "Employee updated successfully!");
@@ -1568,19 +1577,19 @@ public class MainForm extends javax.swing.JFrame {
         model.setRowCount(0);
 
         try {
-            // Gọi phương thức không tĩnh từ thể hiện của XFile để lấy danh sách nhân viên
+            // Gọi phương thức không tĩnh từ thể hiện của EmployeeDAO để lấy danh sách nhân viên
             ArrayList<EmployeeSalary> list = xFile.readSalary(); // Giả sử bạn có phương thức loadData để lấy danh sách
-                                                                 // nhân viên
+            // nhân viên
             boolean found = false; // Biến để kiểm tra xem có tìm thấy không
 
             for (EmployeeSalary salary : list) {
                 if (salary.getID().trim().equalsIgnoreCase(id.trim())) {
                     // Nếu tìm thấy ID, thêm vào bảng
                     Object[] rowData = {
-                            salary.getID(),
-                            salary.getFirstName(),
-                            salary.getLastName(),
-                            salary.getSalary()
+                        salary.getID(),
+                        salary.getFirstName(),
+                        salary.getLastName(),
+                        salary.getSalary()
                     };
                     model.addRow(rowData);
                     found = true; // Đánh dấu là đã tìm thấy
@@ -1636,11 +1645,7 @@ public class MainForm extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                try {
-                    new MainForm().setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                new MainForm().setVisible(true);
             }
         });
     }

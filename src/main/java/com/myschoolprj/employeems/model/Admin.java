@@ -1,7 +1,7 @@
 package com.myschoolprj.employeems.model;
 
 public class Admin {
-    private String id;
+    private int id;
     private String name;
     private String password;
 
@@ -9,18 +9,18 @@ public class Admin {
     public Admin() {
     }
 
-    public Admin(String id, String name, String password) {
+    public Admin(int id, String name, String password) {
         this.id = id;
         this.name = name;
-        this.password = password;
+        this.password = password;    
     }
 
     // Getters and Setters
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -38,10 +38,5 @@ public class Admin {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    @Override
-    public String toString() {
-        return "Admin [id=" + id + ", name=" + name + "]";
     }
 }

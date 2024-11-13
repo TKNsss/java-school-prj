@@ -1,46 +1,41 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package com.myschoolprj.employeems;
+package com.myschoolprj.employeems.dao;
 
+import com.myschoolprj.employeems.EmployeeSalary;
+import com.myschoolprj.employeems.model.Employee;
 import com.myschoolprj.employeems.utils.connectDB;
 import java.sql.*;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-/**
- *
- * @author ADMIN
- */
-public class XFile {
+public class EmployeeDAO {
 
-    private Connection connection;
+    private final Connection connection;
+    private ArrayList<Employee> emList;
 
-    public XFile() throws SQLException {
-        connection = connectDB.getConnection();
+    public EmployeeDAO() throws SQLException {
+        this.connection = connectDB.getConnection();
     }
 
-    public ArrayList<EmployeeSalary> readSalary() throws Exception {
-        ArrayList<EmployeeSalary> salaries = new ArrayList<>();
-        String sql = "SELECT * FROM employees_salaries";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
-            while (resultSet.next()) {
-                EmployeeSalary salary = new EmployeeSalary();
-                salary.setID(resultSet.getString("id"));
-                salary.setFirstName(resultSet.getString("first_name"));
-                salary.setLastName(resultSet.getString("last_name"));
-                salary.setSalary(resultSet.getFloat("salary"));
-                salaries.add(salary);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception("Error reading Salaries: " + e);
-        }
-        return salaries;
-    }
+//    public ArrayList<EmployeeSalary> readSalary() throws SQLException {
+//        ArrayList<EmployeeSalary> salaries = new ArrayList<>();
+//        String sql = "SELECT * FROM employees_salaries";
+//        
+//        try (PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
+//            while (resultSet.next()) {
+//                EmployeeSalary salary = new EmployeeSalary();
+//                salary.setID(resultSet.getString("id"));
+//                salary.setFirstName(resultSet.getString("first_name"));
+//                salary.setLastName(resultSet.getString("last_name"));
+//                salary.setSalary(resultSet.getFloat("salary"));
+//                salaries.add(salary);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new Exception("Error reading Salaries: " + e);
+//        }
+//        return salaries;
+//    }
 
     public void writeSalary(ArrayList<EmployeeSalary> salaries) throws Exception {
         String sql = "INSERT INTO employees_salaries (id, first_name, last_name, salary) VALUES (?, ?, ?, ?)";
@@ -76,14 +71,14 @@ public class XFile {
         }
     }
 
-    public ArrayList<EmployeeDataType> readEmployees() throws Exception {
-        ArrayList<EmployeeDataType> employees = new ArrayList<>();
+    public ArrayList<Employee> readEmployees() throws Exception {
+        ArrayList<Employee> employees = new ArrayList<>();
         String sql = "SELECT * FROM employees_infor";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
-                EmployeeDataType employee = new EmployeeDataType();
+                Employee employee = new Employee();
                 employee.setID(resultSet.getString("id")); // Thay thế 'id' bằng tên cột của bạn
                 employee.setStatus(resultSet.getString("status"));
                 employee.setFirstName(resultSet.getString("first_name")); 
@@ -97,7 +92,7 @@ public class XFile {
             }
             // In ra số lượng nhân viên đã tải
             System.out.println("Employees loaded: " + employees.size());
-            for (EmployeeDataType emp : employees) {
+            for (Employee emp : employees) {
                 System.out.println("Employee ID: " + emp.getID());
             }
 
@@ -108,10 +103,11 @@ public class XFile {
         return employees;
     }
 
-    public void writeEmployees(ArrayList<EmployeeDataType> employees) throws Exception {
-        String sql = "INSERT INTO employees_infor (id, status, first_name, last_name, gender, phone, address,position, date_of_birth) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            for (EmployeeDataType employee : employees) {
+    public void addEmployee(ArrayList<Employee> employees) throws Exception {
+        String insertQuery = "INSERT INTO Employees(em_id, firstname, lastname, phone, gender, dob, address) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        
+        try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
+            for (Employee employee : employees) {
                 preparedStatement.setString(1, employee.getID());
                 preparedStatement.setString(2, employee.getStatus());
                 preparedStatement.setString(3, employee.getFirstName());
@@ -135,7 +131,7 @@ public class XFile {
         }
     }
 
-    public void updateEmployee(EmployeeDataType employee) throws Exception {
+    public void updateEmployee(Employee employee) throws Exception {
         String sql = "UPDATE employees_infor SET status = ?, first_name = ?, last_name = ?, gender = ?, phone = ?,  address = ?, position = ?, date_of_birth = ? WHERE id = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             // Thiết lập các tham số theo đúng thứ tự

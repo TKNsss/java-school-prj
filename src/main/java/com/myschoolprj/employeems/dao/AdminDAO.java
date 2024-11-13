@@ -18,19 +18,18 @@ public class AdminDAO {
     }
 
     // Check if admin exists with the given username and password
-    public Admin getAdminByCredentials(String username, String password) throws SQLException {
-        String query = "SELECT * FROM Admins WHERE ad_name = ? AND password = ?";
+    public Admin getAdminByCredentials(String username) throws SQLException {
+        String query = "SELECT * FROM Admins WHERE username = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, username);
-            ps.setString(2, password);
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     // If the credentials are correct, return the Admin object
                     return new Admin(
-                            rs.getString("ad_id"),
-                            rs.getString("ad_name"),
+                            rs.getInt("ad_id"),
+                            rs.getString("username"),
                             rs.getString("password")
                     );
                 }
@@ -39,8 +38,8 @@ public class AdminDAO {
         return null;
     }
 
-    public boolean existedUsername(String username) throws SQLException {
-        String query = "SELECT * FROM Admins WHERE ad_name = ?";
+    public boolean isUsernameExist(String username) throws SQLException {
+        String query = "SELECT * FROM Admins WHERE username = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, username);
@@ -53,7 +52,7 @@ public class AdminDAO {
     }
 
     public void createAdminCredentials(String username, String password) {
-        String query = "INSERT INTO Admins(ad_name, password) VALUES(?, ?)";
+        String query = "INSERT INTO Admins(username, password) VALUES(?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, username);

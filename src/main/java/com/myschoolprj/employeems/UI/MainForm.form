@@ -371,9 +371,9 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
                           <Component id="jPanel6" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="40" max="32767" attributes="0"/>
+                          <EmptySpace pref="59" max="32767" attributes="0"/>
                           <Component id="jPanel9" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
                           <Component id="jPanel7" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
                       </Group>
@@ -660,7 +660,7 @@
           <SubComponents>
             <Container class="javax.swing.JPanel" name="jPanel12">
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="jPanel12.setBorder(new com.myschoolprj.employeems.border(5,1)); // Thay &#x111;&#x1ed5;i b&#xe1;n k&#xed;nh bo g&#xf3;c n&#x1ebf;u c&#x1ea7;n"/>
+                <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="jPanel12.setBorder(new com.myschoolprj.employeems.utils.border(5,1)); // Thay &#x111;&#x1ed5;i b&#xe1;n k&#xed;nh bo g&#xf3;c n&#x1ebf;u c&#x1ea7;n"/>
               </AuxValues>
 
               <Layout>
@@ -805,7 +805,7 @@
             </Container>
             <Container class="javax.swing.JPanel" name="jPanel13">
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="jPanel13.setBorder(new com.myschoolprj.employeems.border(5,3)); // Thay &#x111;&#x1ed5;i b&#xe1;n k&#xed;nh bo g&#xf3;c n&#x1ebf;u c&#x1ea7;n"/>
+                <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="jPanel13.setBorder(new com.myschoolprj.employeems.utils.border(5,3)); // Thay &#x111;&#x1ed5;i b&#xe1;n k&#xed;nh bo g&#xf3;c n&#x1ebf;u c&#x1ea7;n"/>
               </AuxValues>
 
               <Layout>
@@ -1283,7 +1283,7 @@
           <SubComponents>
             <Container class="javax.swing.JPanel" name="jPanel16">
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="jPanel16.setBorder(new com.myschoolprj.employeems.border(5,1)); // Thay &#x111;&#x1ed5;i b&#xe1;n k&#xed;nh bo g&#xf3;c n&#x1ebf;u c&#x1ea7;n"/>
+                <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="jPanel16.setBorder(new com.myschoolprj.employeems.utils.border(5,1)); // Thay &#x111;&#x1ed5;i b&#xe1;n k&#xed;nh bo g&#xf3;c n&#x1ebf;u c&#x1ea7;n"/>
               </AuxValues>
 
               <Layout>
@@ -1501,7 +1501,7 @@
             </Container>
             <Container class="javax.swing.JPanel" name="jPanel17">
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="jPanel17.setBorder(new com.myschoolprj.employeems.border(5,1)); // Thay &#x111;&#x1ed5;i b&#xe1;n k&#xed;nh bo g&#xf3;c n&#x1ebf;u c&#x1ea7;n"/>
+                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="jPanel17.setBorder(new com.myschoolprj.employeems.utils.border(5,1)); // Thay &#x111;&#x1ed5;i b&#xe1;n k&#xed;nh bo g&#xf3;c n&#x1ebf;u c&#x1ea7;n"/>
               </AuxValues>
 
               <Layout>
@@ -1519,7 +1519,7 @@
             </Container>
             <Container class="javax.swing.JPanel" name="jPanel18">
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="jPanel18.setBorder(new com.myschoolprj.employeems.border(5,1)); // Thay &#x111;&#x1ed5;i b&#xe1;n k&#xed;nh bo g&#xf3;c n&#x1ebf;u c&#x1ea7;n"/>
+                <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="jPanel18.setBorder(new com.myschoolprj.employeems.utils.border(5,1)); // Thay &#x111;&#x1ed5;i b&#xe1;n k&#xed;nh bo g&#xf3;c n&#x1ebf;u c&#x1ea7;n"/>
               </AuxValues>
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">

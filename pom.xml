@@ -17,12 +17,7 @@
             <artifactId>jcalendar</artifactId>
             <version>1.4</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-sqlserver</artifactId>
-            <version>10.20.1</version>
-        </dependency>
+        
         <!-- https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc -->
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
@@ -35,19 +30,12 @@
             <artifactId>jfreechart</artifactId>
             <version>1.0.19</version>
         </dependency>    
+        
+        <!-- https://mvnrepository.com/artifact/org.mindrot/jbcrypt -->
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.4</version>
+        </dependency>
     </dependencies>
-    
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.flywaydb</groupId>
-                <artifactId>flyway-maven-plugin</artifactId>
-                <version>10.20.1</version>
-                
-                <configuration>
-                    <configFiles>src/main/resources/flyway.properties</configFiles>                      
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>  
