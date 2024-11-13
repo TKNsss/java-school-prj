@@ -16,9 +16,10 @@ public class Employee implements Serializable {
     private String role;
     private int baseSalary;
     private int netSalary;
+    private String title;
 
     // Constructor
-    public Employee(String ID, String firstName, String lastName, String phone, String gender, Date dob, String address, String position, String role, int baseSalary, int netSalary) {
+    public Employee(String ID, String firstName, String lastName, String phone, String gender, Date dob, String address, String position, String role, int baseSalary, int netSalary, String title) {
         this.ID = ID;  
         this.firstName = firstName;
         this.lastName = lastName;
@@ -30,6 +31,7 @@ public class Employee implements Serializable {
         this.role = role;
         this.baseSalary = baseSalary;
         this.netSalary = netSalary;
+        this.title = title;
     }
 
     // Default constructor
@@ -115,5 +117,13 @@ public class Employee implements Serializable {
 
     public void setNetSalary(int netSalary) {
         this.netSalary = netSalary;
+    }
+    
+    public String getTitle() {
+        return title;
+    }
+
+    public void setNetSalary(String title) {
+        this.title = title;
     }
 }

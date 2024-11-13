@@ -71,93 +71,93 @@ public class EmployeeDAO {
         }
     }
 
-    public ArrayList<Employee> readEmployees() throws Exception {
-        ArrayList<Employee> employees = new ArrayList<>();
-        String sql = "SELECT * FROM employees_infor";
+//    public ArrayList<Employee> readEmployees() throws Exception {
+//        ArrayList<Employee> employees = new ArrayList<>();
+//        String sql = "SELECT * FROM employees_infor";
+//
+//        try (PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
+//
+//            while (resultSet.next()) {
+//                Employee employee = new Employee();
+//                employee.setID(resultSet.getString("id")); // Thay thế 'id' bằng tên cột của bạn
+//                employee.setStatus(resultSet.getString("status"));
+//                employee.setFirstName(resultSet.getString("first_name")); 
+//                employee.setLastName(resultSet.getString("last_name"));
+//                employee.setGender(resultSet.getString("gender")); 
+//                employee.setPhone(resultSet.getString("phone")); 
+//                employee.setPosition(resultSet.getString("position"));
+//                employee.setAddress(resultSet.getString("address"));
+//                employee.setDateOfBirth(resultSet.getDate("date_of_birth"));
+//                employees.add(employee);
+//            }
+//            // In ra số lượng nhân viên đã tải
+//            System.out.println("Employees loaded: " + employees.size());
+//            for (Employee emp : employees) {
+//                System.out.println("Employee ID: " + emp.getID());
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new Exception("Error reading Employees: " + e);
+//        }
+//        return employees;
+//    }
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
+//    public void addEmployee(ArrayList<Employee> employees) throws Exception {
+//        String insertQuery = "INSERT INTO Employees(em_id, firstname, lastname, phone, gender, dob, address) VALUES (?, ?, ?, ?, ?, ?, ?)";
+//        
+//        try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
+//            for (Employee employee : employees) {
+//                preparedStatement.setString(1, employee.getID());
+//                preparedStatement.setString(2, employee.getStatus());
+//                preparedStatement.setString(3, employee.getFirstName());
+//                preparedStatement.setString(4, employee.getLastName());
+//                preparedStatement.setString(5, employee.getGender());
+//                preparedStatement.setString(6, employee.getPhone());
+//                preparedStatement.setString(7, employee.getAddress());
+//                preparedStatement.setString(8, employee.getPosition());
+//                if (employee.getDateOfBirth() != null) {
+//                    preparedStatement.setDate(9, new java.sql.Date(employee.getDateOfBirth().getTime()));
+//                } else {
+//                    preparedStatement.setNull(9, java.sql.Types.DATE);
+//                }
+//
+//                preparedStatement.addBatch();
+//            }
+//            preparedStatement.executeBatch();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new Exception("Error writing Employees: " + e);
+//        }
+//    }
 
-            while (resultSet.next()) {
-                Employee employee = new Employee();
-                employee.setID(resultSet.getString("id")); // Thay thế 'id' bằng tên cột của bạn
-                employee.setStatus(resultSet.getString("status"));
-                employee.setFirstName(resultSet.getString("first_name")); 
-                employee.setLastName(resultSet.getString("last_name"));
-                employee.setGender(resultSet.getString("gender")); 
-                employee.setPhone(resultSet.getString("phone")); 
-                employee.setPosition(resultSet.getString("position"));
-                employee.setAddress(resultSet.getString("address"));
-                employee.setDateOfBirth(resultSet.getDate("date_of_birth"));
-                employees.add(employee);
-            }
-            // In ra số lượng nhân viên đã tải
-            System.out.println("Employees loaded: " + employees.size());
-            for (Employee emp : employees) {
-                System.out.println("Employee ID: " + emp.getID());
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception("Error reading Employees: " + e);
-        }
-        return employees;
-    }
-
-    public void addEmployee(ArrayList<Employee> employees) throws Exception {
-        String insertQuery = "INSERT INTO Employees(em_id, firstname, lastname, phone, gender, dob, address) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        
-        try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
-            for (Employee employee : employees) {
-                preparedStatement.setString(1, employee.getID());
-                preparedStatement.setString(2, employee.getStatus());
-                preparedStatement.setString(3, employee.getFirstName());
-                preparedStatement.setString(4, employee.getLastName());
-                preparedStatement.setString(5, employee.getGender());
-                preparedStatement.setString(6, employee.getPhone());
-                preparedStatement.setString(7, employee.getAddress());
-                preparedStatement.setString(8, employee.getPosition());
-                if (employee.getDateOfBirth() != null) {
-                    preparedStatement.setDate(9, new java.sql.Date(employee.getDateOfBirth().getTime()));
-                } else {
-                    preparedStatement.setNull(9, java.sql.Types.DATE);
-                }
-
-                preparedStatement.addBatch();
-            }
-            preparedStatement.executeBatch();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception("Error writing Employees: " + e);
-        }
-    }
-
-    public void updateEmployee(Employee employee) throws Exception {
-        String sql = "UPDATE employees_infor SET status = ?, first_name = ?, last_name = ?, gender = ?, phone = ?,  address = ?, position = ?, date_of_birth = ? WHERE id = ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            // Thiết lập các tham số theo đúng thứ tự
-            preparedStatement.setString(1, employee.getStatus());
-            preparedStatement.setString(2, employee.getFirstName());
-            preparedStatement.setString(3, employee.getLastName());
-            preparedStatement.setString(4, employee.getGender());
-            preparedStatement.setString(5, employee.getPhone());
-            preparedStatement.setString(6, employee.getAddress());
-            preparedStatement.setString(7, employee.getPosition());
-
-            // Chuyển đổi ngày sang java.sql.Date
-            if (employee.getDateOfBirth() != null) {
-                preparedStatement.setDate(8, new java.sql.Date(employee.getDateOfBirth().getTime())); // date_of_birth
-            } else {
-                throw new Exception("Date of birth cannot be null."); // Ném lỗi nếu ngày là null
-            }
-
-            preparedStatement.setString(9, employee.getID()); // Điều kiện WHERE
-
-            preparedStatement.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception("Error updating Employees: " + e);
-        }
-    }
+//    public void updateEmployee(Employee employee) throws Exception {
+//        String sql = "UPDATE employees_infor SET status = ?, first_name = ?, last_name = ?, gender = ?, phone = ?,  address = ?, position = ?, date_of_birth = ? WHERE id = ?";
+//        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+//            // Thiết lập các tham số theo đúng thứ tự
+//            preparedStatement.setString(1, employee.getStatus());
+//            preparedStatement.setString(2, employee.getFirstName());
+//            preparedStatement.setString(3, employee.getLastName());
+//            preparedStatement.setString(4, employee.getGender());
+//            preparedStatement.setString(5, employee.getPhone());
+//            preparedStatement.setString(6, employee.getAddress());
+//            preparedStatement.setString(7, employee.getPosition());
+//
+//            // Chuyển đổi ngày sang java.sql.Date
+//            if (employee.getDateOfBirth() != null) {
+//                preparedStatement.setDate(8, new java.sql.Date(employee.getDateOfBirth().getTime())); // date_of_birth
+//            } else {
+//                throw new Exception("Date of birth cannot be null."); // Ném lỗi nếu ngày là null
+//            }
+//
+//            preparedStatement.setString(9, employee.getID()); // Điều kiện WHERE
+//
+//            preparedStatement.executeUpdate();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new Exception("Error updating Employees: " + e);
+//        }
+//    }
 
     public void deleteEmployee(String employeeId) throws Exception {
         String sql = "DELETE FROM employees_infor WHERE id = ?";

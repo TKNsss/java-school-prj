@@ -52,15 +52,6 @@ public class LoginForm extends javax.swing.JFrame {
         showPassCB = new javax.swing.JCheckBox();
         closeBtn = new javax.swing.JButton();
         switchToRegBtn = new javax.swing.JButton();
-        switchToEmBtn = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
-        closeBtn1 = new javax.swing.JButton();
-        usernameEmTF = new javax.swing.JTextField();
-        passwordEmTF = new javax.swing.JPasswordField();
-        loginEmBtn = new javax.swing.JButton();
-        lfRightTitle3 = new javax.swing.JLabel();
-        switchToAdBtn = new javax.swing.JButton();
-        showPassEmCB = new javax.swing.JCheckBox();
         jPanel2 = new javax.swing.JPanel();
         lfRightTitle1 = new javax.swing.JLabel();
         regUsernameTF = new javax.swing.JTextField();
@@ -204,14 +195,6 @@ public class LoginForm extends javax.swing.JFrame {
             }
         });
 
-        switchToEmBtn.setText("Employee Mode");
-        switchToEmBtn.setPreferredSize(new java.awt.Dimension(240, 40));
-        switchToEmBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                switchToEmBtnActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -225,19 +208,17 @@ public class LoginForm extends javax.swing.JFrame {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
+                                    .addComponent(switchToRegBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(showPassCB))
                                 .addGroup(jPanel3Layout.createSequentialGroup()
                                     .addGap(16, 16, 16)
-                                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(passwordTF, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(usernameTF, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
                                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(switchToEmBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(switchToRegBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(showPassCB, javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(loginBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(passwordTF, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(usernameTF, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(loginBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addComponent(lfRightTitle2))
                         .addGap(0, 30, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -258,135 +239,11 @@ public class LoginForm extends javax.swing.JFrame {
                     .addComponent(switchToRegBtn)
                     .addComponent(showPassCB))
                 .addGap(54, 54, 54)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(loginBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(switchToEmBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(loginBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(47, 47, 47))
         );
 
         lfRightPanel.add(jPanel3, "Login card");
-
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-
-        closeBtn1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-x-24.png"))); // NOI18N
-        closeBtn1.setBorder(null);
-        closeBtn1.setBorderPainted(false);
-        closeBtn1.setContentAreaFilled(false);
-        closeBtn1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        closeBtn1.setFocusPainted(false);
-        closeBtn1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                closeBtn1ActionPerformed(evt);
-            }
-        });
-
-        usernameEmTF.setForeground(new java.awt.Color(153, 153, 153));
-        usernameEmTF.setText("Enter Username");
-        usernameEmTF.setPreferredSize(new java.awt.Dimension(200, 40));
-        usernameEmTF.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                usernameEmTFFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                usernameEmTFFocusLost(evt);
-            }
-        });
-
-        passwordEmTF.setForeground(new java.awt.Color(153, 153, 153));
-        passwordEmTF.setText("Enter Password");
-        passwordEmTF.setEchoChar('\u0000');
-        passwordEmTF.setPreferredSize(new java.awt.Dimension(200, 40));
-        passwordEmTF.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                passwordEmTFFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                passwordEmTFFocusLost(evt);
-            }
-        });
-        passwordEmTF.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                passwordEmTFKeyTyped(evt);
-            }
-        });
-
-        loginEmBtn.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        loginEmBtn.setText("Login");
-        loginEmBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        loginEmBtn.setPreferredSize(new java.awt.Dimension(240, 40));
-        loginEmBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loginEmBtnActionPerformed(evt);
-            }
-        });
-
-        lfRightTitle3.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
-        lfRightTitle3.setForeground(new java.awt.Color(37, 103, 81));
-        lfRightTitle3.setText("Employee Timekeeping");
-
-        switchToAdBtn.setText("Admin");
-        switchToAdBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                switchToAdBtnActionPerformed(evt);
-            }
-        });
-
-        showPassEmCB.setText("Show Password");
-        showPassEmCB.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        showPassEmCB.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                showPassEmCBActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(326, Short.MAX_VALUE)
-                        .addComponent(closeBtn1))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(42, 42, 42)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(switchToAdBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(34, 34, 34)
-                                        .addComponent(loginEmBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(passwordEmTF, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(usernameEmTF, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(showPassEmCB, javax.swing.GroupLayout.Alignment.TRAILING)))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(25, 25, 25)
-                                .addComponent(lfRightTitle3)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(closeBtn1)
-                .addGap(108, 108, 108)
-                .addComponent(lfRightTitle3)
-                .addGap(45, 45, 45)
-                .addComponent(usernameEmTF, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(passwordEmTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(showPassEmCB)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(loginEmBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(switchToAdBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(39, 39, 39))
-        );
-
-        lfRightPanel.add(jPanel1, "Login employee card");
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -742,84 +599,6 @@ public class LoginForm extends javax.swing.JFrame {
         checkPasswordSpaces(passwordTF, evt);
     }//GEN-LAST:event_passwordTFKeyTyped
 
-    private void closeBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeBtn1ActionPerformed
-        this.dispose();
-    }//GEN-LAST:event_closeBtn1ActionPerformed
-
-    private void usernameEmTFFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_usernameEmTFFocusGained
-        PlaceholderUtils.handleFocusedPlaceholder(usernameEmTF, "Enter Username");
-    }//GEN-LAST:event_usernameEmTFFocusGained
-
-    private void usernameEmTFFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_usernameEmTFFocusLost
-        PlaceholderUtils.handleFocusedPlaceholder(usernameEmTF, "Enter Username");
-    }//GEN-LAST:event_usernameEmTFFocusLost
-
-    private void passwordEmTFFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_passwordEmTFFocusGained
-        PlaceholderUtils.handleFocusedPlaceholder(passwordEmTF, "Enter Password");
-    }//GEN-LAST:event_passwordEmTFFocusGained
-
-    private void passwordEmTFFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_passwordEmTFFocusLost
-        PlaceholderUtils.handleFocusedPlaceholder(passwordEmTF, "Enter Password");
-    }//GEN-LAST:event_passwordEmTFFocusLost
-
-    private void passwordEmTFKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passwordEmTFKeyTyped
-        checkPasswordSpaces(passwordEmTF, evt);
-    }//GEN-LAST:event_passwordEmTFKeyTyped
-
-    private void loginEmBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginEmBtnActionPerformed
-        // read messages
-        StringBuilder sb = new StringBuilder();
-
-        // check empty fields and special characters
-        boolean filledUsername = Validator.checkSpecialCharacters(usernameEmTF, sb, "Username can't be blank");
-        boolean filledUPassword = Validator.checkSpecialCharacters(passwordEmTF, sb, "Password can't be blank");
-
-        if (!filledUsername || !filledUPassword) {
-            JOptionPane.showMessageDialog(this, sb.toString(), "Validation Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        String username = usernameEmTF.getText().trim();
-        String password = passwordEmTF.getText();
-
-        try {
-            // Get the matching Admin object
-            Admin admin = adDAO.getAdminByCredentials(username);
-            // compare hashed pw in db with login pw
-            if (admin == null || !BCrypt.checkpw(password, admin.getPassword())) {
-                JOptionPane.showMessageDialog(this, "Invalid username or password.", "Login Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            JOptionPane.showMessageDialog(this, "Login successful! Welcome " + admin.getName(), "Success", JOptionPane.INFORMATION_MESSAGE);
-            this.setVisible(false);
-            TimekeepingForm tkf = new TimekeepingForm();      
-            tkf.setVisible(true);
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "There was an issue with the database operation. Please try again.", "Database Error", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "An unexpected error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
-        }
-    }//GEN-LAST:event_loginEmBtnActionPerformed
-
-    private void switchToAdBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switchToAdBtnActionPerformed
-        CardLayout cl = (CardLayout) lfRightPanel.getLayout();
-        cl.show(lfRightPanel, "Login card");
-    }//GEN-LAST:event_switchToAdBtnActionPerformed
-
-    private void switchToEmBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switchToEmBtnActionPerformed
-        CardLayout cl = (CardLayout) lfRightPanel.getLayout();
-        cl.show(lfRightPanel, "Login employee card");
-    }//GEN-LAST:event_switchToEmBtnActionPerformed
-
-    private void showPassEmCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showPassEmCBActionPerformed
-        if (showPassEmCB.isSelected()) {
-            passwordEmTF.setEchoChar('\u0000');
-        } else {
-            passwordEmTF.setEchoChar('*');
-        }
-    }//GEN-LAST:event_showPassEmCBActionPerformed
-
     private void checkPasswordSpaces(JTextField tf, java.awt.event.KeyEvent evt) {
         char keyChar = evt.getKeyChar();
 
@@ -865,8 +644,6 @@ public class LoginForm extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton closeBtn;
-    private javax.swing.JButton closeBtn1;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JLabel lfLeftIcon;
@@ -875,10 +652,7 @@ public class LoginForm extends javax.swing.JFrame {
     private javax.swing.JPanel lfRightPanel;
     private javax.swing.JLabel lfRightTitle1;
     private javax.swing.JLabel lfRightTitle2;
-    private javax.swing.JLabel lfRightTitle3;
     private javax.swing.JButton loginBtn;
-    private javax.swing.JButton loginEmBtn;
-    private javax.swing.JPasswordField passwordEmTF;
     private javax.swing.JPasswordField passwordTF;
     private javax.swing.JButton regCloseBtn;
     private javax.swing.JPasswordField regConPasswordTF;
@@ -887,12 +661,8 @@ public class LoginForm extends javax.swing.JFrame {
     private javax.swing.JButton registerBtn;
     private javax.swing.JCheckBox showBothPassCB;
     private javax.swing.JCheckBox showPassCB;
-    private javax.swing.JCheckBox showPassEmCB;
-    private javax.swing.JButton switchToAdBtn;
-    private javax.swing.JButton switchToEmBtn;
     private javax.swing.JButton switchToLogBtn;
     private javax.swing.JButton switchToRegBtn;
-    private javax.swing.JTextField usernameEmTF;
     private javax.swing.JTextField usernameTF;
     // End of variables declaration//GEN-END:variables
 }

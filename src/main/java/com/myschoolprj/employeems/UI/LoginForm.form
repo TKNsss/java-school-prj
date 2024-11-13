@@ -123,22 +123,19 @@
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Component id="switchToRegBtn" min="-2" pref="140" max="-2" attributes="0"/>
+                                          <EmptySpace min="44" max="32767" attributes="0"/>
+                                          <Component id="showPassCB" min="-2" max="-2" attributes="0"/>
+                                      </Group>
                                       <Group type="102" attributes="0">
                                           <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
-                                          <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="passwordTF" min="-2" pref="273" max="-2" attributes="0"/>
-                                              <Component id="usernameTF" min="-2" pref="273" max="-2" attributes="0"/>
-                                          </Group>
-                                      </Group>
-                                      <Group type="102" alignment="0" attributes="0">
                                           <Group type="103" groupAlignment="1" attributes="0">
-                                              <Component id="switchToEmBtn" min="-2" pref="120" max="-2" attributes="0"/>
-                                              <Component id="switchToRegBtn" min="-2" pref="140" max="-2" attributes="0"/>
-                                          </Group>
-                                          <EmptySpace min="31" max="32767" attributes="0"/>
-                                          <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="showPassCB" alignment="1" min="-2" max="-2" attributes="0"/>
-                                              <Component id="loginBtn" alignment="1" min="-2" pref="118" max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                  <Component id="passwordTF" min="-2" pref="273" max="-2" attributes="0"/>
+                                                  <Component id="usernameTF" min="-2" pref="273" max="-2" attributes="0"/>
+                                              </Group>
+                                              <Component id="loginBtn" min="-2" pref="269" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
                                   </Group>
@@ -168,10 +165,7 @@
                           <Component id="showPassCB" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="loginBtn" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="switchToEmBtn" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="loginBtn" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -281,189 +275,6 @@
                 <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="switchToRegBtnMouseEntered"/>
                 <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="switchToRegBtnMouseExited"/>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="switchToRegBtnActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JButton" name="switchToEmBtn">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Employee Mode"/>
-                <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                  <Dimension value="[240, 40]"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="switchToEmBtnActionPerformed"/>
-              </Events>
-            </Component>
-          </SubComponents>
-        </Container>
-        <Container class="javax.swing.JPanel" name="jPanel1">
-          <Properties>
-            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="ff" green="ff" red="ff" type="rgb"/>
-            </Property>
-          </Properties>
-          <Constraints>
-            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
-              <CardConstraints cardName="Login employee card"/>
-            </Constraint>
-          </Constraints>
-
-          <Layout>
-            <DimensionLayout dim="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace pref="326" max="32767" attributes="0"/>
-                              <Component id="closeBtn1" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Group type="102" attributes="0">
-                                              <Component id="switchToAdBtn" min="-2" pref="119" max="-2" attributes="0"/>
-                                              <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
-                                              <Component id="loginEmBtn" min="-2" pref="120" max="-2" attributes="0"/>
-                                          </Group>
-                                          <Component id="passwordEmTF" min="-2" pref="273" max="-2" attributes="0"/>
-                                          <Component id="usernameEmTF" min="-2" pref="273" max="-2" attributes="0"/>
-                                          <Component id="showPassEmCB" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
-                                      <Component id="lfRightTitle3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                  </Group>
-              </Group>
-            </DimensionLayout>
-            <DimensionLayout dim="1">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="closeBtn1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="108" max="-2" attributes="0"/>
-                      <Component id="lfRightTitle3" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
-                      <Component id="usernameEmTF" min="-2" pref="40" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="passwordEmTF" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="showPassEmCB" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="49" max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="loginEmBtn" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="switchToAdBtn" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
-                  </Group>
-              </Group>
-            </DimensionLayout>
-          </Layout>
-          <SubComponents>
-            <Component class="javax.swing.JButton" name="closeBtn1">
-              <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/images/icons8-x-24.png"/>
-                </Property>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="null"/>
-                </Property>
-                <Property name="borderPainted" type="boolean" value="false"/>
-                <Property name="contentAreaFilled" type="boolean" value="false"/>
-                <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                  <Color id="Hand Cursor"/>
-                </Property>
-                <Property name="focusPainted" type="boolean" value="false"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="closeBtn1ActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JTextField" name="usernameEmTF">
-              <Properties>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="99" green="99" red="99" type="rgb"/>
-                </Property>
-                <Property name="text" type="java.lang.String" value="Enter Username"/>
-                <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                  <Dimension value="[200, 40]"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="usernameEmTFFocusGained"/>
-                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="usernameEmTFFocusLost"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JPasswordField" name="passwordEmTF">
-              <Properties>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="99" green="99" red="99" type="rgb"/>
-                </Property>
-                <Property name="text" type="java.lang.String" value="Enter Password"/>
-                <Property name="echoChar" type="char" value="\u0000" containsInvalidXMLChars="true"/>
-                <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                  <Dimension value="[200, 40]"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="passwordEmTFFocusGained"/>
-                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="passwordEmTFFocusLost"/>
-                <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="passwordEmTFKeyTyped"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JButton" name="loginEmBtn">
-              <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Tahoma" size="12" style="0"/>
-                </Property>
-                <Property name="text" type="java.lang.String" value="Login"/>
-                <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                  <Color id="Hand Cursor"/>
-                </Property>
-                <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                  <Dimension value="[240, 40]"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loginEmBtnActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JLabel" name="lfRightTitle3">
-              <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Tahoma" size="20" style="1"/>
-                </Property>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="51" green="67" red="25" type="rgb"/>
-                </Property>
-                <Property name="text" type="java.lang.String" value="Employee Timekeeping"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JButton" name="switchToAdBtn">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Admin"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="switchToAdBtnActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JCheckBox" name="showPassEmCB">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Show Password"/>
-                <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                  <Color id="Hand Cursor"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showPassEmCBActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>
