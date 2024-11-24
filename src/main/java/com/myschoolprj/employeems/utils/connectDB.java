@@ -30,8 +30,8 @@ public class connectDB {
                     }
                     props.load(inputStream);
                 }
-                String url = props.getProperty("DB_URL");
-                String user = props.getProperty("USER");
+                String url = props.getProperty("URL");
+                String user = props.getProperty("USER_NAME");
                 String password = props.getProperty("PASSWORD");
 
                 // Attempt to establish a connection

@@ -14,19 +14,21 @@ public class Employee implements Serializable {
     private String address;
     private String position;
     private String role;
-    private int baseSalary;
-    private int netSalary;
+    private int roleID; // Thêm biến roleID kiểu int
+    private int positionID; // Thêm biến positionID kiểu int
+    private float baseSalary;
+    private float netSalary;
     private String title;
 
     // Constructor
     public Employee(String ID, String firstName, String lastName, String phone, String gender, Date dob, String address, String position, String role, int baseSalary, int netSalary, String title) {
-        this.ID = ID;  
+        this.ID = ID;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
         this.gender = gender;
         this.dob = dob;
-        this.address = address;        
+        this.address = address;
         this.position = position;
         this.role = role;
         this.baseSalary = baseSalary;
@@ -39,6 +41,14 @@ public class Employee implements Serializable {
     }
 
     // Getters and Setters
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -62,7 +72,7 @@ public class Employee implements Serializable {
     public void setPhone(String phone) {
         this.phone = phone;
     }
-    
+
     public String getGender() {
         return gender;
     }
@@ -70,7 +80,7 @@ public class Employee implements Serializable {
     public void setGender(String gender) {
         this.gender = gender;
     }
-    
+
     public Date getDob() {
         return dob;
     }
@@ -78,7 +88,7 @@ public class Employee implements Serializable {
     public void setDob(Date dob) {
         this.dob = dob;
     }
-    
+
     public String getAddress() {
         return address;
     }
@@ -86,7 +96,7 @@ public class Employee implements Serializable {
     public void setAddress(String address) {
         this.address = address;
     }
-    
+
     public String getPosition() {
         return position;
     }
@@ -94,7 +104,7 @@ public class Employee implements Serializable {
     public void setPosition(String position) {
         this.position = position;
     }
-    
+
     public String getRole() {
         return role;
     }
@@ -102,28 +112,41 @@ public class Employee implements Serializable {
     public void setRole(String role) {
         this.role = role;
     }
-    
-    public int getBaseSalary() {
+
+    public float getBaseSalary() {
         return baseSalary;
     }
 
-    public void setBaseSalary(int baseSalary) {
+    public void setBaseSalary(float baseSalary) {
         this.baseSalary = baseSalary;
     }
-    
-    public int getnetSalary() {
+
+    public float getNetSalary() {
         return netSalary;
     }
 
-    public void setNetSalary(int netSalary) {
+    public void setNetSalary(float netSalary) {
         this.netSalary = netSalary;
     }
-    
-    public String getTitle() {
-        return title;
+
+    // Getter cho roleID
+    public int getRoleID() {
+        return roleID;
     }
 
-    public void setNetSalary(String title) {
-        this.title = title;
+    // Setter cho roleID
+    public void setRoleID(int roleID) {
+        this.roleID = roleID;
     }
+
+    // Getter cho positionID
+    public int getPositionID() {
+        return positionID;
+    }
+
+    // Setter cho positionID
+    public void setPositionID(int positionID) {
+        this.positionID = positionID;
+    }
+
 }

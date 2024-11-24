@@ -6,7 +6,7 @@ import com.myschoolprj.employeems.utils.GradientPanels;
 import com.myschoolprj.employeems.utils.jPanelGradient2;
 import com.myschoolprj.employeems.utils.PlaceholderUtils;
 import com.myschoolprj.employeems.dao.EmployeeDAO;
-import com.myschoolprj.employeems.EmployeeSalary;
+import com.myschoolprj.employeems.model.Employee;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -28,7 +28,8 @@ public class MainForm extends javax.swing.JFrame {
 
     public MainForm() {
         initComponents();
-        
+        // tải data từ db lên bảng
+
         try {
             emDAO = new EmployeeDAO();
         } catch (SQLException e) {
@@ -38,6 +39,7 @@ public class MainForm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "An unexpected error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
+        loadDataIntoTable();
 
         // Khởi tạo Barchart
         Barchart barchart = new Barchart();
@@ -48,7 +50,56 @@ public class MainForm extends javax.swing.JFrame {
         jPanel10.revalidate(); // Cập nhật lại panel
         jPanel10.repaint(); // Vẽ lại panel
     }
-    
+
+    private void resetForm() {
+        txtEmployeeID.setText("");
+        txtFirstName.setText("");
+        txtLastName.setText("");
+        txtPhone.setText("");
+        cbPosition.setSelectedIndex(-1);
+        cbRole.setSelectedIndex(-1);
+        cbGender.setSelectedIndex(-1);
+        cbAddress.setSelectedIndex(-1);
+        jDate.setDate(null);
+    }
+
+    private void loadDataIntoTable() {
+        try {
+            // Gọi phương thức từ EmployeeDAO để lấy danh sách nhân viên
+            ArrayList<Employee> employees = emDAO.readEmployees();
+
+            // Lấy model của JTable
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            model.setRowCount(0); // Xóa tất cả các hàng hiện có trong bảng
+
+            // Duyệt qua danh sách nhân viên và thêm dữ liệu vào bảng
+            for (Employee employee : employees) {
+                // Kiểm tra và xử lý ngày tháng nếu null
+                String dobStr = (employee.getDob() != null)
+                        ? new SimpleDateFormat("dd/MM/yyyy").format(employee.getDob())
+                        : "N/A"; // Gán "N/A" nếu ngày tháng null
+
+                // Thêm một hàng mới vào bảng
+                Object[] rowData = {
+                    employee.getID(), // ID nhân viên
+                    employee.getFirstName(), // Tên
+                    employee.getLastName(), // Họ
+                    employee.getPhone(), // Số điện thoại
+                    employee.getGender(), // Giới tính
+                    dobStr, // Ngày sinh
+                    employee.getAddress(), // Địa chỉ
+                    employee.getRole(), // Tên Role
+                    employee.getPosition(), // Tên Position
+                };
+
+                model.addRow(rowData); // Thêm hàng vào JTable
+            }
+        } catch (Exception e) {
+            // Hiển thị thông báo lỗi
+            JOptionPane.showMessageDialog(this, "Error loading data: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -112,14 +163,12 @@ public class MainForm extends javax.swing.JFrame {
         bttnAdd = new javax.swing.JButton();
         bttnUpdate = new javax.swing.JButton();
         bttnDelete = new javax.swing.JButton();
-        jLabel28 = new javax.swing.JLabel();
-        cbPosition = new javax.swing.JComboBox<>();
         jDate = new com.toedter.calendar.JDateChooser();
         jLabel29 = new javax.swing.JLabel();
-        cbStatus = new javax.swing.JComboBox<>();
+        cbRole = new javax.swing.JComboBox<>();
         jLabel30 = new javax.swing.JLabel();
         jLabel34 = new javax.swing.JLabel();
-        cbPosition1 = new javax.swing.JComboBox<>();
+        cbPosition = new javax.swing.JComboBox<>();
         jPanel15 = new javax.swing.JPanel();
         jPanel16 = new javax.swing.JPanel();
         jLabel23 = new javax.swing.JLabel();
@@ -257,7 +306,7 @@ public class MainForm extends javax.swing.JFrame {
                 .addComponent(home_button, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(add_button)
-                .addGap(0, 4, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(salary_button, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -520,6 +569,24 @@ public class MainForm extends javax.swing.JFrame {
 
         searchTF.setForeground(new java.awt.Color(153, 153, 153));
         searchTF.setText("Search");
+        searchTF.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                searchTFFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                searchTFFocusLost(evt);
+            }
+        });
+        searchTF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchTFActionPerformed(evt);
+            }
+        });
+        searchTF.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                searchTFKeyReleased(evt);
+            }
+        });
 
         jTable1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -527,14 +594,14 @@ public class MainForm extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Employee ID", "First name", "Last name", "Phone #", "Gender", "Date of birth", "Address", "Role", "Position", "Title"
+                "Employee ID", "First name", "Last name", "Phone #", "Gender", "Date of birth", "Address", "Role", "Position"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -581,12 +648,11 @@ public class MainForm extends javax.swing.JFrame {
                     .addComponent(jLabel14)
                     .addComponent(lblStatus))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         jPanel13.setBorder(new com.myschoolprj.employeems.utils.border(5,3)); // Thay đổi bán kính bo góc nếu cần
-        jPanel13.setBackground(new java.awt.Color(255, 255, 255));
         jPanel13.setForeground(new java.awt.Color(0, 0, 0));
 
         jLabel15.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -639,23 +705,13 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
 
-        jLabel28.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel28.setText("Title:");
-
-        cbPosition.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Frontend Developer", "Backend Developer", "Full-Stack Developer", "Mobile Developer", "Tester", "Data Engineer", " " }));
-        cbPosition.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbPositionActionPerformed(evt);
-            }
-        });
-
         jLabel29.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel29.setText("Date:");
 
-        cbStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Staff", "Leader" }));
-        cbStatus.addActionListener(new java.awt.event.ActionListener() {
+        cbRole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Staff", "Leader" }));
+        cbRole.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbStatusActionPerformed(evt);
+                cbRoleActionPerformed(evt);
             }
         });
 
@@ -665,10 +721,10 @@ public class MainForm extends javax.swing.JFrame {
         jLabel34.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel34.setText("Position:");
 
-        cbPosition1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Intern", "Fresher", "Junior", "Middle", "Senior" }));
-        cbPosition1.addActionListener(new java.awt.event.ActionListener() {
+        cbPosition.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Software Developer", "Tester/QA" }));
+        cbPosition.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbPosition1ActionPerformed(evt);
+                cbPositionActionPerformed(evt);
             }
         });
 
@@ -702,39 +758,35 @@ public class MainForm extends javax.swing.JFrame {
                             .addGroup(jPanel13Layout.createSequentialGroup()
                                 .addComponent(jLabel30)
                                 .addGap(18, 18, 18)
-                                .addComponent(cbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cbRole, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(86, 86, 86)))
-                        .addGap(41, 41, 41)
-                        .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel13Layout.createSequentialGroup()
-                                        .addComponent(jLabel16)
-                                        .addGap(12, 12, 12)
-                                        .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel13Layout.createSequentialGroup()
-                                        .addGap(4, 4, 4)
-                                        .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabel34)
-                                            .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(7, 7, 7)
-                                        .addComponent(cbAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
-                                    .addComponent(jLabel29)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(jDate, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel13Layout.createSequentialGroup()
-                                .addGap(23, 23, 23)
-                                .addComponent(jLabel28)
-                                .addGap(15, 15, 15)
-                                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cbPosition1, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cbPosition, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(46, 46, 46)
+                                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(jPanel13Layout.createSequentialGroup()
+                                            .addComponent(jLabel16)
+                                            .addGap(12, 12, 12)
+                                            .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
+                                            .addComponent(jLabel29)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                            .addComponent(jDate, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(jPanel13Layout.createSequentialGroup()
+                                        .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(cbAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(jPanel13Layout.createSequentialGroup()
+                                .addGap(52, 52, 52)
+                                .addComponent(jLabel34)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbPosition, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(36, 36, 36)))
                 .addComponent(bttnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bttnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(82, Short.MAX_VALUE))
         );
         jPanel13Layout.setVerticalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -764,7 +816,7 @@ public class MainForm extends javax.swing.JFrame {
                             .addComponent(jLabel20))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(cbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbRole, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel30)))
                     .addGroup(jPanel13Layout.createSequentialGroup()
                         .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -773,10 +825,6 @@ public class MainForm extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(cbPosition, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel28))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(cbPosition1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel34))))
                 .addGap(59, 59, 59)
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -784,7 +832,7 @@ public class MainForm extends javax.swing.JFrame {
                     .addComponent(bttnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(bttnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(bttnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(11, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
@@ -800,9 +848,10 @@ public class MainForm extends javax.swing.JFrame {
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel11Layout.createSequentialGroup()
-                .addGap(285, 285, 285)
-                .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(21, 21, 21))
         );
 
         jPanel3.add(jPanel11, "tab2");
@@ -1024,7 +1073,7 @@ public class MainForm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jPanel16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel18, javax.swing.GroupLayout.DEFAULT_SIZE, 641, Short.MAX_VALUE)
+                .addComponent(jPanel18, javax.swing.GroupLayout.DEFAULT_SIZE, 645, Short.MAX_VALUE)
                 .addGap(12, 12, 12))
         );
         jPanel15Layout.setVerticalGroup(
@@ -1074,13 +1123,350 @@ public class MainForm extends javax.swing.JFrame {
         netSalaryTF.setText("");
     }//GEN-LAST:event_clearBtnActionPerformed
 
-    private void cbPosition1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbPosition1ActionPerformed
+    private void cbPositionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbPositionActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cbPosition1ActionPerformed
+    }//GEN-LAST:event_cbPositionActionPerformed
 
     private void closeMainBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeMainBtnActionPerformed
         this.dispose();
     }//GEN-LAST:event_closeMainBtnActionPerformed
+
+    private void bttnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttnAddActionPerformed
+        // Lấy dữ liệu từ các trường nhập liệu
+        try {
+            StringBuilder sb = new StringBuilder();
+
+            Validator.checkEmptyFields(txtEmployeeID, sb, "Employee cannot be blank!");
+            Validator.checkEmptyFields(txtFirstName, sb, "First name cannot be blank!");
+            Validator.checkEmptyFields(txtLastName, sb, "Last name cannot be blank!");
+            Validator.checkValidPhone(txtPhone, sb);
+            Validator.checkEmptyComboBoxes(cbGender, sb, "Gender cannot be blank!");
+            Validator.checkEmptyComboBoxes(cbAddress, sb, "Address cannot be blank!");
+            Validator.checkEmptyComboBoxes(cbRole, sb, "Role cannot be blank!");
+            Validator.checkEmptyComboBoxes(cbPosition, sb, "Title cannot be blank!");
+            boolean AgeValid = Validator.checkValidDOB(jDate, sb);
+
+            if (sb.length() > 0) {
+                JOptionPane.showMessageDialog(this, sb.toString(), "Input Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            Date date = jDate.getDate();
+            String dateStr = "";
+
+            if (date != null) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                dateStr = dateFormat.format(date);
+            }
+
+            Employee newEmployee = new Employee();
+            EmployeeDAO xFile = new EmployeeDAO();
+            ArrayList<Employee> employees = new ArrayList<>();
+            employees.add(newEmployee);
+
+            String roleID = xFile.getRoleIDByName(cbRole.getSelectedItem().toString().trim());
+            String positionID = xFile.getPositionIDByName(cbPosition.getSelectedItem().toString().trim());
+
+            // Kiểm tra nếu không tìm thấy
+            if (roleID == null) {
+                JOptionPane.showMessageDialog(this, "Role does not exist in the database!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (positionID == null) {
+                JOptionPane.showMessageDialog(this, "Position does not exist in the database!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            String employeeID = txtEmployeeID.getText().trim();
+            String firstName = txtFirstName.getText().trim();
+            String lastName = txtLastName.getText().trim();
+            String gender = cbGender.getSelectedItem().toString().trim();
+            String roles = cbRole.getSelectedItem().toString().trim();
+
+            String phone = txtPhone.getText().trim();
+            String address = cbAddress.getSelectedItem().toString().trim();
+            String position = cbPosition.getSelectedItem().toString().trim();
+            float salary = 0;
+
+            // lưu thông tin vào đối tượng newEmployees đã tạo
+            newEmployee.setID(txtEmployeeID.getText().trim());
+            newEmployee.setFirstName(txtFirstName.getText().trim());
+            newEmployee.setLastName(txtLastName.getText().trim());
+            newEmployee.setPhone(txtPhone.getText().trim());
+            newEmployee.setGender(cbGender.getSelectedItem().toString().trim());
+            newEmployee.setDob(jDate.getDate());
+            newEmployee.setAddress(cbAddress.getSelectedItem().toString().trim());
+            newEmployee.setRole(roleID); // Lưu role_id
+            newEmployee.setPosition(positionID); // Lưu pos_id
+
+            // khoi tao EmployeeDAO de ghi du lieu
+            xFile.writeEmployee(employees);
+
+            Object[] EmployeerowData = {employeeID, firstName, lastName, phone, gender, dateStr, address, roles, position};
+            // Thêm dữ liệu vào bảng
+            DefaultTableModel model1 = (DefaultTableModel) jTable1.getModel(); // Lấy tableModel từ jTable1
+            model1.addRow(EmployeerowData); // Thêm hàng mới vào tableModel
+
+            resetForm();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }
+        lblStatus.setText("Status: Add new");
+
+    }//GEN-LAST:event_bttnAddActionPerformed
+
+    private void cbRoleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbRoleActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbRoleActionPerformed
+
+    private void bttnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttnUpdateActionPerformed
+
+
+      // TODO add your handling code here:
+        try {
+            StringBuilder sb = new StringBuilder();
+
+            // Kiểm tra các trường nhập liệu
+            Validator.checkEmptyFields(txtEmployeeID, sb, "Employee ID cannot be blank!");
+            Validator.checkEmptyFields(txtFirstName, sb, "First name cannot be blank!");
+            Validator.checkEmptyFields(txtLastName, sb, "Last name cannot be blank!");
+            Validator.checkValidPhone(txtPhone, sb);
+            Validator.checkEmptyComboBoxes(cbGender, sb, "Gender cannot be blank!");
+            Validator.checkEmptyComboBoxes(cbAddress, sb, "Address cannot be blank!");
+            Validator.checkEmptyComboBoxes(cbRole, sb, "Role cannot be blank!");
+            Validator.checkEmptyComboBoxes(cbPosition, sb, "Position cannot be blank!");
+            boolean isAgeValid = Validator.checkValidDOB(jDate, sb);
+
+            if (sb.length() > 0) {
+                JOptionPane.showMessageDialog(this, sb.toString(), "Input Error", JOptionPane.ERROR_MESSAGE);
+                return; // Dừng thực hiện nếu có lỗi
+            }
+
+            // Lấy ngày từ jDate
+            Date date = jDate.getDate();
+            String dateStr = "";
+            if (date != null) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                dateStr = dateFormat.format(date);
+            }
+
+            // Lấy Role ID và Position ID
+            EmployeeDAO xFile = new EmployeeDAO();
+            String roleID = xFile.getRoleIDByName(cbRole.getSelectedItem().toString().trim());
+            String positionID = xFile.getPositionIDByName(cbPosition.getSelectedItem().toString().trim());
+
+            // Kiểm tra tính hợp lệ của Role ID và Position ID
+            if (roleID == null || positionID == null) {
+                JOptionPane.showMessageDialog(this, "Invalid Role or Position!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Tạo đối tượng Employee và gán giá trị
+            Employee updatedEmployee = new Employee();
+            updatedEmployee.setID(txtEmployeeID.getText().trim());
+            updatedEmployee.setFirstName(txtFirstName.getText().trim());
+            updatedEmployee.setLastName(txtLastName.getText().trim());
+            updatedEmployee.setPhone(txtPhone.getText().trim());
+            updatedEmployee.setGender(cbGender.getSelectedItem().toString().trim());
+            updatedEmployee.setDob(date);
+            updatedEmployee.setAddress(cbAddress.getSelectedItem().toString().trim());
+            updatedEmployee.setRole(roleID);
+            updatedEmployee.setPosition(positionID);
+
+            // Cập nhật trong cơ sở dữ liệu
+            xFile.updateEmployee(updatedEmployee);
+
+            // Cập nhật dữ liệu trong JTable
+            int selectedRow = jTable1.getSelectedRow();
+            if (selectedRow >= 0) {
+                DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+                model.setValueAt(txtEmployeeID.getText().trim(), selectedRow, 0);
+                model.setValueAt(txtFirstName.getText().trim(), selectedRow, 1);
+                model.setValueAt(txtLastName.getText().trim(), selectedRow, 2);
+                model.setValueAt(txtPhone.getText().trim(), selectedRow, 3);
+                model.setValueAt(cbGender.getSelectedItem().toString().trim(), selectedRow, 4);
+                model.setValueAt(dateStr, selectedRow, 5);
+                model.setValueAt(cbAddress.getSelectedItem().toString().trim(), selectedRow, 6);
+                model.setValueAt(cbRole.getSelectedItem().toString().trim(), selectedRow, 7);
+                model.setValueAt(cbPosition.getSelectedItem().toString().trim(), selectedRow, 8);
+
+                JOptionPane.showMessageDialog(this, "Employee updated successfully!");
+            } else {
+                JOptionPane.showMessageDialog(this, "Please select a row to update!", "Update Error",
+                        JOptionPane.WARNING_MESSAGE);
+            }
+
+            // Xóa dữ liệu trong các trường nhập sau khi cập nhật
+            resetForm();
+            lblStatus.setText("Status: Updated");
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }
+    }//GEN-LAST:event_bttnUpdateActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        // Hiển thị trạng thái "Update"
+        lblStatus.setText("Status: Update");
+
+        // Lấy hàng được chọn trong JTable
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow >= 0) {
+            // Lấy dữ liệu từ từng cột của hàng được chọn
+            String employeeID = jTable1.getValueAt(selectedRow, 0).toString(); // Employee ID
+            String firstName = jTable1.getValueAt(selectedRow, 1).toString(); // First Name
+            String lastName = jTable1.getValueAt(selectedRow, 2).toString();  // Last Name
+            String phone = jTable1.getValueAt(selectedRow, 3).toString();     // Phone
+            String gender = jTable1.getValueAt(selectedRow, 4).toString();   // Gender
+            String dateStr = jTable1.getValueAt(selectedRow, 5).toString();  // Date of Birth
+            String address = jTable1.getValueAt(selectedRow, 6).toString();  // Address
+            String roleName = jTable1.getValueAt(selectedRow, 7).toString(); // Role Name
+            String positionName = jTable1.getValueAt(selectedRow, 8).toString(); // Position Name
+
+            // Điền dữ liệu vào các trường nhập liệu
+            txtEmployeeID.setText(employeeID);
+            txtFirstName.setText(firstName);
+            txtLastName.setText(lastName);
+            txtPhone.setText(phone);
+            cbGender.setSelectedItem(gender);
+            cbAddress.setSelectedItem(address);
+
+            // Chuyển đổi tên Role và Position thành ID nếu cần
+            try {
+                String roleID = emDAO.getRoleIDByName(roleName);
+                String positionID = emDAO.getPositionIDByName(positionName);
+                cbRole.setSelectedItem(roleName); // Hiển thị tên Role trong ComboBox
+                cbPosition.setSelectedItem(positionName); // Hiển thị tên Position trong ComboBox
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error fetching Role/Position: " + e.getMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+            // Chuyển đổi chuỗi ngày sang kiểu Date
+            try {
+                Date date = new SimpleDateFormat("dd/MM/yyyy").parse(dateStr);
+                jDate.setDate(date); // Điền ngày vào JDateChooser
+            } catch (ParseException e) {
+                e.printStackTrace(); // Xử lý lỗi nếu ngày không hợp lệ
+            }
+        }
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    private void bttnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttnClearActionPerformed
+        // TODO add your handling code here:
+        resetForm();
+    }//GEN-LAST:event_bttnClearActionPerformed
+
+    private void bttnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttnDeleteActionPerformed
+        // TODO add your handling code here:
+        // Lấy chỉ số hàng được chọn trong bảng
+        int selectedRow = jTable1.getSelectedRow();
+
+        // Kiểm tra xem có hàng nào được chọn không
+        if (selectedRow >= 0) {
+            // Xác nhận trước khi xóa
+            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this record?",
+                    "Confirm Delete", JOptionPane.YES_NO_OPTION);
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                // Lấy Employee ID từ hàng đã chọn
+                String employeeID = jTable1.getValueAt(selectedRow, 0).toString(); // Giả sử ID ở cột đầu tiên
+
+                // Xóa bản ghi khỏi DefaultTableModel (hiển thị trên giao diện)
+                DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+                model.removeRow(selectedRow);
+
+                // Xóa bản ghi khỏi cơ sở dữ liệu
+                try {
+                    EmployeeDAO employeeDAO = new EmployeeDAO(); // Tạo đối tượng EmployeeDAO
+                    employeeDAO.deleteEmployee(employeeID); // Gọi phương thức xóa trong EmployeeDAO
+                    JOptionPane.showMessageDialog(this, "Record deleted successfully.");
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(this, "Error deleting record from database: " + e.getMessage(),
+                            "Delete Error", JOptionPane.ERROR_MESSAGE);
+                }
+
+                // Xóa dữ liệu trong các trường nhập liệu
+                resetForm();
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a row to delete!", "Delete Error",
+                    JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_bttnDeleteActionPerformed
+
+    private void searchTFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchTFActionPerformed
+        String searchID = searchTF.getText().trim();
+
+        // Kiểm tra độ dài ID
+        if (searchID.length() < 1 || searchID.length() > 6) {
+            JOptionPane.showMessageDialog(this, "ID must be between 1 and 6 characters long.", "Input Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (!searchID.isEmpty() && !searchID.equals("Search")) {
+            searchByID(searchID); // Gọi phương thức tìm kiếm với ID kiểu String
+        } else {
+            JOptionPane.showMessageDialog(this, "Please enter a valid ID to search.", "Input Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_searchTFActionPerformed
+
+private void searchByID(String id) {
+    // Xóa tất cả các hàng hiện tại trong bảng
+    DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+    model.setRowCount(0);
+
+    try {
+        EmployeeDAO xFile = new EmployeeDAO();
+        ArrayList<Employee> list = xFile.readEmployees(); // Lấy danh sách nhân viên
+        boolean found = false;
+
+        for (Employee employee : list) {
+            if (employee.getID().trim().equalsIgnoreCase(id.trim())) {
+                // Nếu tìm thấy ID, thêm vào bảng
+                Object[] rowData = {
+                    employee.getID(),
+                    employee.getFirstName(),
+                    employee.getLastName(),
+                    employee.getPhone(),
+                    employee.getGender(),
+                    new SimpleDateFormat("dd/MM/yyyy").format(employee.getDob()),
+                    employee.getAddress(),
+                    employee.getRole(), // Lấy tên Role đã có
+                    employee.getPosition() // Lấy tên Position đã có
+                };
+                model.addRow(rowData);
+                found = true;
+                break; // Thoát khỏi vòng lặp nếu đã tìm thấy
+            }
+        }
+
+        // Nếu không tìm thấy, hiển thị thông báo
+        if (!found) {
+            JOptionPane.showMessageDialog(this, "No employee found with ID: " + id, "Search Result", JOptionPane.INFORMATION_MESSAGE);
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error loading data: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
+
+    private void searchTFFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchTFFocusGained
+        // TODO add your handling code here:
+        PlaceholderUtils.handleFocusedPlaceholder(searchTF, "Search");
+    }//GEN-LAST:event_searchTFFocusGained
+
+    private void searchTFFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_searchTFFocusLost
+        // TODO add your handling code here:
+        PlaceholderUtils.handleFocusedPlaceholder(searchTF, "Search");
+    }//GEN-LAST:event_searchTFFocusLost
+
+    private void searchTFKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchTFKeyReleased
+        // TODO add your handling code here:
+        if (searchTF.getText().isEmpty()) {
+            loadDataIntoTable(); // Gọi lại phương thức để tải lại dữ liệu vào bảng
+        }  
+    }//GEN-LAST:event_searchTFKeyReleased
 
     private void home_buttonActionPerformed(java.awt.event.ActionEvent evt) {
         CardLayout cl = (CardLayout) (jPanel3.getLayout());
@@ -1097,286 +1483,36 @@ public class MainForm extends javax.swing.JFrame {
         cl.show(jPanel3, "tab3");
     }
 
-    private void bttnAddActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_bttnAddActionPerformed
-        // Lấy dữ liệu từ các trường nhập liệu
-//        try {
-//            StringBuilder sb = new StringBuilder();
-//
-//            Validator.checkEmptyFields(txtEmployeeID, sb, "Employee cannot be blank!");
-//            Validator.checkEmptyFields(txtFirstName, sb, "First name cannot be blank!");
-//            Validator.checkEmptyFields(txtLastName, sb, "Last name cannot be blank!");
-//            Validator.checkEmptyComboBoxes(cbGender, sb, "Gender cannot be blank!");
-//            Validator.checkValidPhone(txtPhone, sb);
-//            Validator.checkEmptyComboBoxes(cbPosition, sb, "Position cannot be blank!");
-//            Validator.checkEmptyComboBoxes(cbAddress, sb, "Address cannot be blank !");
-//
-//            boolean AgeValid = Validator.checkValidDOB(jDate, sb);
-//
-//            if (sb.length() > 0) {
-//                JOptionPane.showMessageDialog(this, sb.toString(), "Input Error", JOptionPane.ERROR_MESSAGE);
-//                return;
-//            }
-//            Date date = jDate.getDate();
-//            String dateStr = "";
-//
-//            if (date != null) {
-//                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-//                dateStr = dateFormat.format(date);
-//            }
-//            String employeeID = txtEmployeeID.getText().trim();
-//            String status = cbStatus.getSelectedItem().toString().trim();
-//            String firstName = txtFirstName.getText().trim();
-//            String lastName = txtLastName.getText().trim();
-//            String gender = cbGender.getSelectedItem().toString().trim();
-//            String phone = txtPhone.getText().trim();
-//            String position = cbPosition.getSelectedItem().toString().trim();
-//            String address = cbAddress.getSelectedItem().toString().trim();
-//            float salary = 0;
-//
-//            Employee newEmployee = new Employee();
-//            newEmployee.setID(employeeID);
-//            newEmployee.setStatus(status);
-//            newEmployee.setFirstName(firstName);
-//            newEmployee.setLastName(lastName);
-//            newEmployee.setGender(gender);
-//            newEmployee.setPhone(phone);
-//            newEmployee.setPosition(position);
-//            newEmployee.setAddress(address);
-//            newEmployee.setDateOfBirth(date);
-//
-//            // khoi tao EmployeeDAO de ghi du lieu
-//            EmployeeDAO xFile = new EmployeeDAO();
-//            ArrayList<Employee> employees = new ArrayList<>();
-//            employees.add(newEmployee);
-//
-//            xFile.writeEmployees(employees);
-//
-//            Object[] EmployeerowData = {employeeID, status, firstName, lastName, gender, phone, address, position,
-//                dateStr};
-//            // Thêm dữ liệu vào bảng
-//            DefaultTableModel model1 = (DefaultTableModel) jTable1.getModel(); // Lấy tableModel từ jTable1
-//            model1.addRow(EmployeerowData); // Thêm hàng mới vào tableModel
-//
-//            // Tạo danh sách salaries
-//            ArrayList<EmployeeSalary> salaries = new ArrayList<>();
-//            EmployeeSalary newSalary = new EmployeeSalary(employeeID, firstName, lastName, salary);
-//            salaries.add(newSalary);
-//
-//            // Ghi dữ liệu vào bảng employees_salaries trong cơ sở dữ liệu
-//            xFile.writeSalary(salaries);
-//
-//            Object[] SalaryrowData = {employeeID, firstName, lastName, salary};
-//            // Thêm dữ liệu vào bảng
-//            DefaultTableModel model2 = (DefaultTableModel) tbl_salary.getModel();
-//            model2.addRow(SalaryrowData); // Thêm hàng mới vào tableModel
-//
-//            txtEmployeeID.setText("");
-//            txtFirstName.setText("");
-//            txtLastName.setText("");
-//            txtPhone.setText("");
-//            cbStatus.setSelectedItem(null);
-//            cbGender.setSelectedItem(null);
-//            cbAddress.setSelectedItem(null);
-//            cbPosition.setSelectedItem(null);
-//            jDate.setDate(null);
-//        } catch (Exception e) {
-//            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
-//        }
-//        lblStatus.setText("Status: Add new");
-    }
-
-    private void bttnUpdateActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_bttnUpdateActionPerformed
-//        // TODO add your handling code here:
-//        try {
-//            StringBuilder sb = new StringBuilder();
-//
-//            // Kiểm tra các trường nhập liệu
-//            Validator.checkEmptyFields(txtEmployeeID, sb, "Employee ID cannot be blank !");
-//            Validator.checkEmptyFields(txtFirstName, sb, "First name cannot be blank !");
-//            Validator.checkEmptyFields(txtLastName, sb, "Last name cannot be blank !");
-//            Validator.checkEmptyComboBoxes(cbGender, sb, "Gender cannot be blank !");
-//            Validator.checkValidPhone(txtPhone, sb);
-//            Validator.checkEmptyComboBoxes(cbStatus, sb, "Status cannot be blank !");
-//            Validator.checkEmptyComboBoxes(cbPosition, sb, "Position cannot be blank !");
-//            Validator.checkEmptyComboBoxes(cbAddress, sb, "Address cannot be blank !");
-//            boolean isAgeValid = Validator.checkValidDOB(jDate, sb);
-//
-//            if (sb.length() > 0) {
-//                JOptionPane.showMessageDialog(this, sb.toString(), "Input Error", JOptionPane.ERROR_MESSAGE);
-//                return; // Dừng thực hiện nếu có lỗi
-//            }
-//
-//            // Lấy thông tin từ các trường nhập liệu
-//            String employeeID = txtEmployeeID.getText();
-//            String firstName = txtFirstName.getText();
-//            String lastName = txtLastName.getText();
-//            String gender = cbGender.getSelectedItem().toString();
-//            String phone = txtPhone.getText();
-//            String status = cbStatus.getSelectedItem().toString();
-//            String position = cbPosition.getSelectedItem().toString();
-//            String address = cbAddress.getSelectedItem().toString();
-//            java.util.Date date = jDate.getDate(); // Lấy ngày từ jDate
-//
-//            // Cập nhật hàng trong bảng
-//            int selectedRow = jTable1.getSelectedRow();
-//
-//            if (selectedRow >= 0) {
-//                DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-//                model.setValueAt(employeeID, selectedRow, 0);
-//                model.setValueAt(status, selectedRow, 1);
-//                model.setValueAt(firstName, selectedRow, 2);
-//                model.setValueAt(lastName, selectedRow, 3);
-//                model.setValueAt(gender, selectedRow, 4);
-//                model.setValueAt(phone, selectedRow, 5);
-//                model.setValueAt(address, selectedRow, 6);
-//                model.setValueAt(position, selectedRow, 7);
-//                model.setValueAt(date != null ? new SimpleDateFormat("dd/MM/yyyy").format(date) : "", selectedRow, 8);
-//
-//                // Cập nhật thông tin trong cơ sở dữ liệu
-//                Employee employee = new Employee();
-//                employee.setID(employeeID);
-//                employee.setStatus(status);
-//                employee.setFirstName(firstName);
-//                employee.setLastName(lastName);
-//                employee.setGender(gender);
-//                employee.setPhone(phone);
-//                employee.setAddress(address);
-//                employee.setPosition(position);
-//
-//                // Chuyển đổi ngày sang java.sql.Date
-//                if (date != null) {
-//                    java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-//                    employee.setDateOfBirth(sqlDate);
-//                } else {
-//                    employee.setDateOfBirth(null); // Nếu ngày là null
-//                }
-//
-//                // Gọi phương thức cập nhật trong lớp EmployeeDAO
-//                EmployeeDAO xFile = new EmployeeDAO();
-//                xFile.updateEmployee(employee);
-//
-//                JOptionPane.showMessageDialog(this, "Employee updated successfully!");
-//            } else {
-//                JOptionPane.showMessageDialog(this, "Please select a row to update!", "Update Error",
-//                        JOptionPane.WARNING_MESSAGE);
-//            }
-//
-//            // Xóa dữ liệu trong các trường nhập sau khi cập nhật
-//            txtEmployeeID.setText("");
-//            txtFirstName.setText("");
-//            txtLastName.setText("");
-//            txtPhone.setText("");
-//            cbStatus.setSelectedItem(null);
-//            cbGender.setSelectedItem(null);
-//            cbAddress.setSelectedItem(null);
-//            cbPosition.setSelectedItem(null);
-//            jDate.setDate(null);
-//        } catch (Exception e) {
-//            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
-//        }
-    }// GEN-LAST:event_bttnUpdateActionPerformed
-
-    private void bttnDeleteActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_bttnDeleteActionPerformed
-        // TODO add your handling code here:
-        // Lấy chỉ số hàng được chọn
-        int selectedRow = jTable1.getSelectedRow();
-
-        // Kiểm tra xem có hàng nào được chọn không
-        if (selectedRow >= 0) {
-            // Xác nhận trước khi xóa
-            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this record?",
-                    "Confirm Delete", JOptionPane.YES_NO_OPTION);
-
-            if (confirm == JOptionPane.YES_OPTION) {
-                // Lấy ID của nhân viên từ hàng được chọn
-                String employeeId = jTable1.getValueAt(selectedRow, 0).toString(); // Giả sử ID ở cột đầu tiên
-
-                // Xóa hàng khỏi DefaultTableModel
-                DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-                model.removeRow(selectedRow);
-
-                // Xóa bản ghi khỏi cơ sở dữ liệu
-                try {
-                    EmployeeDAO xFile = new EmployeeDAO(); // Tạo đối tượng EmployeeDAO để truy cập cơ sở dữ liệu
-                    xFile.deleteEmployee(employeeId); // Gọi phương thức xóa
-                    JOptionPane.showMessageDialog(this, "Record deleted successfully.");
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(this, "Error deleting record from database: " + e.getMessage(),
-                            "Delete Error", JOptionPane.ERROR_MESSAGE);
-                }
-                txtEmployeeID.setText("");
-                txtFirstName.setText("");
-                txtLastName.setText("");
-                txtPhone.setText("");
-                cbStatus.setSelectedItem(null);
-                cbGender.setSelectedItem(null);
-                cbAddress.setSelectedItem(null);
-                cbPosition.setSelectedItem(null);
-                jDate.setDate(null);
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Please select a row to delete!", "Delete Error",
-                    JOptionPane.WARNING_MESSAGE);
-        }
-
-    }// GEN-LAST:event_bttnDeleteActionPerformed
-
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-        JFileChooser fileChooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files", "jpg", "jpeg", "png", "gif");
-        fileChooser.setFileFilter(filter);
-
-        // Hiển thị hộp thoại chọn tệp
-        int result = fileChooser.showOpenDialog(this);
-        if (result == JFileChooser.APPROVE_OPTION) {
-            // Lấy tệp đã chọn
-            File selectedFile = fileChooser.getSelectedFile();
-            try {
-                // Tạo ImageIcon từ tệp đã chọn
-                ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath());
-
-                // Tùy chọn: Thay đổi kích thước hình ảnh để vừa với JLabel
-                Image img = icon.getImage();
-                Image scaledImg = img.getScaledInstance(106, 106, Image.SCALE_SMOOTH); // Thay đổi kích thước theo ý
-                // muốn
-//                lblImage.setIcon(new ImageIcon(scaledImg)); // Đặt hình ảnh đã thay đổi kích thước vào JLabel
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Error loading image: " + ex.getMessage());
-            }
-        }
+//        // TODO add your handling code here:
+//        JFileChooser fileChooser = new JFileChooser();
+//        FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files", "jpg", "jpeg", "png", "gif");
+//        fileChooser.setFileFilter(filter);
+//
+//        // Hiển thị hộp thoại chọn tệp
+//        int result = fileChooser.showOpenDialog(this);
+//        if (result == JFileChooser.APPROVE_OPTION) {
+//            // Lấy tệp đã chọn
+//            File selectedFile = fileChooser.getSelectedFile();
+//            try {
+//                // Tạo ImageIcon từ tệp đã chọn
+//                ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath());
+//
+//                // Tùy chọn: Thay đổi kích thước hình ảnh để vừa với JLabel
+//                Image img = icon.getImage();
+//                Image scaledImg = img.getScaledInstance(106, 106, Image.SCALE_SMOOTH); // Thay đổi kích thước theo ý
+//                // muốn
+////                lblImage.setIcon(new ImageIcon(scaledImg)); // Đặt hình ảnh đã thay đổi kích thước vào JLabel
+//            } catch (Exception ex) {
+//                JOptionPane.showMessageDialog(this, "Error loading image: " + ex.getMessage());
+//            }
+//        }
     }// GEN-LAST:event_jButton3ActionPerformed
-
-    private void bttnClearActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_bttnClearActionPerformed
-        // TODO add your handling code here:
-        txtEmployeeID.setText("");
-        txtFirstName.setText("");
-        txtLastName.setText("");
-        txtPhone.setText("");
-        cbStatus.setSelectedItem(null);
-        cbGender.setSelectedItem(null);
-        cbAddress.setSelectedItem(null);
-        cbPosition.setSelectedItem(null);
-        jDate.setDate(null);
-        lblStatus.setText("Status: Add new");
-    }// GEN-LAST:event_bttnClearActionPerformed
-
-    private void searchTFFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_searchTFFocusGained
-        PlaceholderUtils.handleFocusedPlaceholder(searchTF, "Search");
-    }// GEN-LAST:event_searchTFFocusGained
-
-    private void searchTFFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_searchTFFocusLost
-        PlaceholderUtils.handleFocusedPlaceholder(searchTF, "Search");
-    }// GEN-LAST:event_searchTFFocusLost
 
     private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowGainedFocus
         // TODO add your handling code here:
         this.requestFocusInWindow();
     }// GEN-LAST:event_formWindowGainedFocus
-
-    private void cbPositionActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cbPositionActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_cbPositionActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
@@ -1384,98 +1520,6 @@ public class MainForm extends javax.swing.JFrame {
         lg.setVisible(true);
         this.dispose();
     }// GEN-LAST:event_jButton1ActionPerformed
-
-    private void txt_sActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txt_sActionPerformed
-        // TODO add your handling code here:
-        String searchID = searchTF.getText().trim(); // Lấy ID từ trường tìm kiếm
-        if (!searchID.isEmpty() && !searchID.equals("Search")) {
-            searchByID(searchID); // Gọi phương thức tìm kiếm
-        } else {
-            JOptionPane.showMessageDialog(this, "Please enter a valid ID to search.", "Input Error",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-    }// GEN-LAST:event_txt_sActionPerformed
-
-    private void searchByID(String id) {
-        // Xóa tất cả các hàng hiện tại trong bảng
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        model.setRowCount(0);
-
-//        try {
-//            // Gọi phương thức không tĩnh từ thể hiện của EmployeeDAO để lấy danh sách nhân viên
-//            ArrayList<Employee> list = xFile.readEmployees(); // Giả sử bạn có phương thức loadData để lấy danh
-//            // sách nhân viên
-//            boolean found = false; // Biến để kiểm tra xem có tìm thấy không
-//
-//            for (Employee employee : list) {
-//                if (employee.getID().trim().equalsIgnoreCase(id.trim())) {
-//                    // Nếu tìm thấy ID, thêm vào bảng
-//                    Object[] rowData = {
-//                        employee.getID(),
-//                        employee.getStatus(),
-//                        employee.getFirstName(),
-//                        employee.getLastName(),
-//                        employee.getGender(),
-//                        employee.getPhone(),
-//                        employee.getPosition(),
-//                        employee.getAddress(),
-//                        new SimpleDateFormat("dd/MM/yyyy").format(employee.getDateOfBirth())
-//                    };
-//                    model.addRow(rowData);
-//                    found = true; // Đánh dấu là đã tìm thấy
-//                    break;
-//                }
-//            }
-//
-//            // Nếu không tìm thấy, có thể hiển thị thông báo
-//            if (!found) {
-//                JOptionPane.showMessageDialog(this, "No employee found with ID: " + id, "Search Result",
-//                        JOptionPane.INFORMATION_MESSAGE);
-//            }
-//        } catch (Exception e) {
-//            JOptionPane.showMessageDialog(this, "Error loading data: " + e.getMessage(), "Error",
-//                    JOptionPane.ERROR_MESSAGE);
-//        }
-    }
-
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jTable1MouseClicked
-        // TODO add your handling code here:
-        lblStatus.setText("Status: Update");
-
-        int selectedRow = jTable1.getSelectedRow();
-        if (selectedRow >= 0) {
-            // Lấy dữ liệu từ hàng đã chọn
-            String employeeID = jTable1.getValueAt(selectedRow, 0).toString();
-            String status = jTable1.getValueAt(selectedRow, 1).toString();
-            String firstName = jTable1.getValueAt(selectedRow, 2).toString();
-            String lastName = jTable1.getValueAt(selectedRow, 3).toString();
-            String gender = jTable1.getValueAt(selectedRow, 4).toString();
-            String phone = jTable1.getValueAt(selectedRow, 5).toString();
-            String address = jTable1.getValueAt(selectedRow, 6).toString();
-            String position = jTable1.getValueAt(selectedRow, 7).toString();
-            String dateStr = jTable1.getValueAt(selectedRow, 8).toString();
-
-            // Điền dữ liệu vào các trường nhập liệu
-            txtEmployeeID.setText(employeeID);
-            cbStatus.setSelectedItem(status);
-            txtFirstName.setText(firstName);
-            txtLastName.setText(lastName);
-            cbGender.setSelectedItem(gender);
-            txtPhone.setText(phone);
-            cbPosition.setSelectedItem(position);
-            cbAddress.setSelectedItem(address);
-            try {
-                Date date = new SimpleDateFormat("dd/MM/yyyy").parse(dateStr);
-                jDate.setDate(date);
-            } catch (ParseException e) {
-                e.printStackTrace(); // Xử lý lỗi nếu cần
-            }
-        }
-    }// GEN-LAST:event_jTable1MouseClicked
-
-    private void cbStatusActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cbStatusActionPerformed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_cbStatusActionPerformed
 
     private void txt_s1FocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txt_s1FocusGained
         // TODO add your handling code here:
@@ -1496,33 +1540,23 @@ public class MainForm extends javax.swing.JFrame {
     }// GEN-LAST:event_txt_s1FocusLost
 
     private void tbl_salaryMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_tbl_salaryMouseClicked
-        // TODO add your handling code here:
-        int selectedRow = tbl_salary.getSelectedRow();
-        if (selectedRow >= 0) {
-            // Lấy dữ liệu từ hàng đã chọn
-            String id = tbl_salary.getValueAt(selectedRow, 0).toString(); // Giả sử ID ở cột 0
-            String first_name = tbl_salary.getValueAt(selectedRow, 1).toString(); // Giả sử tên đầu tiên ở cột 1
-            String last_name = tbl_salary.getValueAt(selectedRow, 2).toString(); // Giả sử tên cuối cùng ở cột 2
-            String salary = tbl_salary.getValueAt(selectedRow, 3).toString(); // Giả sử lương ở cột 3
-
-            // Điền dữ liệu vào các trường nhập liệu
-            idTF.setText(id);
-            firstnameTF.setText(first_name);
-            lastnameTF.setText(last_name);
-            baseSalaryTF.setText(salary);
-        }
+//        // TODO add your handling code here:
+//        int selectedRow = tbl_salary.getSelectedRow();
+//        if (selectedRow >= 0) {
+//            // Lấy dữ liệu từ hàng đã chọn
+//            String id = tbl_salary.getValueAt(selectedRow, 0).toString(); // Giả sử ID ở cột 0
+//            String first_name = tbl_salary.getValueAt(selectedRow, 1).toString(); // Giả sử tên đầu tiên ở cột 1
+//            String last_name = tbl_salary.getValueAt(selectedRow, 2).toString(); // Giả sử tên cuối cùng ở cột 2
+//            String salary = tbl_salary.getValueAt(selectedRow, 3).toString(); // Giả sử lương ở cột 3
+//
+//            // Điền dữ liệu vào các trường nhập liệu
+//            idTF.setText(id);
+//            firstnameTF.setText(first_name);
+//            lastnameTF.setText(last_name);
+//            baseSalaryTF.setText(salary);
+//        }
     }// GEN-LAST:event_tbl_salaryMouseClicked
 
-    private void txt_sKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txt_sKeyPressed
-        // TODO add your handling code here:
-    }// GEN-LAST:event_txt_sKeyPressed
-
-    private void txt_sKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txt_sKeyReleased
-        // TODO add your handling code here:
-//        if (searchTF.getText().isEmpty()) {
-//            loadDataIntoTable(); // Gọi lại phương thức để tải lại dữ liệu vào bảng
-//        }
-    }// GEN-LAST:event_txt_sKeyReleased
 
     private void txt_s1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txt_s1ActionPerformed
         // TODO add your handling code here:
@@ -1605,8 +1639,7 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cbAddress;
     private javax.swing.JComboBox<String> cbGender;
     private javax.swing.JComboBox<String> cbPosition;
-    private javax.swing.JComboBox<String> cbPosition1;
-    private javax.swing.JComboBox<String> cbStatus;
+    private javax.swing.JComboBox<String> cbRole;
     private javax.swing.JButton clearBtn;
     private javax.swing.JButton closeMainBtn;
     private javax.swing.JTextField coefTF;
@@ -1633,7 +1666,6 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel27;
-    private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
