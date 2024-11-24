@@ -3,7 +3,7 @@ package com.myschoolprj.employeems.model;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Employee implements Serializable {
+public class Employee {
 
     private String ID;
     private String firstName;
@@ -15,11 +15,14 @@ public class Employee implements Serializable {
     private String position;
     private String role;
     private int baseSalary;
-    private int netSalary;
-    private String title;
+    private int netSalary;    
+    private float allowanceLevel;
+    private float coefLevel;
+    private int posID;
+    private int roleID;
 
     // Constructor
-    public Employee(String ID, String firstName, String lastName, String phone, String gender, Date dob, String address, String position, String role, int baseSalary, int netSalary, String title) {
+    public Employee(String ID, String firstName, String lastName, String phone, String gender, Date dob, String address, String position, String role, int baseSalary, int netSalary, int posID, int roleID) {
         this.ID = ID;  
         this.firstName = firstName;
         this.lastName = lastName;
@@ -30,12 +33,21 @@ public class Employee implements Serializable {
         this.position = position;
         this.role = role;
         this.baseSalary = baseSalary;
-        this.netSalary = netSalary;
-        this.title = title;
+        this.netSalary = netSalary;    
+        this.posID = posID;
+        this.roleID = roleID;
     }
 
     // Default constructor
     public Employee() {
+    }
+    
+    public String getID() {
+        return ID;
+    }
+    
+    public void setID(String id) {
+        this.ID = id;
     }
 
     // Getters and Setters
@@ -95,12 +107,28 @@ public class Employee implements Serializable {
         this.position = position;
     }
     
+    public int getPositionID() {
+        return posID;
+    }
+    
+    public void setPositionID(int posID) {
+        this.posID = posID;
+    }
+    
     public String getRole() {
         return role;
     }
 
     public void setRole(String role) {
         this.role = role;
+    }
+    
+    public int getRoleID() {
+        return roleID;
+    }
+    
+    public void setRoleID(int roleID) {
+        this.roleID = roleID;
     }
     
     public int getBaseSalary() {
@@ -111,7 +139,7 @@ public class Employee implements Serializable {
         this.baseSalary = baseSalary;
     }
     
-    public int getnetSalary() {
+    public int getNetSalary() {
         return netSalary;
     }
 
@@ -119,11 +147,19 @@ public class Employee implements Serializable {
         this.netSalary = netSalary;
     }
     
-    public String getTitle() {
-        return title;
+    public void setAllowanceLevel(float alLevel) {
+        this.allowanceLevel = alLevel;
     }
-
-    public void setNetSalary(String title) {
-        this.title = title;
+    
+    public float getAllowanceLevel() {
+        return allowanceLevel;
+    }
+    
+    public void setCoefLevel(float coefLevel) {
+        this.coefLevel = coefLevel;
+    }
+    
+    public float getCoefLevel() {
+        return coefLevel;
     }
 }

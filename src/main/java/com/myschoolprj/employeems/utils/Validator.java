@@ -2,6 +2,7 @@ package com.myschoolprj.employeems.utils;
 
 import com.toedter.calendar.JDateChooser;
 import java.awt.*;
+import java.sql.SQLException;
 import javax.swing.*;
 import java.util.Calendar;
 import java.util.Date;
@@ -37,13 +38,13 @@ public class Validator {
         String specialCharsPattern = "[$&+,:;=?@#|'<>.^*()%!\\[\\]-]";
 
         // Check for special characters in the field text
-        if (!checkEmptyFields(tf, sb, msg)) {            
+        if (!checkEmptyFields(tf, sb, msg)) {
             return false;
         }
-        
+
         if (tf.getText().matches(".*" + specialCharsPattern + ".*")) {
-            String errorMessage = "No special characters within username/password, please!\n";
-            
+            String errorMessage = "No special characters, please!\n";
+
             if (!sb.toString().contains(errorMessage)) {
                 sb.append(errorMessage);
             }
@@ -56,7 +57,7 @@ public class Validator {
 
     public static boolean checkValidPhone(JTextField tf, StringBuilder sb) {
         // check emptiness
-        if (!Validator.checkEmptyFields(tf, sb, "Do not leave Phone Number blank.")) {
+        if (!checkEmptyFields(tf, sb, "Do not leave Phone Number blank.")) {
             return false;
         }
         String phoneNumber = tf.getText().trim();
@@ -64,10 +65,10 @@ public class Validator {
         // check valid length and format
         if (phoneNumber.length() != 10 && !phoneNumber.matches("^\\+\\d{1,3}[- ]?\\d{10}$")) {
             sb.append("Phone number must be 10 digits long or in the format +[country code]-XXXXXXXXXX!\n");
-            tf.setBackground(Color.WHITE);
+            tf.setBackground(Color.decode("#FFCDD2"));
             return false;
         }
-        tf.setBackground(Color.decode("#46494B"));
+        tf.setBackground(Color.WHITE);
         return true;
     }
 
@@ -106,6 +107,32 @@ public class Validator {
         return true;
     }
     
+    public static void checkPasswordSpaces(java.awt.event.KeyEvent evt) {
+        char keyChar = evt.getKeyChar();
+
+        if (keyChar == java.awt.event.KeyEvent.VK_SPACE) {
+            JOptionPane.showMessageDialog(null, "Spaces are not allowed within password.", "Input Error", JOptionPane.ERROR_MESSAGE);
+            // Consume the event to prevent the space from being typed into the field
+            evt.consume();
+        }
+    }
+
+    public static void printSQLExceptionMessage(SQLException e) {
+        StringBuilder errMsg = new StringBuilder();
+        
+        errMsg.append("SQL Exception occurred:\n");
+        errMsg.append("Message: ").append(e.getMessage()).append("\n");
+        errMsg.append("SQL State: ").append(e.getSQLState()).append("\n");
+        errMsg.append("Error Code: ").append(e.getErrorCode()).append("\n");
+
+        // Print to console (optional, for debugging)
+        System.err.println(errMsg.toString());
+        e.printStackTrace();
+
+        // Show in a JOptionPane
+        JOptionPane.showMessageDialog(null, errMsg.toString(), "Database Error", JOptionPane.ERROR_MESSAGE);
+    }
+
     public static boolean check_Salary(JTextField field, StringBuilder sb) {
         if (!Validator.checkEmptyFields(field, sb, "Do not leave Salary blank !")) {
             return false;

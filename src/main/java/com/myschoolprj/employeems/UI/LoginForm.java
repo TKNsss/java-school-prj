@@ -10,7 +10,6 @@ import java.awt.CardLayout;
 import java.sql.SQLException;
 import java.awt.Color;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class LoginForm extends javax.swing.JFrame {
@@ -428,12 +427,12 @@ public class LoginForm extends javax.swing.JFrame {
         StringBuilder sb = new StringBuilder();
 
         // check empty fields and special characters
-        boolean filledUsername = Validator.checkSpecialCharacters(regUsernameTF, sb, "Username can't be blank");
-        boolean filledPassword = Validator.checkSpecialCharacters(regPasswordTF, sb, "Password can't be blank");
-        boolean filledConPassword = Validator.checkEmptyFields(regConPasswordTF, sb, "Please fill confirmed password too!");
+        Validator.checkSpecialCharacters(regUsernameTF, sb, "Username can't be blank");
+        Validator.checkSpecialCharacters(regPasswordTF, sb, "Password can't be blank");
+        Validator.checkEmptyFields(regConPasswordTF, sb, "Please fill confirmed password too!");
 
         // checked values equal false
-        if (!filledUsername || !filledPassword || !filledConPassword) {
+        if (sb.length() > 0) {
             JOptionPane.showMessageDialog(this, sb.toString(), "Validation Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -445,6 +444,11 @@ public class LoginForm extends javax.swing.JFrame {
         // check identical passwords
         if (!password.equals(confirmedPassword)) {
             JOptionPane.showMessageDialog(this, "Confirmed password did not match with password", "Input error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if (password.length() < 8) {
+            JOptionPane.showMessageDialog(this, "Password must contain more than 8 characters", "Input error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -518,10 +522,10 @@ public class LoginForm extends javax.swing.JFrame {
         StringBuilder sb = new StringBuilder();
 
         // check empty fields and special characters
-        boolean filledUsername = Validator.checkSpecialCharacters(usernameTF, sb, "Username can't be blank");
-        boolean filledUPassword = Validator.checkSpecialCharacters(passwordTF, sb, "Password can't be blank");
+        Validator.checkSpecialCharacters(usernameTF, sb, "Username can't be blank");
+        Validator.checkSpecialCharacters(passwordTF, sb, "Password can't be blank");
 
-        if (!filledUsername || !filledUPassword) {
+        if (sb.length() > 0) {
             JOptionPane.showMessageDialog(this, sb.toString(), "Validation Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -588,26 +592,17 @@ public class LoginForm extends javax.swing.JFrame {
     }//GEN-LAST:event_switchToLogBtnMouseExited
 
     private void regPasswordTFKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_regPasswordTFKeyTyped
-        checkPasswordSpaces(regPasswordTF, evt);
+        Validator.checkPasswordSpaces(evt);
     }//GEN-LAST:event_regPasswordTFKeyTyped
 
     private void regConPasswordTFKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_regConPasswordTFKeyTyped
-        checkPasswordSpaces(regConPasswordTF, evt);
+        Validator.checkPasswordSpaces(evt);
     }//GEN-LAST:event_regConPasswordTFKeyTyped
 
     private void passwordTFKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passwordTFKeyTyped
-        checkPasswordSpaces(passwordTF, evt);
+        Validator.checkPasswordSpaces(evt);
     }//GEN-LAST:event_passwordTFKeyTyped
 
-    private void checkPasswordSpaces(JTextField tf, java.awt.event.KeyEvent evt) {
-        char keyChar = evt.getKeyChar();
-
-        if (keyChar == java.awt.event.KeyEvent.VK_SPACE) {
-            JOptionPane.showMessageDialog(this, "Spaces are not allowed within password.", "Input Error", JOptionPane.ERROR_MESSAGE);
-            // Consume the event to prevent the space from being typed into the field
-            evt.consume();
-        }
-    }
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
