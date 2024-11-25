@@ -106,12 +106,12 @@ public class Validator {
         dc.setBackground(Color.WHITE);
         return true;
     }
-    
-    public static void checkPasswordSpaces(java.awt.event.KeyEvent evt) {
+
+    public static void checkContentSpaces(java.awt.event.KeyEvent evt) {
         char keyChar = evt.getKeyChar();
 
         if (keyChar == java.awt.event.KeyEvent.VK_SPACE) {
-            JOptionPane.showMessageDialog(null, "Spaces are not allowed within password.", "Input Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Spaces are not allowed within password/ID", "Input Error", JOptionPane.ERROR_MESSAGE);
             // Consume the event to prevent the space from being typed into the field
             evt.consume();
         }
@@ -119,7 +119,7 @@ public class Validator {
 
     public static void printSQLExceptionMessage(SQLException e) {
         StringBuilder errMsg = new StringBuilder();
-        
+
         errMsg.append("SQL Exception occurred:\n");
         errMsg.append("Message: ").append(e.getMessage()).append("\n");
         errMsg.append("SQL State: ").append(e.getSQLState()).append("\n");
@@ -133,25 +133,26 @@ public class Validator {
         JOptionPane.showMessageDialog(null, errMsg.toString(), "Database Error", JOptionPane.ERROR_MESSAGE);
     }
 
-    public static boolean check_Salary(JTextField field, StringBuilder sb) {
-        if (!Validator.checkEmptyFields(field, sb, "Do not leave Salary blank !")) {
+    public static boolean checkNumericFields(JTextField tf, StringBuilder sb) {
+        if (!Validator.checkEmptyFields(tf, sb, "Do not leave fields blank!")) {
             return false;
         }
 
         try {
-            double salary = Double.parseDouble(field.getText());
-
-            if (salary < 200) {
-                sb.append("Salary must be greater than 200 !\n");
-                field.setBackground(Color.yellow);
-                return false;
+            String input = tf.getText().trim();
+            // Try parsing as an integer
+            try {
+                Integer.parseInt(input);
+            } catch (NumberFormatException e1) {
+                // If not an integer, try parsing as a double
+                Double.parseDouble(input);
             }
-        } catch (Exception e) {
-            sb.append("Salary value must be numeric !\n");
-            field.setBackground(Color.red);
+        } catch (NumberFormatException e) {
+            sb.append("Those fields must be numeric (integer or decimal)!\n");
+            tf.setBackground(Color.decode("#FFCDD2"));
             return false;
         }
-        field.setBackground(Color.white);
+        tf.setBackground(Color.WHITE);
         return true;
     }
 }

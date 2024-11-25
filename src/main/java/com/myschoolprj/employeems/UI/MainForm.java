@@ -37,6 +37,7 @@ public class MainForm extends javax.swing.JFrame {
             e.printStackTrace();
         }
         loadDataIntoEmTable();
+        loadDataIntoSalaryTable();
 
         // Khởi tạo Barchart
         Barchart barchart = new Barchart();
@@ -123,7 +124,7 @@ public class MainForm extends javax.swing.JFrame {
         jLabel23 = new javax.swing.JLabel();
         jLabel25 = new javax.swing.JLabel();
         jLabel27 = new javax.swing.JLabel();
-        clearBtn = new javax.swing.JButton();
+        clearSalEmBtn = new javax.swing.JButton();
         updateSalaryBtn = new javax.swing.JButton();
         salSearchTF = new javax.swing.JTextField();
         jLabel21 = new javax.swing.JLabel();
@@ -613,6 +614,12 @@ public class MainForm extends javax.swing.JFrame {
         jLabel15.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel15.setText("Employee ID:");
 
+        txtEmID.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtEmIDKeyTyped(evt);
+            }
+        });
+
         jLabel16.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel16.setText("Phone #:");
 
@@ -799,6 +806,7 @@ public class MainForm extends javax.swing.JFrame {
         jPanel3.add(jPanel11, "tab2");
 
         jPanel16.setBorder(new com.myschoolprj.employeems.utils.border(5,1)); // Thay đổi bán kính bo góc nếu cần
+        jPanel16.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel23.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         jLabel23.setText("First name:");
@@ -809,15 +817,21 @@ public class MainForm extends javax.swing.JFrame {
         jLabel27.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         jLabel27.setText("Coef:");
 
-        clearBtn.setText("Clear");
-        clearBtn.addActionListener(new java.awt.event.ActionListener() {
+        clearSalEmBtn.setText("Clear");
+        clearSalEmBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clearBtnActionPerformed(evt);
+                clearSalEmBtnActionPerformed(evt);
             }
         });
 
         updateSalaryBtn.setText("Update");
+        updateSalaryBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateSalaryBtnActionPerformed(evt);
+            }
+        });
 
+        salSearchTF.setForeground(new java.awt.Color(153, 153, 153));
         salSearchTF.setText("Search");
         salSearchTF.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -855,20 +869,29 @@ public class MainForm extends javax.swing.JFrame {
         calculateBaseNetBtn.setText("Calculate Base and Net $");
 
         emSalIdTF.setEditable(false);
+        emSalIdTF.setBackground(new java.awt.Color(211, 211, 211));
         emSalIdTF.setPreferredSize(new java.awt.Dimension(73, 30));
 
         emSalFirstnameTF.setEditable(false);
+        emSalFirstnameTF.setBackground(new java.awt.Color(211, 211, 211));
         emSalFirstnameTF.setPreferredSize(new java.awt.Dimension(73, 30));
 
         emSalLastnameTF.setEditable(false);
+        emSalLastnameTF.setBackground(new java.awt.Color(211, 211, 211));
         emSalLastnameTF.setPreferredSize(new java.awt.Dimension(73, 30));
 
+        emSalCoefTF.setEditable(false);
+        emSalCoefTF.setBackground(new java.awt.Color(211, 211, 211));
         emSalCoefTF.setPreferredSize(new java.awt.Dimension(73, 30));
 
         emSalAllowanceTF.setPreferredSize(new java.awt.Dimension(73, 30));
 
+        emSalBaseTF.setEditable(false);
+        emSalBaseTF.setBackground(new java.awt.Color(211, 211, 211));
         emSalBaseTF.setPreferredSize(new java.awt.Dimension(73, 30));
 
+        emSalNetTF.setEditable(false);
+        emSalNetTF.setBackground(new java.awt.Color(211, 211, 211));
         emSalNetTF.setPreferredSize(new java.awt.Dimension(73, 30));
 
         jLabel35.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
@@ -897,7 +920,7 @@ public class MainForm extends javax.swing.JFrame {
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel16Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(clearBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(clearSalEmBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(31, 31, 31)
                         .addComponent(updateSalaryBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(29, 29, 29))
@@ -1008,12 +1031,13 @@ public class MainForm extends javax.swing.JFrame {
                     .addComponent(jLabel36, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(clearBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(clearSalEmBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(updateSalaryBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(16, 16, 16))
         );
 
         jPanel18.setBorder(new com.myschoolprj.employeems.utils.border(5,1)); // Thay đổi bán kính bo góc nếu cần
+        jPanel18.setBackground(new java.awt.Color(255, 255, 255));
         jPanel18.setLayout(null);
 
         salaryTB.setModel(new javax.swing.table.DefaultTableModel(
@@ -1108,12 +1132,14 @@ public class MainForm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Please enter a valid ID or name to search.", "Input Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        searchByInput(searchInput); // Call the updated search method
+
+        // Call the search method for the employee table
+        searchByInput(searchInput, emTB, "employee");
     }//GEN-LAST:event_searchTFActionPerformed
 
     private void salSearchTFKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_salSearchTFKeyReleased
         if (salSearchTF.getText().isEmpty()) {
-            // loadSalaryIntoTable(); // Gọi lại phương thức để tải lại dữ liệu vào bảng
+            loadDataIntoSalaryTable(); // Gọi lại phương thức để tải lại dữ liệu vào bảng
         }
     }//GEN-LAST:event_salSearchTFKeyReleased
 
@@ -1126,14 +1152,16 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_salSearchTFFocusLost
 
     private void salSearchTFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salSearchTFActionPerformed
-        String searchID = salSearchTF.getText().trim(); // Lấy ID từ trường tìm kiếm
+        String searchInput = salSearchTF.getText().trim(); // Get input from the search field
 
-        if (!searchID.isEmpty() && !searchID.equals("Search")) {
-            searchByID_1(searchID); // Gọi phương thức tìm kiếm
-        } else {
-            JOptionPane.showMessageDialog(this, "Please enter a valid ID to search.", "Input Error",
-                    JOptionPane.ERROR_MESSAGE);
+        // Check input validity
+        if (searchInput.isEmpty() || searchInput.equals("Search")) {
+            JOptionPane.showMessageDialog(this, "Please enter a valid ID or name to search.", "Input Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
+
+        // Call the search method for the salary table
+        searchByInput(searchInput, salaryTB, "salary");
     }//GEN-LAST:event_salSearchTFActionPerformed
 
     private void searchTFKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchTFKeyReleased
@@ -1142,15 +1170,26 @@ public class MainForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_searchTFKeyReleased
 
-    private void clearBtnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_clearBtnActionPerformed
+    private void clearSalEmBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearSalEmBtnActionPerformed
         emSalIdTF.setText("");
         emSalFirstnameTF.setText("");
         emSalLastnameTF.setText("");
+        totalWorkDayTF.setText("");
+        monthTF.setText("");
         emSalCoefTF.setText("");
         emSalAllowanceTF.setText("");
         emSalBaseTF.setText("");
         emSalNetTF.setText("");
-    }
+        emMonthSalTF.setText("");
+    }//GEN-LAST:event_clearSalEmBtnActionPerformed
+
+    private void updateSalaryBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateSalaryBtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_updateSalaryBtnActionPerformed
+
+    private void txtEmIDKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEmIDKeyTyped
+        Validator.checkContentSpaces(evt);
+    }//GEN-LAST:event_txtEmIDKeyTyped
 
     private void closeMainBtnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_closeMainBtnActionPerformed
         this.dispose();
@@ -1184,10 +1223,7 @@ public class MainForm extends javax.swing.JFrame {
             String firstName = txtFirstName.getText().trim();
             String lastName = txtLastName.getText().trim();
             String gender = cbGender.getSelectedItem().toString().trim();
-
-            String role = cbRole.getSelectedItem().toString().trim();
-            int roleID = emDAO.getRoleIDByName(role);
-
+            String role = cbRole.getSelectedItem().toString().trim(); 
             String phone = txtPhone.getText().trim();
             Date date = jDate.getDate();
             String address = cbAddress.getSelectedItem().toString().trim();
@@ -1204,11 +1240,12 @@ public class MainForm extends javax.swing.JFrame {
             newEm.setGender(gender);
             newEm.setDob(date);
             newEm.setAddress(address);
-            newEm.setRoleID(roleID);
+            newEm.setRole(role);
             newEm.setPositionID(posID);
 
             emDAO.addEmployeeData(newEm);
             loadDataIntoEmTable();
+            loadDataIntoSalaryTable();
 
             clearFields();
             // // Tạo danh sách salaries
@@ -1246,14 +1283,14 @@ public class MainForm extends javax.swing.JFrame {
 
         txtEmID.setEditable(true);
         txtEmID.setBackground(Color.WHITE);
-    }// GEN-LAST:event_clearEmDataBtnActionPerformed
+    }
 
-    private void salaryBtnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_salaryBtnActionPerformed
+    private void salaryBtnActionPerformed(java.awt.event.ActionEvent evt) {
         CardLayout cl = (CardLayout) (jPanel3.getLayout());
         cl.show(jPanel3, "tab3");
-    }// GEN-LAST:event_salaryBtnActionPerformed
+    }
 
-    private void emTBMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_emTBMouseClicked
+    private void emTBMouseClicked(java.awt.event.MouseEvent evt) {
         lblStatus.setText("Status: Data Selected");
 
         int selectedRow = emTB.getSelectedRow();
@@ -1291,7 +1328,7 @@ public class MainForm extends javax.swing.JFrame {
         }
     }
 
-    private void salaryTBMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_salaryTBMouseClicked
+    private void salaryTBMouseClicked(java.awt.event.MouseEvent evt) {
         int selectedRow = salaryTB.getSelectedRow();
 
         if (selectedRow >= 0) {
@@ -1313,7 +1350,7 @@ public class MainForm extends javax.swing.JFrame {
             emSalBaseTF.setText(baseSalary);
             emSalNetTF.setText(netSalary);
         }
-    }// GEN-LAST:event_salaryTBMouseClicked
+    }
 
     private void homeBtnActionPerformed(java.awt.event.ActionEvent evt) {
         CardLayout cl = (CardLayout) (jPanel3.getLayout());
@@ -1349,10 +1386,7 @@ public class MainForm extends javax.swing.JFrame {
             String firstName = txtFirstName.getText().trim();
             String lastName = txtLastName.getText().trim();
             String gender = cbGender.getSelectedItem().toString().trim();
-
             String role = cbRole.getSelectedItem().toString().trim();
-            int roleID = emDAO.getRoleIDByName(role);
-
             String phone = txtPhone.getText().trim();
             Date date = jDate.getDate();
             String address = cbAddress.getSelectedItem().toString().trim();
@@ -1375,13 +1409,12 @@ public class MainForm extends javax.swing.JFrame {
                 employee.setDob(null);
             }
             employee.setAddress(address);
-            employee.setRoleID(roleID);
+            employee.setRole(role);
             employee.setPositionID(posID);
 
             emDAO.updateEmployeeData(employee);
-            JOptionPane.showMessageDialog(this, "Record updated successfully.", "Success",
-                    JOptionPane.INFORMATION_MESSAGE);
             loadDataIntoEmTable();
+            loadDataIntoSalaryTable();
             lblStatus.setText("Status: update");
             // Xóa dữ liệu trong các trường nhập sau khi cập nhật
             clearFields();
@@ -1395,27 +1428,24 @@ public class MainForm extends javax.swing.JFrame {
 
         if (selectedRow >= 0) {
             // Xác nhận trước khi xóa
-            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this record?",
-                    "Confirm Delete", JOptionPane.YES_NO_OPTION);
+            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this record?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
 
             if (confirm == JOptionPane.YES_OPTION) {
                 // Lấy ID của nhân viên từ hàng được chọn
-                String employeeId = emTB.getValueAt(selectedRow, 0).toString();
-                System.out.println(employeeId);
+                String emID = emTB.getValueAt(selectedRow, 0).toString().trim();
 
                 try {
                     // Xóa bản ghi khỏi cơ sở dữ liệu
-                    emDAO.deleteEmployee(employeeId); // Gọi phương thức xóa
+                    emDAO.deleteEmployee(emID); // Gọi phương thức xóa
                     loadDataIntoEmTable();
+                    loadDataIntoSalaryTable();
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
                 }
-                JOptionPane.showMessageDialog(this, "Record deleted successfully.");
                 clearFields();
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Please select a row to delete!", "Delete Error",
-                    JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please select a row to delete!", "Delete Error", JOptionPane.WARNING_MESSAGE);
         }
     }
 
@@ -1437,111 +1467,98 @@ public class MainForm extends javax.swing.JFrame {
         this.dispose();
     }
 
-    private void searchByInput(String input) {
+    private void searchByInput(String input, JTable tb, String tableType) {
         // Clear current table rows
-        DefaultTableModel model = (DefaultTableModel) emTB.getModel();
+        DefaultTableModel model = (DefaultTableModel) tb.getModel();
         model.setRowCount(0);
 
         try {
-            ArrayList<Employee> emList = emDAO.getEmployeeData(); // Fetch employee list
             boolean found = false;
 
-            for (Employee employee : emList) {
-                // Check if the input matches the ID or is contained in the name
-                if (employee.getID().trim().equalsIgnoreCase(input.trim())
-                        || employee.getFirstName().toLowerCase().contains(input.toLowerCase())
-                        || employee.getLastName().toLowerCase().contains(input.toLowerCase())) {
+            if (tableType.equalsIgnoreCase("employee")) {
+                ArrayList<Employee> emList = emDAO.getEmployeeData(); // Fetch employee list
 
-                    // Add matching employee to the table
-                    Object[] rowData = {
-                        employee.getID(),
-                        employee.getFirstName(),
-                        employee.getLastName(),
-                        employee.getPhone(),
-                        employee.getGender(),
-                        new SimpleDateFormat("dd/MM/yyyy").format(employee.getDob()),
-                        employee.getAddress(),
-                        employee.getRole(),
-                        employee.getPosition()
-                    };
-                    model.addRow(rowData);
-                    found = true;
+                for (Employee employee : emList) {
+                    // Check if the input matches the ID or is contained in the name
+                    if (employee.getID().toLowerCase().contains(input.toLowerCase())
+                            || employee.getFirstName().toLowerCase().contains(input.toLowerCase())
+                            || employee.getLastName().toLowerCase().contains(input.toLowerCase())) {
+
+                        // Add matching employee to the table
+                        Object[] rowData = {
+                            employee.getID(),
+                            employee.getFirstName(),
+                            employee.getLastName(),
+                            employee.getPhone(),
+                            employee.getGender(),
+                            new SimpleDateFormat("dd/MM/yyyy").format(employee.getDob()),
+                            employee.getAddress(),
+                            employee.getRole(),
+                            employee.getPosition()
+                        };
+                        model.addRow(rowData);
+                        found = true;
+                    }
+                }
+            } else if (tableType.equalsIgnoreCase("salary")) {
+                ArrayList<Employee> salList = emDAO.getEmployeeData(); // Fetch salary list
+
+                for (Employee em : salList) {
+                    // Check if the input matches the ID or is contained in the employee name
+                    if (em.getID().toLowerCase().contains(input.toLowerCase())
+                            || em.getFirstName().toLowerCase().contains(input.toLowerCase())
+                            || em.getLastName().toLowerCase().contains(input.toLowerCase())) {
+
+                        // Add matching salary details to the table
+                        Object[] rowData = {
+                            em.getID(),
+                            em.getFirstName(),
+                            em.getLastName(),
+                            em.getCoefLevel(),
+                            em.getAllowanceLevel(),
+                            em.getBaseSalary(),
+                            em.getNetSalary()
+                        };
+                        model.addRow(rowData);
+                        found = true;
+                    }
                 }
             }
 
             // Show message if no matches found
             if (!found) {
-                JOptionPane.showMessageDialog(this, "No employee found with ID or name containing: " + input, "Search Result", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "No records found for: " + input, "Search Result", JOptionPane.INFORMATION_MESSAGE);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error loading data: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    private void searchByID_1(String id) {
-//        //Xóa tất cả các hàng hiện tại trong bảng 
-//        DefaultTableModel model = (DefaultTableModel) tbl_salary.getModel();
-//        model.setRowCount(0);
-//
-//        try {
-//            // Gọi phương thức không tĩnh từ thể hiện của EmployeeDAO để lấy danh sách
-//            nhân viên
-//            ArrayList<EmployeeSalary> list = xFile.readSalary(); // Giả sử bạn có phương
-//            thức loadData để lấy danh sách // nhân viên
-//            boolean found = false; // Biến để kiểm tra xem có tìm thấy không
-//
-//            for (EmployeeSalary salary : list) {
-//                if (salary.getID().trim().equalsIgnoreCase(id.trim())) {
-//                    // Nếu tìm thấy ID, thêm vào bảng
-//                    Object[] rowData = {
-//                        salary.getID(),
-//                        salary.getFirstName(),
-//                        salary.getLastName(),
-//                        salary.getSalary()
-//                    };
-//                    model.addRow(rowData);
-//                    found = true; // Đánh dấu là đã tìm thấy
-//                    break;
-//                }
-//            }
-//
-//            // Nếu không tìm thấy, có thể hiển thị thông báo
-//            if (!found) {
-//                JOptionPane.showMessageDialog(this, "No employee found with ID: " + id,
-//                        "Search Result",
-//                        JOptionPane.INFORMATION_MESSAGE);
-//            }
-//        } catch (Exception e) {
-//            JOptionPane.showMessageDialog(this, "Error loading data: " + e.getMessage(),
-//                    "Error",
-//                    JOptionPane.ERROR_MESSAGE);
-//        }
+    private void loadDataIntoSalaryTable() {
+        try {
+            ArrayList<Employee> employees = emDAO.getEmployeeData();
+            // Lấy model của JTable
+            DefaultTableModel model = (DefaultTableModel) salaryTB.getModel();
+            model.setRowCount(0); // Xóa tất cả các hàng hiện có trong bảng
+            // Thêm dữ liệu vào bảng
+            for (Employee employee : employees) {
+                Object[] rowData = {
+                    employee.getID(),
+                    employee.getFirstName(),
+                    employee.getLastName(),
+                    employee.getCoefLevel(),
+                    employee.getAllowanceLevel(),
+                    employee.getBaseSalary(),
+                    employee.getNetSalary()
+                };
+                model.addRow(rowData);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error loading data: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
-    // private void loadDataIntoSalaryTable() {
-    // try {
-    // ArrayList<Employee> employees = emDAO.getEmployeeData();
-    // // Lấy model của JTable
-    // DefaultTableModel model = (DefaultTableModel) salaryTB.getModel();
-    // model.setRowCount(0); // Xóa tất cả các hàng hiện có trong bảng
-    // // Thêm dữ liệu vào bảng
-    // for (Employee employee : employees) {
-    // Object[] rowData = {
-    // employee.getID(),
-    // employee.getFirstName(),
-    // employee.getLastName(),
-    // employee.getCoefLevel(),
-    // employee.getAllowanceLevel(),
-    // employee.getBaseSalary(),
-    // employee.getNetSalary()
-    // };
-    // model.addRow(rowData);
-    // }
-    // } catch (Exception e) {
-    // JOptionPane.showMessageDialog(this, "Error loading data: " + e.getMessage(),
-    // "Error", JOptionPane.ERROR_MESSAGE);
-    // }
-    // }
     private void loadDataIntoEmTable() {
         try {
             ArrayList<Employee> employees = emDAO.getEmployeeData();
@@ -1603,8 +1620,8 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cbGender;
     private javax.swing.JComboBox<String> cbPosition;
     private javax.swing.JComboBox<String> cbRole;
-    private javax.swing.JButton clearBtn;
     private javax.swing.JButton clearEmDataBtn;
+    private javax.swing.JButton clearSalEmBtn;
     private javax.swing.JButton closeMainBtn;
     private javax.swing.JButton deleteBtn;
     private javax.swing.JTextField emMonthSalTF;

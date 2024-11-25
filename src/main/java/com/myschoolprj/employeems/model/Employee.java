@@ -1,6 +1,5 @@
 package com.myschoolprj.employeems.model;
 
-import java.io.Serializable;
 import java.util.Date;
 
 public class Employee {
@@ -19,10 +18,9 @@ public class Employee {
     private float allowanceLevel;
     private float coefLevel;
     private int posID;
-    private int roleID;
 
     // Constructor
-    public Employee(String ID, String firstName, String lastName, String phone, String gender, Date dob, String address, String position, String role, int baseSalary, int netSalary, int posID, int roleID) {
+    public Employee(String ID, String firstName, String lastName, String phone, String gender, Date dob, String address, String position, String role, int baseSalary, int netSalary, int posID) {
         this.ID = ID;  
         this.firstName = firstName;
         this.lastName = lastName;
@@ -34,8 +32,7 @@ public class Employee {
         this.role = role;
         this.baseSalary = baseSalary;
         this.netSalary = netSalary;    
-        this.posID = posID;
-        this.roleID = roleID;
+        this.posID = posID;   
     }
 
     // Default constructor
@@ -121,14 +118,6 @@ public class Employee {
 
     public void setRole(String role) {
         this.role = role;
-    }
-    
-    public int getRoleID() {
-        return roleID;
-    }
-    
-    public void setRoleID(int roleID) {
-        this.roleID = roleID;
     }
     
     public int getBaseSalary() {

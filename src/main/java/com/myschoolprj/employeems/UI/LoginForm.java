@@ -592,15 +592,15 @@ public class LoginForm extends javax.swing.JFrame {
     }//GEN-LAST:event_switchToLogBtnMouseExited
 
     private void regPasswordTFKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_regPasswordTFKeyTyped
-        Validator.checkPasswordSpaces(evt);
+        Validator.checkContentSpaces(evt);
     }//GEN-LAST:event_regPasswordTFKeyTyped
 
     private void regConPasswordTFKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_regConPasswordTFKeyTyped
-        Validator.checkPasswordSpaces(evt);
+        Validator.checkContentSpaces(evt);
     }//GEN-LAST:event_regConPasswordTFKeyTyped
 
     private void passwordTFKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passwordTFKeyTyped
-        Validator.checkPasswordSpaces(evt);
+        Validator.checkContentSpaces(evt);
     }//GEN-LAST:event_passwordTFKeyTyped
 
 
