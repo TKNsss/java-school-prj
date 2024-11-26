@@ -147,6 +147,8 @@ public class MainForm extends javax.swing.JFrame {
         emMonthSalTF = new javax.swing.JTextField();
         jLabel36 = new javax.swing.JLabel();
         calculateMonBtn = new javax.swing.JButton();
+        emSalRoleIDTF = new javax.swing.JTextField();
+        jLabel22 = new javax.swing.JLabel();
         jPanel18 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         salaryTB = new javax.swing.JTable();
@@ -867,6 +869,11 @@ public class MainForm extends javax.swing.JFrame {
         jLabel33.setText("NET $:");
 
         calculateBaseNetBtn.setText("Calculate Base and Net $");
+        calculateBaseNetBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                calculateBaseNetBtnActionPerformed(evt);
+            }
+        });
 
         emSalIdTF.setEditable(false);
         emSalIdTF.setBackground(new java.awt.Color(211, 211, 211));
@@ -910,6 +917,12 @@ public class MainForm extends javax.swing.JFrame {
         jLabel36.setText("Month $:");
 
         calculateMonBtn.setText("Calculate Month $");
+
+        emSalRoleIDTF.setBackground(new java.awt.Color(211, 211, 211));
+        emSalRoleIDTF.setPreferredSize(new java.awt.Dimension(73, 30));
+
+        jLabel22.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jLabel22.setText("Role ID:");
 
         javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
         jPanel16.setLayout(jPanel16Layout);
@@ -960,8 +973,15 @@ public class MainForm extends javax.swing.JFrame {
                                                 .addComponent(jLabel24))
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                             .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(emSalIdTF, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(emSalFirstnameTF, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                                .addGroup(jPanel16Layout.createSequentialGroup()
+                                                    .addComponent(emSalFirstnameTF, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addGap(1, 1, 1))
+                                                .addGroup(jPanel16Layout.createSequentialGroup()
+                                                    .addComponent(emSalIdTF, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                    .addComponent(jLabel22)
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                    .addComponent(emSalRoleIDTF, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                                     .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                         .addComponent(monthTF, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGroup(jPanel16Layout.createSequentialGroup()
@@ -988,7 +1008,9 @@ public class MainForm extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(emSalIdTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(emSalIdTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(emSalRoleIDTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel22))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(emSalFirstnameTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1042,20 +1064,20 @@ public class MainForm extends javax.swing.JFrame {
 
         salaryTB.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Employee ID", "First name", "Last name", "Coef", "Allowance", "Base Salary $", "Net Salary $"
+                "Employee ID", "Role ID", "First name", "Last name", "Coef", "Allowance", "Base Salary $", "Net Salary $"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.Float.class, java.lang.Integer.class, java.lang.Integer.class
+                java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.Float.class, java.lang.Integer.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -1191,6 +1213,36 @@ public class MainForm extends javax.swing.JFrame {
         Validator.checkContentSpaces(evt);
     }//GEN-LAST:event_txtEmIDKeyTyped
 
+    private void calculateBaseNetBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateBaseNetBtnActionPerformed
+        StringBuilder sb = new StringBuilder();
+
+        Validator.checkNumericFields(emSalCoefTF, sb);
+        Validator.checkNumericFields(emSalAllowanceTF, sb);
+
+        if (sb.length() > 0) {
+            JOptionPane.showMessageDialog(this, sb.toString(), "Input Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (Float.parseFloat(emSalAllowanceTF.getText()) <= 0 || Float.parseFloat(emSalCoefTF.getText()) <= 0) {
+            JOptionPane.showMessageDialog(this, "Please enter value greater than 0", "Input Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        float allowance = Float.parseFloat(emSalAllowanceTF.getText());
+        float coef = Float.parseFloat(emSalCoefTF.getText());
+        // calculate salaries
+        float baseSalary = 2340000 * coef;
+        float netSalary = baseSalary + baseSalary * allowance;
+
+        // Format the salaries
+        NumberFormat numberFormat = NumberFormat.getInstance();
+        numberFormat.setMinimumFractionDigits(2);
+        numberFormat.setMaximumFractionDigits(2);
+
+        emSalBaseTF.setText(numberFormat.format(baseSalary));
+        emSalNetTF.setText(numberFormat.format(netSalary));
+    }//GEN-LAST:event_calculateBaseNetBtnActionPerformed
+
     private void closeMainBtnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_closeMainBtnActionPerformed
         this.dispose();
     }
@@ -1223,7 +1275,7 @@ public class MainForm extends javax.swing.JFrame {
             String firstName = txtFirstName.getText().trim();
             String lastName = txtLastName.getText().trim();
             String gender = cbGender.getSelectedItem().toString().trim();
-            String role = cbRole.getSelectedItem().toString().trim(); 
+            String role = cbRole.getSelectedItem().toString().trim();
             String phone = txtPhone.getText().trim();
             Date date = jDate.getDate();
             String address = cbAddress.getSelectedItem().toString().trim();
@@ -1247,20 +1299,7 @@ public class MainForm extends javax.swing.JFrame {
             loadDataIntoEmTable();
             loadDataIntoSalaryTable();
 
-            clearFields();
-            // // Tạo danh sách salaries
-            // ArrayList<EmployeeSalary> salaries = new ArrayList<>();
-            // EmployeeSalary newSalary = new EmployeeSalary(employeeID, firstName,
-            // lastName, salary);
-            // salaries.add(newSalary);
-            //
-            // // Ghi dữ liệu vào bảng employees_salaries trong cơ sở dữ liệu
-            // xFile.writeSalary(salaries);
-            //
-            // Object[] SalaryrowData = {employeeID, firstName, lastName, salary};
-            // // Thêm dữ liệu vào bảng
-            // DefaultTableModel model2 = (DefaultTableModel) tbl_salary.getModel();
-            // model2.addRow(SalaryrowData); // Thêm hàng mới vào tableModel
+            clearFields();          
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "An unexpected error occurred: " + e.getMessage(), "Error",
                     JOptionPane.ERROR_MESSAGE);
@@ -1334,15 +1373,17 @@ public class MainForm extends javax.swing.JFrame {
         if (selectedRow >= 0) {
             // get data from selected row in salary table
             String id = salaryTB.getValueAt(selectedRow, 0).toString();
-            String first_name = salaryTB.getValueAt(selectedRow, 1).toString();
-            String last_name = salaryTB.getValueAt(selectedRow, 2).toString();
-            String coef = salaryTB.getValueAt(selectedRow, 3).toString();
-            String allowance = salaryTB.getValueAt(selectedRow, 4).toString();
-            String baseSalary = salaryTB.getValueAt(selectedRow, 5).toString();
-            String netSalary = salaryTB.getValueAt(selectedRow, 6).toString();
+            String roleID = salaryTB.getValueAt(selectedRow, 1).toString();
+            String first_name = salaryTB.getValueAt(selectedRow, 2).toString();
+            String last_name = salaryTB.getValueAt(selectedRow, 3).toString();
+            String coef = salaryTB.getValueAt(selectedRow, 4).toString();
+            String allowance = salaryTB.getValueAt(selectedRow, 5).toString();
+            String baseSalary = salaryTB.getValueAt(selectedRow, 6).toString();
+            String netSalary = salaryTB.getValueAt(selectedRow, 7).toString();
 
             // Điền dữ liệu vào các trường nhập liệu
             emSalIdTF.setText(id);
+            emSalRoleIDTF.setText(roleID);
             emSalFirstnameTF.setText(first_name);
             emSalLastnameTF.setText(last_name);
             emSalCoefTF.setText(coef);
@@ -1544,6 +1585,7 @@ public class MainForm extends javax.swing.JFrame {
             for (Employee employee : employees) {
                 Object[] rowData = {
                     employee.getID(),
+                    emDAO.getRoleID(employee.getID()),
                     employee.getFirstName(),
                     employee.getLastName(),
                     employee.getCoefLevel(),
@@ -1632,6 +1674,7 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JTextField emSalIdTF;
     private javax.swing.JTextField emSalLastnameTF;
     private javax.swing.JTextField emSalNetTF;
+    private javax.swing.JTextField emSalRoleIDTF;
     private javax.swing.JTable emTB;
     private javax.swing.JButton jButton1;
     private com.toedter.calendar.JDateChooser jDate;
@@ -1649,6 +1692,7 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;

@@ -152,6 +152,11 @@ public class Validator {
             tf.setBackground(Color.decode("#FFCDD2"));
             return false;
         }
+        
+        if (tf.equals("emSalCoefTF")) {
+            tf.setBackground(Color.decode("#D3D3D3"));
+            return true;
+        }
         tf.setBackground(Color.WHITE);
         return true;
     }

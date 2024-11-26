@@ -19,6 +19,7 @@ com\myschoolprj\employeems\UI\MainForm$4.class
 com\myschoolprj\employeems\UI\MainForm$22.class
 com\myschoolprj\employeems\UI\MainForm$17.class
 com\myschoolprj\employeems\utils\Validator.class
+com\myschoolprj\employeems\dao\SalaryDAO.class
 com\myschoolprj\employeems\UI\LoginForm$8.class
 com\myschoolprj\employeems\UI\LoginForm$19.class
 com\myschoolprj\employeems\UI\MainForm$8.class
@@ -41,10 +42,12 @@ com\myschoolprj\employeems\UI\MainForm$7.class
 com\myschoolprj\employeems\UI\LoginForm$20.class
 com\myschoolprj\employeems\utils\PlaceholderUtils.class
 com\myschoolprj\employeems\UI\LoginForm$10.class
+com\myschoolprj\employeems\UI\MainForm$25.class
 com\myschoolprj\employeems\UI\MainForm$15.class
 com\myschoolprj\employeems\model\Employee.class
 com\myschoolprj\employeems\UI\MainForm$12.class
 com\myschoolprj\employeems\dao\EmployeeDAO.class
+com\myschoolprj\employeems\model\Salary.class
 com\myschoolprj\employeems\UI\MainForm$6.class
 com\myschoolprj\employeems\UI\LoginForm$11.class
 com\myschoolprj\employeems\UI\MainForm$9.class
