@@ -2,6 +2,7 @@ package com.myschoolprj.employeems.dao;
 
 import com.myschoolprj.employeems.utils.connectDB;
 import com.myschoolprj.employeems.model.Admin;
+import com.myschoolprj.employeems.utils.Validator;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -59,12 +60,7 @@ public class AdminDAO {
             ps.setString(2, password);
             ps.executeUpdate();
         } catch (SQLException e) {
-            // Print specific details about the SQL exception
-            System.err.println("SQL Exception occurred:");
-            System.err.println("Message: " + e.getMessage());
-            System.err.println("SQL State: " + e.getSQLState());
-            System.err.println("Error Code: " + e.getErrorCode());
-            e.printStackTrace();
+            Validator.printSQLExceptionMessage(e);
         }
     }
 }

@@ -2,6 +2,7 @@ package com.myschoolprj.employeems.dao;
 
 import com.myschoolprj.employeems.EmployeeSalary;
 import com.myschoolprj.employeems.model.Employee;
+import com.myschoolprj.employeems.utils.Validator;
 import com.myschoolprj.employeems.utils.connectDB;
 import javax.swing.JLabel;
 
@@ -11,6 +12,7 @@ import java.sql.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
@@ -21,7 +23,6 @@ import org.apache.poi.ss.usermodel.Cell;
 public class EmployeeDAO {
 
     private final Connection connection;
-    private ArrayList<Employee> emList;
 
     public EmployeeDAO() throws SQLException {
         this.connection = connectDB.getConnection();
@@ -61,21 +62,21 @@ public class EmployeeDAO {
         }
 
         // Phương thức để lấy số lượng nhân viên có role_id và cập nhật JLabel
-        public void TotalEmployeeWithRole(int roleId) {
-            String sql = "SELECT COUNT(*) AS totalStaff FROM Employees WHERE role_id = ?";
+        public void TotalEmployeeWithRole(String roleName) {
+            String sql = "SELECT COUNT(*) AS totalStaff FROM Roles WHERE role_name = ?";
 
             // Sử dụng try-with-resources
             try (Connection connect = connectDB.getConnection(); PreparedStatement prepare = connect.prepareStatement(sql)) {
 
-                prepare.setInt(1, roleId);
+                prepare.setString(1, roleName);
 
                 try (ResultSet result = prepare.executeQuery()) {
                     if (result.next()) {
                         int totalCount = result.getInt("totalStaff");
 
-                        if (roleId == 1) {
+                        if (roleName == "Staff") {
                             staffLabel.setText("--" + totalCount + "--");
-                        } else if (roleId == 2) {
+                        } else if (roleName == "Leader") {
                             leaderLabel.setText("--" + totalCount + "--");
                         }
                     }
@@ -105,8 +106,7 @@ public class EmployeeDAO {
 //        }
 //        return salaries;
 //    }
-
-    public void writeSalary(ArrayList<EmployeeSalary> salaries) throws Exception {
+    public void updateSalary(ArrayList<EmployeeSalary> salaries) throws Exception {
         String sql = "INSERT INTO employees_salaries (id, first_name, last_name, salary) VALUES (?, ?, ?, ?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             for (EmployeeSalary salary : salaries) {
@@ -124,7 +124,8 @@ public class EmployeeDAO {
     }
 
     public void updateSalary(EmployeeSalary salary) throws Exception {
-        String sql = "UPDATE employees_salaries SET first_name = ?, last_name = ?, salary = ? WHERE id = ?";
+        String sql = "UPDATE employees_salaries SET first_name = ?, last_name = ?, phone = ?, gender = ?, dob = ?, address = ?, role_id = ?, pos_id = ? WHERE id = ?";
+
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             // Thiết lập các tham số theo đúng thứ tự
             preparedStatement.setString(1, salary.getFirstName());
@@ -140,159 +141,96 @@ public class EmployeeDAO {
         }
     }
 
-    public ArrayList<Employee> readEmployees() throws Exception {
+
+    public ArrayList<Employee> getEmployeeData() {
         ArrayList<Employee> employees = new ArrayList<>();
-        String sql = """
-        SELECT 
-            e.em_id, 
-            e.firstname, 
-            e.lastname, 
-            e.phone, 
-            e.gender, 
-            e.dob, 
-            e.address, 
-            r.role_name, 
-            p.pos_name
-        FROM 
-            Employees e
-        LEFT JOIN 
-            Roles r ON e.role_id = r.role_id
-        LEFT JOIN 
-            Positions p ON e.pos_id = p.pos_id
-    """;
+        String query = "SELECT DISTINCT em.em_id AS eID, firstname, lastname, phone, gender, dob, address, base_salary, net_salary, title, sal_col_level, role_name, al_level "
+                + "FROM Employees AS em "
+                + "LEFT JOIN Positions AS pos ON em.pos_id = pos.pos_id "
+                + "LEFT JOIN Salaries AS sal ON sal.em_id = em.em_id "
+                + "LEFT JOIN Roles AS ro ON em.em_id = ro.em_id "
+                + "LEFT JOIN Allowances AS al ON ro.role_id = al.role_id";
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet rs = preparedStatement.executeQuery()) {
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Employee em = new Employee();
 
-            while (rs.next()) {
-                Employee employee = new Employee();
-                employee.setID(rs.getString("em_id"));
-                employee.setFirstName(rs.getString("firstname"));
-                employee.setLastName(rs.getString("lastname"));
-                employee.setPhone(rs.getString("phone"));
-                employee.setGender(rs.getString("gender"));
-                employee.setDob(rs.getDate("dob"));
-                employee.setAddress(rs.getString("address"));
-                employee.setRole(rs.getString("role_name")); // Lấy tên Role
-                employee.setPosition(rs.getString("pos_name")); // Lấy tên Position
-                employees.add(employee);
+                    em.setID(rs.getString("eID"));
+                    em.setFirstName(rs.getString("firstname"));
+                    em.setLastName(rs.getString("lastname"));
+                    em.setPhone(rs.getString("phone"));
+                    em.setGender(rs.getString("gender"));
+                    em.setDob(rs.getDate("dob"));
+                    em.setAddress(rs.getString("address"));
+                    em.setRole(rs.getString("role_name"));
+                    em.setPosition(rs.getString("title"));
+                    em.setBaseSalary(rs.getInt("base_salary"));
+                    em.setNetSalary(rs.getInt("net_salary"));
+                    em.setAllowanceLevel(rs.getFloat("al_level"));
+                    em.setCoefLevel(rs.getFloat("sal_col_level"));
+
+                    employees.add(em);
+                }
             }
-            // In ra số lượng nhân viên đã tải
-            System.out.println("Employees loaded: " + employees.size());
-            for (Employee emp : employees) {
-                System.out.println("Employee ID: " + emp.getID());
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception("Error reading Employees: " + e);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error fetching employee's data:\n" + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+            Validator.printSQLExceptionMessage(e);
         }
         return employees;
     }
 
-    public void writeEmployee(ArrayList<Employee> employees) throws Exception {
-        String insertQuery = "INSERT INTO Employees(em_id, firstname, lastname, phone, gender, dob, address, role_id, pos_id) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
-            for (Employee employee : employees) {
-                preparedStatement.setString(1, employee.getID());
-                preparedStatement.setString(2, employee.getFirstName());
-                preparedStatement.setString(3, employee.getLastName());
-                preparedStatement.setString(4, employee.getPhone());
-                preparedStatement.setString(5, employee.getGender());
-                if (employee.getDob() != null) {
-                    preparedStatement.setDate(6, new java.sql.Date(employee.getDob().getTime()));
-                } else {
-                    preparedStatement.setNull(6, java.sql.Types.DATE);
-                }
-                preparedStatement.setString(7, employee.getAddress());
-                preparedStatement.setString(8, employee.getRole()); // role_id
-                preparedStatement.setString(9, employee.getPosition()); // pos_id
-                preparedStatement.addBatch();
-            }
-            preparedStatement.executeBatch();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception("Error writing Employees: " + e);
+    public void addEmployeeData(Employee em) {
+        if (isPhoneExists(em.getPhone(), null) || isIDExists(em.getID())) {
+            JOptionPane.showMessageDialog(null, "Phone number/ID has existed, please choose another one!", "Input Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
-    }
+        String query1 = "INSERT INTO Employees(em_id, firstname, lastname, phone, gender, dob, address, pos_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String query2 = "INSERT INTO Roles(em_id, role_name) VALUES(?, ?)";
 
-    public void updateEmployee(Employee employee) throws Exception {
-        // Câu lệnh SQL UPDATE
-        String sql = "UPDATE Employees SET em_id = ?, firstname = ?, lastname = ?, phone = ?, gender = ?, dob = ?, address = ?, role_id = ?, pos_id = ? WHERE em_id = ?";
+        try {
+            // Disable auto-commit to start a transaction
+            connection.setAutoCommit(false);
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            // Thiết lập các tham số theo thứ tự
-            preparedStatement.setString(1, employee.getID()); // id
-            preparedStatement.setString(2, employee.getFirstName()); // first_name
-            preparedStatement.setString(3, employee.getLastName()); // last_name
-            preparedStatement.setString(4, employee.getPhone()); // phone
-            preparedStatement.setString(5, employee.getGender()); // gender
-            // Kiểm tra và thiết lập ngày tháng (date_of_birth)
-            if (employee.getDob() != null) {
-                preparedStatement.setDate(6, new java.sql.Date(employee.getDob().getTime())); // date_of_birth
-            } else {
-                preparedStatement.setNull(6, java.sql.Types.DATE); // NULL nếu không có ngày
+            try (PreparedStatement ps1 = connection.prepareStatement(query1); PreparedStatement ps2 = connection.prepareStatement(query2)) {
+                // Insert into Employees
+                ps1.setString(1, em.getID());
+                ps1.setString(2, em.getFirstName());
+                ps1.setString(3, em.getLastName());
+                ps1.setString(4, em.getPhone());
+                ps1.setString(5, em.getGender());
+                ps1.setDate(6, new java.sql.Date(em.getDob().getTime()));
+                ps1.setString(7, em.getAddress());
+                ps1.setInt(8, em.getPositionID());
+                ps1.executeUpdate();
+
+                // Insert into Roles
+                ps2.setString(1, em.getID()); // Corrected index for em_id
+                ps2.setString(2, em.getRole()); // Corrected index for role_name
+                ps2.executeUpdate();
             }
-            preparedStatement.setString(7, employee.getAddress()); // address
-            preparedStatement.setString(8, employee.getRole()); // role_id
-            preparedStatement.setString(9, employee.getPosition()); // position_id
-
-            preparedStatement.setString(10, employee.getID()); // Điều kiện WHERE (id)
-
-            // Thực hiện lệnh UPDATE
-            int rowsUpdated = preparedStatement.executeUpdate();
-
-            if (rowsUpdated == 0) {
-                throw new Exception("Employee with ID " + employee.getID() + " not found. Update failed.");
-            }
+            // Commit the transaction
+            connection.commit();
+            JOptionPane.showMessageDialog(null, "Employee added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
         } catch (SQLException e) {
-            e.printStackTrace();
-            throw new Exception("Error updating Employees: " + e.getMessage());
+            try {
+                // Roll back the transaction in case of error
+                connection.rollback();
+                JOptionPane.showMessageDialog(null, "Error adding Employees:\n" + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+            } catch (SQLException rollbackEx) {
+                JOptionPane.showMessageDialog(null, "Error rolling back transaction:\n" + rollbackEx.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+            }
+            Validator.printSQLExceptionMessage(e);
+        } finally {
+            try {
+                // Restore auto-commit mode
+                connection.setAutoCommit(true);
+            } catch (SQLException autoCommitEx) {
+                JOptionPane.showMessageDialog(null, "Error restoring auto-commit mode:\n" + autoCommitEx.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
-    public void deleteEmployee(String employeeId) throws Exception {
-        String sql = "DELETE FROM Employees WHERE em_id = ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, employeeId);
-            int rowsAffected = preparedStatement.executeUpdate();
-            if (rowsAffected == 0) {
-                throw new Exception("No employee found with ID: " + employeeId);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new Exception("Error deleting employee with ID " + employeeId + ": " + e.getMessage());
-        }
-    }
-
-    // Lấy role_id từ role_name
-    public String getRoleIDByName(String roleName) throws Exception {
-        String query = "SELECT role_id FROM Roles WHERE role_name = ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, roleName);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    return resultSet.getString("role_id");
-                }
-            }
-        }
-        return null; // Nếu không tìm thấy
-    }
-
-// Lấy pos_id từ pos_name
-    public String getPositionIDByName(String positionName) throws Exception {
-        String query = "SELECT pos_id FROM Positions WHERE pos_name = ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, positionName);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    return resultSet.getString("pos_id");
-                }
-            }
-        }
-        return null; // Nếu không tìm thấy
-    }
 
 // Import dữ liệu từ file excel vào db
 //    private void importExcel(File file) throws Exception {
@@ -348,4 +286,164 @@ public class EmployeeDAO {
 //        }
 //    }
 
+    public void updateEmployeeData(Employee em) {
+        if (isPhoneExists(em.getPhone(), em.getID())) {
+            JOptionPane.showMessageDialog(null, "Phone number has existed, please choose another one!", "Input Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        String query1 = "UPDATE Employees SET firstname = ?, lastname = ?, phone = ?, gender = ?, dob = ?, address = ?, pos_id = ? WHERE em_id = ?";
+        String query2 = "UPDATE Roles SET role_name = ? WHERE em_id = ?";
+
+        try {
+            connection.setAutoCommit(false);
+
+            try (PreparedStatement ps1 = connection.prepareStatement(query1); PreparedStatement ps2 = connection.prepareStatement(query2)) {
+
+                ps1.setString(1, em.getFirstName());
+                ps1.setString(2, em.getLastName());
+                ps1.setString(3, em.getPhone());
+                ps1.setString(4, em.getGender());
+
+                // Convert DOB to java.sql.Date
+                if (em.getDob() != null) {
+                    ps1.setDate(5, new java.sql.Date(em.getDob().getTime()));
+                } else {
+                    JOptionPane.showMessageDialog(null, "Date of birth cannot be null.", "Input Error", JOptionPane.WARNING_MESSAGE);
+                    connection.rollback(); // Roll back transaction due to invalid input
+                    return; // Abort the update
+                }
+                ps1.setString(6, em.getAddress());
+                ps1.setInt(7, em.getPositionID());
+                ps1.setString(8, em.getID()); // WHERE condition
+                ps1.executeUpdate();
+
+                // Update Roles table
+                ps2.setString(1, em.getRole());
+                ps2.setString(2, em.getID()); // WHERE condition
+                ps2.executeUpdate();
+            }
+            connection.commit();
+            JOptionPane.showMessageDialog(null, "Employee updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+                JOptionPane.showMessageDialog(null, "Error updating Employees:\n" + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+            } catch (SQLException rollbackEx) {
+                JOptionPane.showMessageDialog(null, "Error rolling back transaction:\n" + rollbackEx.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+            }
+            Validator.printSQLExceptionMessage(e);
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException autoCommitEx) {
+                JOptionPane.showMessageDialog(null, "Error restoring auto-commit mode:\n" + autoCommitEx.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    public void deleteEmployee(String emID) throws Exception {
+        // Since the Roles table likely has a foreign key relationship with the Employees table, we must 
+        // delete from Roles first to avoid foreign key constraint violations.
+        String query1 = "DELETE FROM Roles WHERE em_id = ?";
+        String query2 = "DELETE FROM Employees WHERE em_id = ?";
+
+        try {
+            connection.setAutoCommit(false);
+
+            try (PreparedStatement ps1 = connection.prepareStatement(query1); 
+                 PreparedStatement ps2 = connection.prepareStatement(query2)) {
+                // Delete from Roles
+                ps1.setString(1, emID);
+                ps1.executeUpdate();
+
+                // Delete from Employees
+                ps2.setString(1, emID);
+                int rowsAffected = ps2.executeUpdate();
+
+                if (rowsAffected == 0) {
+                    throw new Exception("No employee found with ID: " + emID);
+                }
+            }
+            connection.commit();
+            JOptionPane.showMessageDialog(null, "Employee deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        } catch (SQLException e) {
+            try {                
+                connection.rollback();
+                JOptionPane.showMessageDialog(null, "Error deleting employee:\n" + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+            } catch (SQLException rollbackEx) {
+                JOptionPane.showMessageDialog(null, "Error rolling back transaction:\n" + rollbackEx.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+            }
+            Validator.printSQLExceptionMessage(e);
+        } finally {
+            try {             
+                connection.setAutoCommit(true);
+            } catch (SQLException autoCommitEx) {
+                JOptionPane.showMessageDialog(null, "Error restoring auto-commit mode:\n" + autoCommitEx.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    public int getPositionIDByName(String position) throws SQLException {
+        String query = "SELECT pos_id FROM Positions WHERE title = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, position);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("pos_id");
+                }
+            }
+        }
+        return -1;
+    }
+
+    public boolean isPhoneExists(String phone, String emID) {
+        String query = "SELECT COUNT(*) AS count "
+                + "FROM Employees "
+                + "WHERE phone = ?";
+
+        // If updating, exclude the current employee ID
+        if (emID != null) {
+            query += " AND em_id != ?";
+        }
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, phone);
+
+            if (emID != null) {
+                ps.setString(2, emID); // Set employeeID parameter
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("count") > 0; // Return true if phone exists
+                }
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error checking phone number existence:\n" + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+            Validator.printSQLExceptionMessage(e);
+        }
+        return false;
+    }
+
+    public boolean isIDExists(String ID) {
+        String query = "SELECT COUNT(*) AS count "
+                + "FROM Employees "
+                + "WHERE em_id = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, ID);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("count") > 0;
+                }
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error checking ID existence:\n" + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+            Validator.printSQLExceptionMessage(e);
+        }
+        return false;
+    }
 }
