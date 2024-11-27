@@ -1,6 +1,5 @@
 package com.myschoolprj.employeems.dao;
 
-import com.myschoolprj.employeems.EmployeeSalary;
 import com.myschoolprj.employeems.model.Employee;
 import com.myschoolprj.employeems.utils.Validator;
 import com.myschoolprj.employeems.utils.connectDB;
@@ -106,41 +105,6 @@ public class EmployeeDAO {
 //        }
 //        return salaries;
 //    }
-    public void updateSalary(ArrayList<EmployeeSalary> salaries) throws Exception {
-        String sql = "INSERT INTO employees_salaries (id, first_name, last_name, salary) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            for (EmployeeSalary salary : salaries) {
-                preparedStatement.setString(1, salary.getID());
-                preparedStatement.setString(2, salary.getFirstName());
-                preparedStatement.setString(3, salary.getLastName());
-                preparedStatement.setFloat(4, salary.getSalary());
-                preparedStatement.addBatch();
-            }
-            preparedStatement.executeBatch();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception("Error writing Salaries: " + e);
-        }
-    }
-
-    public void updateSalary(EmployeeSalary salary) throws Exception {
-        String sql = "UPDATE employees_salaries SET first_name = ?, last_name = ?, phone = ?, gender = ?, dob = ?, address = ?, role_id = ?, pos_id = ? WHERE id = ?";
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            // Thiết lập các tham số theo đúng thứ tự
-            preparedStatement.setString(1, salary.getFirstName());
-            preparedStatement.setString(2, salary.getLastName());
-            preparedStatement.setFloat(3, salary.getSalary()); // Giả sử salary là kiểu double
-            preparedStatement.setString(4, salary.getID()); // ID để xác định bản ghi cần cập nhật
-
-            // Thực thi câu lệnh cập nhật
-            preparedStatement.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception("Error updating salary: " + e);
-        }
-    }
-
 
     public ArrayList<Employee> getEmployeeData() {
         ArrayList<Employee> employees = new ArrayList<>();
@@ -392,6 +356,21 @@ public class EmployeeDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return rs.getInt("pos_id");
+                }
+            }
+        }
+        return -1;
+    }
+    
+    public int getRoleID(String role) throws SQLException {
+        String query = "SELECT role_id FROM Roles WHERE em_id = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, role);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("role_id");
                 }
             }
         }
