@@ -6,6 +6,11 @@ import com.myschoolprj.employeems.utils.GradientPanels;
 import com.myschoolprj.employeems.utils.jPanelGradient2;
 import com.myschoolprj.employeems.utils.PlaceholderUtils;
 import com.myschoolprj.employeems.dao.EmployeeDAO;
+import com.myschoolprj.employeems.model.Employee;
+import com.myschoolprj.employeems.dao.RoleDAO;
+import com.myschoolprj.employeems.model.Role;
+import com.myschoolprj.employeems.dao.SalaryDAO;
+import com.myschoolprj.employeems.model.Salary;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.text.*;
 
-import com.myschoolprj.employeems.model.Employee;
 import java.awt.Color;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
@@ -22,12 +26,16 @@ import javax.swing.table.DefaultTableModel;
 public class MainForm extends javax.swing.JFrame {
 
     private EmployeeDAO emDAO;
+    private RoleDAO roleDAO;
+    private SalaryDAO salaryDAO;
 
     public MainForm() {
         initComponents();
 
         try {
             emDAO = new EmployeeDAO();
+            roleDAO = new RoleDAO();
+            salaryDAO = new SalaryDAO();
         } catch (SQLException e) {
             Validator.printSQLExceptionMessage(e);
             e.printStackTrace();
@@ -827,6 +835,7 @@ public class MainForm extends javax.swing.JFrame {
         });
 
         updateSalaryBtn.setText("Update");
+        updateSalaryBtn.setEnabled(false);
         updateSalaryBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 updateSalaryBtnActionPerformed(evt);
@@ -1194,6 +1203,7 @@ public class MainForm extends javax.swing.JFrame {
 
     private void clearSalEmBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearSalEmBtnActionPerformed
         emSalIdTF.setText("");
+        emSalRoleIDTF.setText("");
         emSalFirstnameTF.setText("");
         emSalLastnameTF.setText("");
         totalWorkDayTF.setText("");
@@ -1203,10 +1213,78 @@ public class MainForm extends javax.swing.JFrame {
         emSalBaseTF.setText("");
         emSalNetTF.setText("");
         emMonthSalTF.setText("");
+        updateSalaryBtn.setEnabled(false);
     }//GEN-LAST:event_clearSalEmBtnActionPerformed
 
     private void updateSalaryBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateSalaryBtnActionPerformed
-        // TODO add your handling code here:
+        try {
+            StringBuilder sb = new StringBuilder();
+
+            Validator.checkNumericFields(emSalAllowanceTF, sb);
+            Validator.checkEmptyFields(emSalBaseTF, sb, "Do not leave Base salary blank!");
+            Validator.checkEmptyFields(emSalNetTF, sb, "Do not leave Net salary blank!");
+
+            if (sb.length() > 0) {
+                JOptionPane.showMessageDialog(this, sb.toString(), "Input Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            String emID = emSalIdTF.getText();
+            double allowance = Double.parseDouble(emSalAllowanceTF.getText().trim());
+
+            // parse back to float value
+            NumberFormat numberFormat = NumberFormat.getInstance();
+            float baseSalary = numberFormat.parse(emSalBaseTF.getText()).floatValue();
+            float netSalary = numberFormat.parse(emSalNetTF.getText()).floatValue();
+
+            // get specific employee's role data
+            Role role = roleDAO.getSingleRoleData(emID);
+
+            if (role == null) {
+                JOptionPane.showMessageDialog(this, "No role data found for the given Employee ID.", "Error", JOptionPane.ERROR_MESSAGE);
+                resetSalSectionToDefault();
+                return;
+            }
+
+            if (role.getRoleName().equals("Staff") && (allowance < 0.1 || allowance > 0.8)) {
+                JOptionPane.showMessageDialog(this, "Staff salary coef number must be in range of [0.1, 0.8]", "Input Error", JOptionPane.ERROR_MESSAGE);
+                resetSalSectionToDefault();
+                return;
+            }
+
+            if (role.getRoleName().equals("Leader") && (allowance < 0.9 || allowance > 1.5)) {
+                JOptionPane.showMessageDialog(this, "Leader salary coef number must be in range of [0.9, 1.5]", "Input Error", JOptionPane.ERROR_MESSAGE);
+
+                return;
+            }
+            // update allowance
+            role.setAllowance(allowance);
+
+            Salary salary = new Salary();
+            salary.setEmId(emID);
+            salary.setBaseSalary(baseSalary);
+            salary.setNetSalary(netSalary);
+
+            salaryDAO.updateSalary(salary, role);
+            loadDataIntoSalaryTable();
+
+            // clear fields after updating
+            emSalIdTF.setText("");
+            emSalRoleIDTF.setText("");
+            emSalFirstnameTF.setText("");
+            emSalLastnameTF.setText("");
+            totalWorkDayTF.setText("");
+            monthTF.setText("");
+            emSalCoefTF.setText("");
+            emSalAllowanceTF.setText("");
+            emSalBaseTF.setText("");
+            emSalNetTF.setText("");
+            emMonthSalTF.setText("");
+            updateSalaryBtn.setEnabled(false);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "An unexpected error occurred: " + e.getMessage(), "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_updateSalaryBtnActionPerformed
 
     private void txtEmIDKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEmIDKeyTyped
@@ -1216,7 +1294,7 @@ public class MainForm extends javax.swing.JFrame {
     private void calculateBaseNetBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateBaseNetBtnActionPerformed
         StringBuilder sb = new StringBuilder();
 
-        Validator.checkNumericFields(emSalCoefTF, sb);
+        Validator.checkEmptyFields(emSalCoefTF, sb, "Coef can not be blank!");
         Validator.checkNumericFields(emSalAllowanceTF, sb);
 
         if (sb.length() > 0) {
@@ -1226,6 +1304,8 @@ public class MainForm extends javax.swing.JFrame {
 
         if (Float.parseFloat(emSalAllowanceTF.getText()) <= 0 || Float.parseFloat(emSalCoefTF.getText()) <= 0) {
             JOptionPane.showMessageDialog(this, "Please enter value greater than 0", "Input Error", JOptionPane.ERROR_MESSAGE);
+            emSalCoefTF.setBackground(Color.decode("#D3D3D3"));
+            updateBtn.setEnabled(false);
             return;
         }
         float allowance = Float.parseFloat(emSalAllowanceTF.getText());
@@ -1241,6 +1321,7 @@ public class MainForm extends javax.swing.JFrame {
 
         emSalBaseTF.setText(numberFormat.format(baseSalary));
         emSalNetTF.setText(numberFormat.format(netSalary));
+        updateSalaryBtn.setEnabled(true);
     }//GEN-LAST:event_calculateBaseNetBtnActionPerformed
 
     private void closeMainBtnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_closeMainBtnActionPerformed
@@ -1292,14 +1373,18 @@ public class MainForm extends javax.swing.JFrame {
             newEm.setGender(gender);
             newEm.setDob(date);
             newEm.setAddress(address);
-            newEm.setRole(role);
             newEm.setPositionID(posID);
 
-            emDAO.addEmployeeData(newEm);
+            // create new Role instance
+            Role newRole = new Role();
+            newRole.setEmID(emId);
+            newRole.setRoleName(role);
+
+            emDAO.addEmployeeData(newEm, newRole);
             loadDataIntoEmTable();
             loadDataIntoSalaryTable();
 
-            clearFields();          
+            clearFields();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "An unexpected error occurred: " + e.getMessage(), "Error",
                     JOptionPane.ERROR_MESSAGE);
@@ -1387,9 +1472,12 @@ public class MainForm extends javax.swing.JFrame {
             emSalFirstnameTF.setText(first_name);
             emSalLastnameTF.setText(last_name);
             emSalCoefTF.setText(coef);
+            emSalCoefTF.setBackground(Color.decode("#D3D3D3"));
             emSalAllowanceTF.setText(allowance);
             emSalBaseTF.setText(baseSalary);
+            emSalBaseTF.setBackground(Color.decode("#D3D3D3"));
             emSalNetTF.setText(netSalary);
+            emSalNetTF.setBackground(Color.decode("#D3D3D3"));
         }
     }
 
@@ -1450,10 +1538,13 @@ public class MainForm extends javax.swing.JFrame {
                 employee.setDob(null);
             }
             employee.setAddress(address);
-            employee.setRole(role);
             employee.setPositionID(posID);
 
-            emDAO.updateEmployeeData(employee);
+            Role newRole = new Role();
+            newRole.setEmID(emId);
+            newRole.setRoleName(role);
+
+            emDAO.updateEmployeeData(employee, newRole);
             loadDataIntoEmTable();
             loadDataIntoSalaryTable();
             lblStatus.setText("Status: update");
@@ -1476,8 +1567,15 @@ public class MainForm extends javax.swing.JFrame {
                 String emID = emTB.getValueAt(selectedRow, 0).toString().trim();
 
                 try {
+                    Role role = roleDAO.getSingleRoleData(emID);
+
+                    if (role == null) {
+                        JOptionPane.showMessageDialog(this, "No role data found for the given Employee ID.", "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    int roleID = role.getRoleId();
                     // Xóa bản ghi khỏi cơ sở dữ liệu
-                    emDAO.deleteEmployee(emID); // Gọi phương thức xóa
+                    emDAO.deleteEmployee(emID, roleID); // Gọi phương thức xóa
                     loadDataIntoEmTable();
                     loadDataIntoSalaryTable();
                 } catch (Exception ex) {
@@ -1550,9 +1648,11 @@ public class MainForm extends javax.swing.JFrame {
                             || em.getFirstName().toLowerCase().contains(input.toLowerCase())
                             || em.getLastName().toLowerCase().contains(input.toLowerCase())) {
 
+                        Role role = roleDAO.getSingleRoleData(em.getID());
                         // Add matching salary details to the table
                         Object[] rowData = {
                             em.getID(),
+                            role.getRoleId(),
                             em.getFirstName(),
                             em.getLastName(),
                             em.getCoefLevel(),
@@ -1583,15 +1683,17 @@ public class MainForm extends javax.swing.JFrame {
             model.setRowCount(0); // Xóa tất cả các hàng hiện có trong bảng
             // Thêm dữ liệu vào bảng
             for (Employee employee : employees) {
+                Role role = roleDAO.getSingleRoleData(employee.getID());
+
                 Object[] rowData = {
                     employee.getID(),
-                    emDAO.getRoleID(employee.getID()),
+                    role.getRoleId(),
                     employee.getFirstName(),
                     employee.getLastName(),
                     employee.getCoefLevel(),
                     employee.getAllowanceLevel(),
-                    employee.getBaseSalary(),
-                    employee.getNetSalary()
+                    String.format("%,d", employee.getBaseSalary()),
+                    String.format("%,d", employee.getNetSalary())
                 };
                 model.addRow(rowData);
             }
@@ -1623,7 +1725,7 @@ public class MainForm extends javax.swing.JFrame {
                 model.addRow(rowData);
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error loading data: " + e.getMessage(), "Error",
+            JOptionPane.showMessageDialog(this, "Error loading data b: " + e.getMessage(), "Error",
                     JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -1638,6 +1740,15 @@ public class MainForm extends javax.swing.JFrame {
         cbAddress.setSelectedItem(null);
         cbPosition.setSelectedItem(null);
         jDate.setDate(null);
+    }
+
+    private void resetSalSectionToDefault() {
+        emSalCoefTF.setBackground(Color.decode("#D3D3D3"));
+        emSalBaseTF.setText("");
+        emSalBaseTF.setBackground(Color.decode("#D3D3D3"));
+        emSalNetTF.setText("");
+        emSalNetTF.setBackground(Color.decode("#D3D3D3"));
+        updateSalaryBtn.setEnabled(false);
     }
 
     /**

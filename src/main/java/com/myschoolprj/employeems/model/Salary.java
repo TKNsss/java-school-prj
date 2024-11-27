@@ -7,6 +7,16 @@ public class Salary {
     private float netSalary;
     private int workDay;
     private int month;
+    
+    public Salary(String emID, float baseSalary, float netSalary, int workDay, int month) {
+        this.emId = emID;
+        this.baseSalary = baseSalary;
+        this.netSalary = netSalary;
+        this.workDay = workDay;
+        this.month = month;
+    }   
+    
+    public Salary() {}
 
     // Getters and setters
     public int getSalId() { return salId; }
