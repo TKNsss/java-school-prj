@@ -109,12 +109,13 @@ public class EmployeeDAO {
 
     public ArrayList<Employee> getEmployeeData() {
         ArrayList<Employee> employees = new ArrayList<>();
-        String query = "SELECT DISTINCT em.em_id AS eID, firstname, lastname, phone, gender, dob, address, base_salary, net_salary, title, sal_col_level, role_name, al_level "
-                + "FROM Employees AS em "
-                + "LEFT JOIN Positions AS pos ON em.pos_id = pos.pos_id "
-                + "LEFT JOIN Salaries AS sal ON sal.em_id = em.em_id "
-                + "LEFT JOIN Roles AS ro ON em.em_id = ro.em_id "
-                + "LEFT JOIN Allowances AS al ON ro.role_id = al.role_id";
+        String query = "SELECT em.em_id AS eID, firstname, lastname, phone, gender, dob, address, base_salary, net_salary, title, sal_col_level, role_name, al_level\n"
+                + "FROM Employees AS em\n"
+                + "LEFT JOIN Positions AS pos ON em.pos_id = pos.pos_id\n"
+                + "LEFT JOIN Salaries AS sal ON sal.em_id = em.em_id\n"
+                + "LEFT JOIN Roles AS ro ON em.em_id = ro.em_id\n"
+                + "LEFT JOIN Allowances AS al ON ro.role_id = al.role_id\n"
+                + "GROUP BY em.em_id, firstname, lastname, phone, gender, dob, address, base_salary, net_salary, title, sal_col_level, role_name, al_level;";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             try (ResultSet rs = ps.executeQuery()) {
@@ -157,8 +158,7 @@ public class EmployeeDAO {
             // Disable auto-commit to start a transaction
             connection.setAutoCommit(false);
 
-            try (PreparedStatement ps1 = connection.prepareStatement(query1); 
-                 PreparedStatement ps2 = connection.prepareStatement(query2)) {
+            try (PreparedStatement ps1 = connection.prepareStatement(query1); PreparedStatement ps2 = connection.prepareStatement(query2)) {
                 // Insert into Employees
                 ps1.setString(1, em.getID());
                 ps1.setString(2, em.getFirstName());
@@ -171,8 +171,8 @@ public class EmployeeDAO {
                 ps1.executeUpdate();
 
                 // Insert into Roles
-                ps2.setString(1, roleObj.getEmID()); 
-                ps2.setString(2, roleObj.getRoleName()); 
+                ps2.setString(1, roleObj.getEmID());
+                ps2.setString(2, roleObj.getRoleName());
                 ps2.executeUpdate();
             }
             // Commit the transaction
@@ -196,8 +196,6 @@ public class EmployeeDAO {
             }
         }
     }
-
-<<<<<<< HEAD
 
 // Import dữ liệu từ file excel vào db
 //    private void importExcel(File file) throws Exception {
@@ -252,11 +250,7 @@ public class EmployeeDAO {
 //            preparedStatement.executeBatch(); // Thực hiện batch
 //        }
 //    }
-
-    public void updateEmployeeData(Employee em) {
-=======
     public void updateEmployeeData(Employee em, Role roleObj) {
->>>>>>> origin/feature2
         if (isPhoneExists(em.getPhone(), em.getID())) {
             JOptionPane.showMessageDialog(null, "Phone number has existed, please choose another one!", "Input Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -322,10 +316,7 @@ public class EmployeeDAO {
         try {
             connection.setAutoCommit(false);
 
-            try (PreparedStatement ps1 = connection.prepareStatement(query1); 
-                 PreparedStatement ps2 = connection.prepareStatement(query2); 
-                 PreparedStatement ps3 = connection.prepareStatement(query3); 
-                 PreparedStatement ps4 = connection.prepareStatement(query4)) {
+            try (PreparedStatement ps1 = connection.prepareStatement(query1); PreparedStatement ps2 = connection.prepareStatement(query2); PreparedStatement ps3 = connection.prepareStatement(query3); PreparedStatement ps4 = connection.prepareStatement(query4)) {
 
                 // Delete from Allowances
                 ps1.setInt(1, roleID);

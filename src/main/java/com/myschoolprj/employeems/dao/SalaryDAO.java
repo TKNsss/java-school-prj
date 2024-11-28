@@ -3,20 +3,14 @@ package com.myschoolprj.employeems.dao;
 import com.myschoolprj.employeems.model.Employee;
 import com.myschoolprj.employeems.utils.connectDB;
 import com.myschoolprj.employeems.model.Salary;
-<<<<<<< HEAD
-=======
 import com.myschoolprj.employeems.model.Role;
->>>>>>> origin/feature2
 import com.myschoolprj.employeems.utils.Validator;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-<<<<<<< HEAD
 import java.util.ArrayList;
-=======
->>>>>>> origin/feature2
 import javax.swing.JOptionPane;
 
 public class SalaryDAO {
@@ -25,20 +19,6 @@ public class SalaryDAO {
 
     public SalaryDAO() throws SQLException {
         this.connection = connectDB.getConnection();
-    }
-<<<<<<< HEAD
-
-    public void updateSalary(Salary sal) throws Exception {
-        String query1 = "INSERT INTO Allowances(al_level, role_id) VALUES (?, ?)";
-        String query2 = "INSERT INTO Salaries(em_id, base_salary, net_salary) VALUES (?, ?, ?)";
-
-        try (PreparedStatement ps = connection.prepareStatement(query1)) {
-
-            ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception("Error writing Salaries: " + e);
-        }
     }
 
     public ArrayList<Salary> getMonSalData() throws SQLException {
@@ -70,8 +50,8 @@ public class SalaryDAO {
             }
         }
         return salaries;
-=======
-    
+    }
+
     public void updateSalary(Salary sal, Role role) {
         if (!isEmIDExists(sal.getEmId())) {
             insertSalary(sal, role);
@@ -79,18 +59,17 @@ public class SalaryDAO {
         }
         String query1 = "UPDATE Allowances SET al_level = ? WHERE role_id = ?";
         String query2 = "UPDATE Salaries SET base_salary = ?, net_salary = ? WHERE em_id = ?";
-        
+
         try {
             connection.setAutoCommit(false);
-            
-            try (PreparedStatement ps1 = connection.prepareStatement(query1);
-                 PreparedStatement ps2 = connection.prepareStatement(query2)) {
-                
+
+            try (PreparedStatement ps1 = connection.prepareStatement(query1); PreparedStatement ps2 = connection.prepareStatement(query2)) {
+
                 // update Allowances
                 ps1.setDouble(1, role.getAllowance());
                 ps1.setInt(2, role.getRoleId());
                 ps1.executeUpdate();
-                
+
                 // update Salaries
                 ps2.setFloat(1, sal.getBaseSalary());
                 ps2.setFloat(2, sal.getNetSalary());
@@ -117,26 +96,36 @@ public class SalaryDAO {
     }
 
     public void insertSalary(Salary sal, Role role) {
-        String query1 = "INSERT INTO Allowances(al_level, role_id) VALUES (?, ?)";
-        String query2 = "INSERT INTO Salaries(em_id, base_salary, net_salary) VALUES (?, ?, ?)";
+        // Chỉnh sửa câu lệnh SQL để thêm các trường mới: month_salary, workday, month, year
+        String query1 = "INSERT INTO Allowances(role_id, al_level) VALUES (?, ?)";
+        String query2 = "INSERT INTO Salaries(em_id, base_salary, net_salary, month_salary, work_day, month, year) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try {
             connection.setAutoCommit(false);
 
+            // Cấu hình PreparedStatement
             try (PreparedStatement ps1 = connection.prepareStatement(query1); PreparedStatement ps2 = connection.prepareStatement(query2)) {
-                // insert into Allowances
-                ps1.setDouble(1, role.getAllowance());
-                ps1.setInt(2, role.getRoleId());
+
+                // Chèn vào bảng Allowances
+                ps1.setInt(1, role.getRoleId());
+                ps1.setDouble(2, role.getAllowance());
                 ps1.executeUpdate();
 
-                // insert into Salaries
+
+                // Chèn vào bảng Salaries
                 ps2.setString(1, sal.getEmId());
                 ps2.setFloat(2, sal.getBaseSalary());
                 ps2.setFloat(3, sal.getNetSalary());
+                ps2.setFloat(4, sal.getMonSalary());  // Thêm tháng lương tính toán vào
+                ps2.setInt(5, sal.getWorkDay());        // Số ngày làm việc
+                ps2.setInt(6, sal.getMonth());          // Tháng
+                ps2.setInt(7, sal.getYear());           // Năm
                 ps2.executeUpdate();
             }
+
             connection.commit();
             JOptionPane.showMessageDialog(null, "Salary inserted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+
         } catch (SQLException e) {
             try {
                 connection.rollback();
@@ -158,19 +147,18 @@ public class SalaryDAO {
         String query = "SELECT COUNT(*) FROM Salaries WHERE em_id = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setString(1, emID); 
+            ps.setString(1, emID);
 
-            try (ResultSet rs = ps.executeQuery()) { 
-                if (rs.next()) { 
-                    return rs.getInt(1) > 0;     
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
                 }
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error fetching employee's data:\n" + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
-            Validator.printSQLExceptionMessage(e);     
+            Validator.printSQLExceptionMessage(e);
         }
-        return false; 
->>>>>>> origin/feature2
+        return false;
     }
 
 }

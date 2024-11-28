@@ -37,7 +37,7 @@ public static boolean checkIntegerAndEmpty(JTextField tf, StringBuilder sb, Stri
         int value = Integer.parseInt(tf.getText().trim());
         
         // Kiểm tra giá trị có nằm trong khoảng không
-        if (value <= min || value >= max) {
+        if (value < min || value > max) {
             sb.append("The input value must be within the range" + min + " - " + max + ".\n");
             tf.setBackground(Color.decode("#FFCDD2"));
             return false;
@@ -210,16 +210,7 @@ public static boolean checkYearInRange(JTextField tf, StringBuilder sb, String e
             sb.append("Those fields must be numeric (integer or decimal)!\n");
             tf.setBackground(Color.decode("#FFCDD2"));
             return false;
-<<<<<<< HEAD
-        }
-
-        if (tf.equals("emSalCoefTF")) {
-            tf.setBackground(Color.decode("#D3D3D3"));
-            return true;
-        }
-=======
         }        
->>>>>>> origin/feature2
         tf.setBackground(Color.WHITE);
         return true;
     }
