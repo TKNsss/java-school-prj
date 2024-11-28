@@ -13,8 +13,14 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import javax.swing.*;
 import java.awt.*;
 import java.sql.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Barchart extends JPanel {
+
+    // Khai báo biến chart như là thuộc tính của lớp
+    private JFreeChart chart;
+    private ChartPanel chartPanel;
 
     public Barchart() {
         System.out.println("Khởi tạo Barchart...");
@@ -23,7 +29,7 @@ public class Barchart extends JPanel {
         CategoryDataset dataset = createDatasetFromDB(11, 2024); // Lọc theo tháng 11 năm 2024
 
         // Tạo biểu đồ
-        JFreeChart chart = ChartFactory.createBarChart(
+        chart = ChartFactory.createBarChart(
                 "Employees Net Salaries", // Tiêu đề
                 "Employee ID", // Trục X
                 "Net Salary", // Trục Y
@@ -47,14 +53,36 @@ public class Barchart extends JPanel {
 
         // Tự động điều chỉnh phạm vi trục Y
         NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-        rangeAxis.setRange(0, 1000);  // Ví dụ: đặt phạm vi từ 0 đến 1000
+        rangeAxis.setRange(0, 200000000);  // Ví dụ: đặt phạm vi từ 0 đến 1000
 
         // Tạo ChartPanel và thêm vào JPanel
-        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel = new ChartPanel(chart);
         this.setLayout(new BorderLayout());
         this.add(chartPanel, BorderLayout.CENTER);
+
+        // Thiết lập timer để tự động làm mới biểu đồ mỗi 10 giây
+        Timer updateTimer = new Timer(10000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Cập nhật lại dữ liệu từ cơ sở dữ liệu và làm mới biểu đồ
+                updateChart(11, 2024);  // Cập nhật theo tháng và năm mong muốn
+            }
+        });
+        updateTimer.start();  // Bắt đầu timer
     }
 
+    // Phương thức cập nhật dataset và biểu đồ
+    public void updateChart(int month, int year) {
+        // Lấy dữ liệu mới từ cơ sở dữ liệu
+        CategoryDataset newDataset = createDatasetFromDB(month, year);
+
+        // Cập nhật dataset cho biểu đồ
+        chart.getCategoryPlot().setDataset(newDataset);
+        chartPanel.revalidate();  // Làm mới lại giao diện người dùng
+        chartPanel.repaint();     // Vẽ lại biểu đồ
+    }
+
+    // Cập nhật dữ liệu từ cơ sở dữ liệu
     private CategoryDataset createDatasetFromDB(int month, int year) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 

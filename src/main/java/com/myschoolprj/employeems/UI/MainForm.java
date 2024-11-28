@@ -1415,11 +1415,27 @@ public class MainForm extends javax.swing.JFrame {
             salary.setMonth(month);
             salary.setYear(year);
 
-            salaryDAO.updateSalary(salary, role);
+       try {
+            // Bắt đầu giao dịch với DAO
+            salaryDAO.beginTransaction();
+
+            // Thực hiện các thao tác trong giao dịch
+            salaryDAO.insertSalary(salary, role);  // Thêm dữ liệu lương
+            salaryDAO.updateSalary(salary, role);  // Cập nhật dữ liệu lương
+
+            // Commit giao dịch nếu tất cả thành công
+            salaryDAO.commitTransaction();
+
+            // Cập nhật bảng lương trên giao diện
+            loadDataIntoMonSalTable();
             loadDataIntoSalaryTable();
 
-            salaryDAO.insertSalary(salary, role);
-            loadDataIntoMonSalTable();
+        } catch (SQLException e) {
+            // Nếu có lỗi, rollback giao dịch
+            salaryDAO.rollbackTransaction();
+            JOptionPane.showMessageDialog(this, "Error updating Salary: " + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
 
             // clear fields after updating
 //            emSalIdTF.setText("");
@@ -1484,20 +1500,20 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     private void bttn_importActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttn_importActionPerformed
-                JFileChooser fileChooser = new JFileChooser();
-                if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    String filePath = fileChooser.getSelectedFile().getAbsolutePath();
-                    try {
-                        EmployeeImport employeeImport = new EmployeeImport();
-                        List<Employee> employees = employeeImport.readEmployeesFromExcel(filePath);
-                        employeeImport.saveEmployeeToDatabase(employees);
-                        JOptionPane.showMessageDialog(null, "Import thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
-                        loadDataIntoEmTable();
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        JOptionPane.showMessageDialog(null, "Lỗi: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
+        JFileChooser fileChooser = new JFileChooser();
+        if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+            try {
+                EmployeeImport employeeImport = new EmployeeImport();
+                List<Employee> employees = employeeImport.readEmployeesFromExcel(filePath);
+                employeeImport.saveEmployeeToDatabase(employees);
+                JOptionPane.showMessageDialog(null, "Import thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+                loadDataIntoEmTable();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Lỗi: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_bttn_importActionPerformed
 
     private void calculateMonBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateMonBtnActionPerformed
