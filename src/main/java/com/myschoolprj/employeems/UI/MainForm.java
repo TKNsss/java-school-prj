@@ -10,13 +10,13 @@ import com.myschoolprj.employeems.model.Employee;
 import com.myschoolprj.employeems.dao.RoleDAO;
 import com.myschoolprj.employeems.model.Role;
 import com.myschoolprj.employeems.dao.SalaryDAO;
+import com.myschoolprj.employeems.dao.EmployeeImport;
 import com.myschoolprj.employeems.model.Salary;
 
-import java.io.FileInputStream;
-import java.io.File;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Date;
 import java.text.*;
 import java.util.Map;
@@ -149,6 +149,7 @@ public class MainForm extends javax.swing.JFrame {
         jLabel34 = new javax.swing.JLabel();
         cbPosition = new javax.swing.JComboBox<>();
         bttn_import = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
         jPanel15 = new javax.swing.JPanel();
         jPanel16 = new javax.swing.JPanel();
         jLabel23 = new javax.swing.JLabel();
@@ -721,12 +722,15 @@ public class MainForm extends javax.swing.JFrame {
 
         cbPosition.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Frontend Developer", "Backend Developer", "Full-Stack Developer", "Mobile Developer", "Tester", "Data Engineer" }));
 
-        bttn_import.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-file-32.png"))); // NOI18N
+        bttn_import.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-file-16.png"))); // NOI18N
         bttn_import.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bttn_importActionPerformed(evt);
             }
         });
+
+        jLabel6.setFont(new java.awt.Font("PMingLiU-ExtB", 2, 12)); // NOI18N
+        jLabel6.setText("Import File Ex");
 
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
         jPanel13.setLayout(jPanel13Layout);
@@ -787,7 +791,11 @@ public class MainForm extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(deleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(85, Short.MAX_VALUE))
-                    .addComponent(bttn_import, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(bttn_import))))
         );
         jPanel13Layout.setVerticalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -800,10 +808,11 @@ public class MainForm extends javax.swing.JFrame {
                             .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtEmID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel16)))
+                    .addComponent(bttn_import)
                     .addGroup(jPanel13Layout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(bttn_import)))
-                .addGap(23, 23, 23)
+                        .addContainerGap()
+                        .addComponent(jLabel6)))
+                .addGap(25, 25, 25)
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(txtFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1374,7 +1383,6 @@ public class MainForm extends javax.swing.JFrame {
             int month = numberFormat.parse(monthTF.getText()).intValue();
             int year = numberFormat.parse(yearTF.getText()).intValue();
 
-
             // get specific employee's role data
             Role role = roleDAO.getSingleRoleData(emID);
 
@@ -1409,7 +1417,7 @@ public class MainForm extends javax.swing.JFrame {
 
             salaryDAO.updateSalary(salary, role);
             loadDataIntoSalaryTable();
-            
+
             salaryDAO.insertSalary(salary, role);
             loadDataIntoMonSalTable();
 
@@ -1476,21 +1484,20 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     private void bttn_importActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttn_importActionPerformed
-//        // TODO add your handling code here:
-//        JFileChooser fileChooser = new JFileChooser();
-//        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Excel Files", "xls", "xlsx"));
-//        int result = fileChooser.showOpenDialog(null);
-//
-//        if (result == JFileChooser.APPROVE_OPTION) {
-//            File file = fileChooser.getSelectedFile();
-//            try {
-//                importExcel(file);
-//                JOptionPane.showMessageDialog(null, "Import thành công!", "Success", JOptionPane.INFORMATION_MESSAGE);
-//            } catch (Exception ex) {
-//                ex.printStackTrace();
-//                JOptionPane.showMessageDialog(null, "Import thất bại: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-//            }
-//        }
+                JFileChooser fileChooser = new JFileChooser();
+                if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+                    try {
+                        EmployeeImport employeeImport = new EmployeeImport();
+                        List<Employee> employees = employeeImport.readEmployeesFromExcel(filePath);
+                        employeeImport.saveEmployeeToDatabase(employees);
+                        JOptionPane.showMessageDialog(null, "Import thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+                        loadDataIntoEmTable();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "Lỗi: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
     }//GEN-LAST:event_bttn_importActionPerformed
 
     private void calculateMonBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateMonBtnActionPerformed
@@ -2087,6 +2094,7 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel36;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;

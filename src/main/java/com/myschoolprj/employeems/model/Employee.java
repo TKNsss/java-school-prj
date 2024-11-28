@@ -14,14 +14,15 @@ public class Employee {
     private String position;
     private String role;
     private float baseSalary;
-    private float netSalary;    
+    private float netSalary;
     private float allowanceLevel;
     private float coefLevel;
     private int posID;
+    private int roleID;
 
     // Constructor
     public Employee(String ID, String firstName, String lastName, String phone, String gender, Date dob, String address, String position, String role, float baseSalary, float netSalary, int posID) {
-        this.ID = ID;  
+        this.ID = ID;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
@@ -31,18 +32,31 @@ public class Employee {
         this.position = position;
         this.role = role;
         this.baseSalary = baseSalary;
-        this.netSalary = netSalary;    
-        this.posID = posID;   
+        this.netSalary = netSalary;
+        this.posID = posID;
+    }
+
+    public Employee(String emId, String firstName, String lastName, String phone, String gender, Date dob, String address, String role, String pos) {
+        this.ID = emId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.gender = gender;
+        this.dob = dob;
+        this.address = address;
+        this.role = role;
+        this.position = pos;
+
     }
 
     // Default constructor
     public Employee() {
     }
-    
+
     public String getID() {
         return ID;
     }
-    
+
     public void setID(String id) {
         this.ID = id;
     }
@@ -106,17 +120,25 @@ public class Employee {
     public int getPositionID() {
         return posID;
     }
-    
+
     public void setPositionID(int posID) {
         this.posID = posID;
     }
-    
+
     public String getRole() {
         return role;
     }
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public int getRoleID() {
+        return roleID;
+    }
+
+    public void setRoleID(int posID) {
+        this.roleID = posID;
     }
 
     public float getBaseSalary() {
@@ -135,22 +157,20 @@ public class Employee {
         this.netSalary = netSalary;
     }
 
-    
     public void setAllowanceLevel(float alLevel) {
         this.allowanceLevel = alLevel;
     }
-    
+
     public float getAllowanceLevel() {
         return allowanceLevel;
     }
-    
+
     public void setCoefLevel(float coefLevel) {
         this.coefLevel = coefLevel;
     }
-    
+
     public float getCoefLevel() {
         return coefLevel;
     }
-
 
 }
