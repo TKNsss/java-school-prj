@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.JTextField;
+import java.time.Year;
 
 public class Validator {
 
@@ -22,6 +23,64 @@ public class Validator {
         tf.setBackground(Color.WHITE);
         return true;
     }
+
+public static boolean checkIntegerAndEmpty(JTextField tf, StringBuilder sb, String emptyMsg, String integerMsg, int min, int max) {
+    // Kiểm tra trường rỗng
+    if (tf.getText().trim().isEmpty()) {
+        sb.append(emptyMsg).append("\n");
+        tf.setBackground(Color.decode("#FFCDD2"));
+        return false;
+    }
+
+    // Kiểm tra số nguyên
+    try {
+        int value = Integer.parseInt(tf.getText().trim());
+        
+        // Kiểm tra giá trị có nằm trong khoảng không
+        if (value <= min || value >= max) {
+            sb.append("The input value must be within the range" + min + " - " + max + ".\n");
+            tf.setBackground(Color.decode("#FFCDD2"));
+            return false;
+        }
+
+        tf.setBackground(Color.WHITE);
+        return true; // Giá trị hợp lệ và nằm trong khoảng
+    } catch (NumberFormatException e) {
+        sb.append(integerMsg).append("\n");
+        tf.setBackground(Color.decode("#FFCDD2"));
+        return false; // Giá trị không phải số nguyên
+    }
+}
+
+public static boolean checkYearInRange(JTextField tf, StringBuilder sb, String emptyMsg, String yearMsg) {
+    // Kiểm tra trường rỗng
+    if (tf.getText().trim().isEmpty()) {
+        sb.append(emptyMsg).append("\n");
+        tf.setBackground(Color.decode("#FFCDD2"));
+        return false;
+    }
+
+    // Kiểm tra số nguyên
+    try {
+        int year = Integer.parseInt(tf.getText().trim());
+        int currentYear = Year.now().getValue(); // Lấy năm hiện tại
+
+        // Kiểm tra năm có nằm trong khoảng từ 2020 đến năm hiện tại không
+        if (year < 2020 || year > currentYear) {
+            sb.append(yearMsg + " (Must be between 2020 and" + currentYear + ").\n");
+            tf.setBackground(Color.decode("#FFCDD2"));
+            return false;
+        }
+
+        tf.setBackground(Color.WHITE);
+        return true; // Năm hợp lệ
+    } catch (NumberFormatException e) {
+        sb.append("The value entered must be a valid year.\n");
+        tf.setBackground(Color.decode("#FFCDD2"));
+        return false; // Không phải số nguyên
+    }
+}
+
 
     public static boolean checkEmptyComboBoxes(JComboBox tf, StringBuilder sb, String msg) {
         if (tf.getSelectedIndex() == -1) {
@@ -152,7 +211,7 @@ public class Validator {
             tf.setBackground(Color.decode("#FFCDD2"));
             return false;
         }
-        
+
         if (tf.equals("emSalCoefTF")) {
             tf.setBackground(Color.decode("#D3D3D3"));
             return true;

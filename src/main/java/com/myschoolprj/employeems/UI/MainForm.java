@@ -6,6 +6,7 @@ import com.myschoolprj.employeems.utils.GradientPanels;
 import com.myschoolprj.employeems.utils.jPanelGradient2;
 import com.myschoolprj.employeems.utils.PlaceholderUtils;
 import com.myschoolprj.employeems.dao.EmployeeDAO;
+import com.myschoolprj.employeems.dao.SalaryDAO;
 import com.myschoolprj.employeems.utils.connectDB;
 
 import java.io.FileInputStream;
@@ -17,6 +18,7 @@ import java.util.Date;
 import java.text.*;
 
 import com.myschoolprj.employeems.model.Employee;
+import com.myschoolprj.employeems.model.Salary;
 import java.awt.Color;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
@@ -25,6 +27,7 @@ import javax.swing.table.DefaultTableModel;
 public class MainForm extends javax.swing.JFrame {
 
     private EmployeeDAO emDAO;
+    private SalaryDAO salDAO;
 
     public MainForm() {
         initComponents();
@@ -44,7 +47,6 @@ public class MainForm extends javax.swing.JFrame {
         }
 
         // tải data từ db lên bảng
-
         try {
             emDAO = new EmployeeDAO();
         } catch (SQLException e) {
@@ -58,6 +60,7 @@ public class MainForm extends javax.swing.JFrame {
 
         loadDataIntoEmTable();
         loadDataIntoSalaryTable();
+        loadDataIntoMonSalTable();
 
         // Khởi tạo Barchart
         Barchart barchart = new Barchart();
@@ -68,6 +71,7 @@ public class MainForm extends javax.swing.JFrame {
         jPanel10.revalidate(); // Cập nhật lại panel
         jPanel10.repaint(); // Vẽ lại panel
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -174,6 +178,9 @@ public class MainForm extends javax.swing.JFrame {
         jPanel18 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         salaryTB = new javax.swing.JTable();
+        jPanel14 = new javax.swing.JPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        monthSalTB = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -953,12 +960,19 @@ public class MainForm extends javax.swing.JFrame {
 
         monthTF.setPreferredSize(new java.awt.Dimension(73, 30));
 
+        emMonthSalTF.setEditable(false);
+        emMonthSalTF.setBackground(new java.awt.Color(211, 211, 211));
         emMonthSalTF.setPreferredSize(new java.awt.Dimension(73, 30));
 
         jLabel36.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         jLabel36.setText("Month $:");
 
         calculateMonBtn.setText("Calculate Month $");
+        calculateMonBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                calculateMonBtnActionPerformed(evt);
+            }
+        });
 
         emSalRoleIDTF.setBackground(new java.awt.Color(211, 211, 211));
         emSalRoleIDTF.setPreferredSize(new java.awt.Dimension(73, 30));
@@ -989,11 +1003,11 @@ public class MainForm extends javax.swing.JFrame {
                                     .addComponent(jLabel32)
                                     .addComponent(jLabel33)
                                     .addComponent(jLabel36))
-                                .addGap(33, 33, 33)
+                                .addGap(9, 9, 9)
                                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(emMonthSalTF, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(emSalNetTF, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(emSalBaseTF, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(emSalBaseTF, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(emSalNetTF, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(emMonthSalTF, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel16Layout.createSequentialGroup()
                                     .addComponent(jLabel25)
@@ -1089,7 +1103,7 @@ public class MainForm extends javax.swing.JFrame {
                     .addComponent(emSalAllowanceTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(calculateMonBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+                    .addComponent(calculateMonBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(calculateBaseNetBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(33, 33, 33)
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1145,18 +1159,74 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
         jScrollPane3.setViewportView(salaryTB);
+        if (salaryTB.getColumnModel().getColumnCount() > 0) {
+            salaryTB.getColumnModel().getColumn(0).setPreferredWidth(55);
+            salaryTB.getColumnModel().getColumn(1).setPreferredWidth(35);
+            salaryTB.getColumnModel().getColumn(2).setPreferredWidth(45);
+            salaryTB.getColumnModel().getColumn(3).setPreferredWidth(45);
+            salaryTB.getColumnModel().getColumn(4).setPreferredWidth(20);
+            salaryTB.getColumnModel().getColumn(5).setPreferredWidth(40);
+        }
 
         javax.swing.GroupLayout jPanel18Layout = new javax.swing.GroupLayout(jPanel18);
         jPanel18.setLayout(jPanel18Layout);
         jPanel18Layout.setHorizontalGroup(
             jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel18Layout.createSequentialGroup()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 640, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 646, Short.MAX_VALUE)
         );
         jPanel18Layout.setVerticalGroup(
             jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 540, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+
+        jPanel14.setBorder(new com.myschoolprj.employeems.utils.border(5,1)); // Thay đổi bán kính bo góc nếu cần
+
+        monthSalTB.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "Salary ID", "Employee ID", "First name", "Last name", "Work day", "Month Salary $", "Month", "Year"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Float.class, java.lang.Integer.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane4.setViewportView(monthSalTB);
+        if (monthSalTB.getColumnModel().getColumnCount() > 0) {
+            monthSalTB.getColumnModel().getColumn(0).setPreferredWidth(40);
+            monthSalTB.getColumnModel().getColumn(1).setPreferredWidth(55);
+            monthSalTB.getColumnModel().getColumn(2).setPreferredWidth(45);
+            monthSalTB.getColumnModel().getColumn(3).setPreferredWidth(45);
+            monthSalTB.getColumnModel().getColumn(4).setPreferredWidth(35);
+            monthSalTB.getColumnModel().getColumn(6).setPreferredWidth(25);
+            monthSalTB.getColumnModel().getColumn(7).setPreferredWidth(25);
+        }
+
+        javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
+        jPanel14.setLayout(jPanel14Layout);
+        jPanel14Layout.setHorizontalGroup(
+            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING)
+        );
+        jPanel14Layout.setVerticalGroup(
+            jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
@@ -1167,14 +1237,19 @@ public class MainForm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jPanel16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         jPanel15Layout.setVerticalGroup(
             jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel15Layout.createSequentialGroup()
-                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel15Layout.createSequentialGroup()
+                        .addComponent(jPanel18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -1206,7 +1281,7 @@ public class MainForm extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void searchTFActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    private void searchTFActionPerformed(java.awt.event.ActionEvent evt) {
         String searchInput = searchTF.getText().trim(); // Get input from the search field
         // Check input validity
         if (searchInput.isEmpty() || searchInput.equals("Search")) {
@@ -1216,7 +1291,7 @@ public class MainForm extends javax.swing.JFrame {
 
         // Call the search method for the employee table
         searchByInput(searchInput, emTB, "employee");
-    }                                        
+    }
 
     private void salSearchTFKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_salSearchTFKeyReleased
         if (salSearchTF.getText().isEmpty()) {
@@ -1245,11 +1320,11 @@ public class MainForm extends javax.swing.JFrame {
         searchByInput(searchInput, salaryTB, "salary");
     }//GEN-LAST:event_salSearchTFActionPerformed
 
-    private void searchTFKeyReleased(java.awt.event.KeyEvent evt) {                                     
+    private void searchTFKeyReleased(java.awt.event.KeyEvent evt) {
         if (searchTF.getText().isEmpty()) {
             loadDataIntoEmTable();
         }
-    }                                    
+    }
 
     private void clearSalEmBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearSalEmBtnActionPerformed
         emSalIdTF.setText("");
@@ -1305,7 +1380,7 @@ public class MainForm extends javax.swing.JFrame {
 
     private void closeMainBtnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_closeMainBtnActionPerformed
         this.dispose();
-    }                                            
+    }
 
     private void bttn_importActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttn_importActionPerformed
 //        // TODO add your handling code here:
@@ -1324,6 +1399,69 @@ public class MainForm extends javax.swing.JFrame {
 //            }
 //        }
     }//GEN-LAST:event_bttn_importActionPerformed
+
+    private void calculateMonBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateMonBtnActionPerformed
+        // TODO add your handling code here:
+        StringBuilder sb = new StringBuilder();
+
+        Validator.checkNumericFields(emSalCoefTF, sb);
+        Validator.checkNumericFields(emSalAllowanceTF, sb);
+        Validator.checkIntegerAndEmpty(totalWorkDayTF, sb, "The field -Work day- cannot be left blank", "The value entered into -Work day- must be an integer", 0, 26);
+        Validator.checkIntegerAndEmpty(monthTF, sb, "The field -Month- cannot be left blank", "The value entered into -Month- must be an integer", 1, 12);
+        Validator.checkYearInRange(yearTF, sb, "The field -Year- cannot be left blank", "Invalid year entered");
+
+        if (sb.length() > 0) {
+            JOptionPane.showMessageDialog(this, sb.toString(), "Input Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (Float.parseFloat(emSalAllowanceTF.getText()) <= 0 || Float.parseFloat(emSalCoefTF.getText()) <= 0) {
+            JOptionPane.showMessageDialog(this, "Please enter value greater than 0", "Input Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        float allowance = Float.parseFloat(emSalAllowanceTF.getText());
+        float coef = Float.parseFloat(emSalCoefTF.getText());
+        int workday = Integer.parseInt(totalWorkDayTF.getText());
+        // calculate salaries
+        float baseSalary = 2340000 * coef;
+        float netSalary = baseSalary + baseSalary * allowance;
+        float monthSal = (netSalary / 26) * workday;
+
+        // Format the salaries
+        NumberFormat numberFormat = NumberFormat.getInstance();
+        numberFormat.setMinimumFractionDigits(2);
+        numberFormat.setMaximumFractionDigits(2);
+
+        emMonthSalTF.setText(numberFormat.format(monthSal));
+    }//GEN-LAST:event_calculateMonBtnActionPerformed
+
+    private void salaryTBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_salaryTBMouseClicked
+        // TODO add your handling code here:
+        int selectedRow = salaryTB.getSelectedRow();
+
+        if (selectedRow >= 0) {
+            // get data from selected row in salary table
+            String id = salaryTB.getValueAt(selectedRow, 0).toString();
+            String roleID = salaryTB.getValueAt(selectedRow, 1).toString();
+            String first_name = salaryTB.getValueAt(selectedRow, 2).toString();
+            String last_name = salaryTB.getValueAt(selectedRow, 3).toString();
+            String coef = salaryTB.getValueAt(selectedRow, 4).toString();
+            String allowance = salaryTB.getValueAt(selectedRow, 5).toString();
+            String baseSalary = salaryTB.getValueAt(selectedRow, 6).toString();
+            String netSalary = salaryTB.getValueAt(selectedRow, 7).toString();
+
+            // Điền dữ liệu vào các trường nhập liệu
+            emSalIdTF.setText(id);
+            emSalRoleIDTF.setText(roleID);
+            emSalFirstnameTF.setText(first_name);
+            emSalLastnameTF.setText(last_name);
+            emSalCoefTF.setText(coef);
+            emSalAllowanceTF.setText(allowance);
+            emSalBaseTF.setText(baseSalary);
+            emSalNetTF.setText(netSalary);
+        }
+    }//GEN-LAST:event_salaryTBMouseClicked
 
     private void addEmDataBtnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_addEmDataBtnActionPerformed
         try {
@@ -1377,7 +1515,7 @@ public class MainForm extends javax.swing.JFrame {
             loadDataIntoEmTable();
             loadDataIntoSalaryTable();
 
-            clearFields();          
+            clearFields();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "An unexpected error occurred: " + e.getMessage(), "Error",
                     JOptionPane.ERROR_MESSAGE);
@@ -1401,8 +1539,6 @@ public class MainForm extends javax.swing.JFrame {
         txtEmID.setEditable(true);
         txtEmID.setBackground(Color.WHITE);
     }
-
-
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton3ActionPerformed
 //        // TODO add your handling code here:
@@ -1465,32 +1601,6 @@ public class MainForm extends javax.swing.JFrame {
             }
             cbAddress.setSelectedItem(address);
             cbPosition.setSelectedItem(position);
-        }
-    }
-
-    private void salaryTBMouseClicked(java.awt.event.MouseEvent evt) {
-        int selectedRow = salaryTB.getSelectedRow();
-
-        if (selectedRow >= 0) {
-            // get data from selected row in salary table
-            String id = salaryTB.getValueAt(selectedRow, 0).toString();
-            String roleID = salaryTB.getValueAt(selectedRow, 1).toString();
-            String first_name = salaryTB.getValueAt(selectedRow, 2).toString();
-            String last_name = salaryTB.getValueAt(selectedRow, 3).toString();
-            String coef = salaryTB.getValueAt(selectedRow, 4).toString();
-            String allowance = salaryTB.getValueAt(selectedRow, 5).toString();
-            String baseSalary = salaryTB.getValueAt(selectedRow, 6).toString();
-            String netSalary = salaryTB.getValueAt(selectedRow, 7).toString();
-
-            // Điền dữ liệu vào các trường nhập liệu
-            emSalIdTF.setText(id);
-            emSalRoleIDTF.setText(roleID);
-            emSalFirstnameTF.setText(first_name);
-            emSalLastnameTF.setText(last_name);
-            emSalCoefTF.setText(coef);
-            emSalAllowanceTF.setText(allowance);
-            emSalBaseTF.setText(baseSalary);
-            emSalNetTF.setText(netSalary);
         }
     }
 
@@ -1707,6 +1817,33 @@ public class MainForm extends javax.swing.JFrame {
         }
     }
 
+    private void loadDataIntoMonSalTable() {
+        try {
+            salDAO = new SalaryDAO();
+            ArrayList<Salary> salaries = salDAO.getMonSalData(); // Phương thức này có thể ném SQLException
+            DefaultTableModel model = (DefaultTableModel) monthSalTB.getModel();
+            model.setRowCount(0);
+
+            for (Salary sal : salaries) {
+                Object[] rowData = {
+                    sal.getSalId(),
+                    sal.getEmId(),
+                    sal.getFirstName(),
+                    sal.getLastName(),
+                    sal.getWorkDay(),
+                    sal.getMonSalary(),
+                    sal.getMonth(),
+                    sal.getYear()
+
+                };
+                model.addRow(rowData);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error loading data: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+
     private void loadDataIntoEmTable() {
         try {
             ArrayList<Employee> employees = emDAO.getEmployeeData();
@@ -1821,6 +1958,7 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel13;
+    private javax.swing.JPanel jPanel14;
     private javax.swing.JPanel jPanel15;
     private javax.swing.JPanel jPanel16;
     private javax.swing.JPanel jPanel18;
@@ -1835,7 +1973,9 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLabel lblStatus;
+    private javax.swing.JTable monthSalTB;
     private javax.swing.JTextField monthTF;
     private javax.swing.JLabel mthlb;
     private javax.swing.JTextField salSearchTF;

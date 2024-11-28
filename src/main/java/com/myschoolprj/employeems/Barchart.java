@@ -64,7 +64,7 @@ public class Barchart extends JPanel {
         String password = "matkhaudongian"; // Thay bằng password của bạn
 
         // Câu lệnh SQL để lấy dữ liệu của các nhân viên trong tháng và năm cụ thể
-        String query = "SELECT em_id, net_salary FROM Salaries WHERE month = ? AND year = ?";
+        String query = "SELECT em_id, month_salary FROM Salaries WHERE month = ? AND year = ?";
 
         try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, month); // Gắn giá trị tháng vào câu truy vấn
@@ -74,11 +74,11 @@ public class Barchart extends JPanel {
                 // Lấy dữ liệu từ ResultSet và thêm vào dataset
                 while (rs.next()) {
                     String employeeId = rs.getString("em_id"); // Mã nhân viên
-                    double netSalary = rs.getDouble("net_salary"); // Lương thực nhận
-                    System.out.println("Employee: " + employeeId + ", Net Salary: " + netSalary); // Debug line
+                    double monthSalary = rs.getDouble("month_salary"); // Lương tháng
+                    System.out.println("Employee: " + employeeId + ", Net Salary: " + monthSalary); // Debug line
 
                     // Thêm dữ liệu vào dataset
-                    dataset.addValue(netSalary, "Net Salary", employeeId);
+                    dataset.addValue(monthSalary, "Month Salary", employeeId);
                 }
             }
 
