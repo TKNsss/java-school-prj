@@ -9,6 +9,7 @@ public class Salary {
     private float netSalary;
     private int workDay;
     private int month;
+<<<<<<< HEAD
     private int year;
     private float monthSalary;
     
@@ -24,6 +25,18 @@ public class Salary {
         this.netSalary = netSalary;  
         this.monthSalary = monthSalary;
     }
+=======
+    
+    public Salary(String emID, float baseSalary, float netSalary, int workDay, int month) {
+        this.emId = emID;
+        this.baseSalary = baseSalary;
+        this.netSalary = netSalary;
+        this.workDay = workDay;
+        this.month = month;
+    }   
+    
+    public Salary() {}
+>>>>>>> origin/feature2
 
     // Getters and setters
     public int getSalId() { return salId; }

@@ -19,7 +19,7 @@ public class Validator {
             sb.append(msg + "\n");
             tf.setBackground(Color.decode("#FFCDD2"));
             return false;
-        }
+        }       
         tf.setBackground(Color.WHITE);
         return true;
     }
@@ -210,12 +210,16 @@ public static boolean checkYearInRange(JTextField tf, StringBuilder sb, String e
             sb.append("Those fields must be numeric (integer or decimal)!\n");
             tf.setBackground(Color.decode("#FFCDD2"));
             return false;
+<<<<<<< HEAD
         }
 
         if (tf.equals("emSalCoefTF")) {
             tf.setBackground(Color.decode("#D3D3D3"));
             return true;
         }
+=======
+        }        
+>>>>>>> origin/feature2
         tf.setBackground(Color.WHITE);
         return true;
     }

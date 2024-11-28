@@ -1,6 +1,7 @@
 package com.myschoolprj.employeems.dao;
 
 import com.myschoolprj.employeems.model.Employee;
+import com.myschoolprj.employeems.model.Role;
 import com.myschoolprj.employeems.utils.Validator;
 import com.myschoolprj.employeems.utils.connectDB;
 import javax.swing.JLabel;
@@ -144,7 +145,7 @@ public class EmployeeDAO {
         return employees;
     }
 
-    public void addEmployeeData(Employee em) {
+    public void addEmployeeData(Employee em, Role roleObj) {
         if (isPhoneExists(em.getPhone(), null) || isIDExists(em.getID())) {
             JOptionPane.showMessageDialog(null, "Phone number/ID has existed, please choose another one!", "Input Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -156,7 +157,8 @@ public class EmployeeDAO {
             // Disable auto-commit to start a transaction
             connection.setAutoCommit(false);
 
-            try (PreparedStatement ps1 = connection.prepareStatement(query1); PreparedStatement ps2 = connection.prepareStatement(query2)) {
+            try (PreparedStatement ps1 = connection.prepareStatement(query1); 
+                 PreparedStatement ps2 = connection.prepareStatement(query2)) {
                 // Insert into Employees
                 ps1.setString(1, em.getID());
                 ps1.setString(2, em.getFirstName());
@@ -169,8 +171,8 @@ public class EmployeeDAO {
                 ps1.executeUpdate();
 
                 // Insert into Roles
-                ps2.setString(1, em.getID()); // Corrected index for em_id
-                ps2.setString(2, em.getRole()); // Corrected index for role_name
+                ps2.setString(1, roleObj.getEmID()); 
+                ps2.setString(2, roleObj.getRoleName()); 
                 ps2.executeUpdate();
             }
             // Commit the transaction
@@ -195,6 +197,7 @@ public class EmployeeDAO {
         }
     }
 
+<<<<<<< HEAD
 
 // Import dữ liệu từ file excel vào db
 //    private void importExcel(File file) throws Exception {
@@ -251,6 +254,9 @@ public class EmployeeDAO {
 //    }
 
     public void updateEmployeeData(Employee em) {
+=======
+    public void updateEmployeeData(Employee em, Role roleObj) {
+>>>>>>> origin/feature2
         if (isPhoneExists(em.getPhone(), em.getID())) {
             JOptionPane.showMessageDialog(null, "Phone number has existed, please choose another one!", "Input Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -282,8 +288,8 @@ public class EmployeeDAO {
                 ps1.executeUpdate();
 
                 // Update Roles table
-                ps2.setString(1, em.getRole());
-                ps2.setString(2, em.getID()); // WHERE condition
+                ps2.setString(1, roleObj.getRoleName());
+                ps2.setString(2, roleObj.getEmID()); // WHERE condition
                 ps2.executeUpdate();
             }
             connection.commit();
@@ -305,33 +311,54 @@ public class EmployeeDAO {
         }
     }
 
-    public void deleteEmployee(String emID) throws Exception {
+    public void deleteEmployee(String emID, int roleID) throws Exception {
         // Since the Roles table likely has a foreign key relationship with the Employees table, we must 
         // delete from Roles first to avoid foreign key constraint violations.
-        String query1 = "DELETE FROM Roles WHERE em_id = ?";
-        String query2 = "DELETE FROM Employees WHERE em_id = ?";
+        String query1 = "DELETE FROM Allowances WHERE role_id = ?";
+        String query2 = "DELETE FROM Roles WHERE em_id = ?";
+        String query3 = "DELETE FROM Salaries WHERE em_id = ?";
+        String query4 = "DELETE FROM Employees WHERE em_id = ?";
 
         try {
             connection.setAutoCommit(false);
 
             try (PreparedStatement ps1 = connection.prepareStatement(query1); 
-                 PreparedStatement ps2 = connection.prepareStatement(query2)) {
+                 PreparedStatement ps2 = connection.prepareStatement(query2); 
+                 PreparedStatement ps3 = connection.prepareStatement(query3); 
+                 PreparedStatement ps4 = connection.prepareStatement(query4)) {
+
+                // Delete from Allowances
+                ps1.setInt(1, roleID);
+                int affectedRows1 = ps1.executeUpdate();
+                if (affectedRows1 == 0) {
+                    throw new SQLException("No allowances found for role_id: " + roleID);
+                }
+
                 // Delete from Roles
-                ps1.setString(1, emID);
-                ps1.executeUpdate();
+                ps2.setString(1, emID);
+                int affectedRows2 = ps2.executeUpdate();
+                if (affectedRows2 == 0) {
+                    throw new SQLException("No role found for employee ID: " + emID);
+                }
+
+                // Delete from Salaries
+                ps3.setString(1, emID);
+                int affectedRows3 = ps3.executeUpdate();
+                if (affectedRows3 == 0) {
+                    throw new SQLException("No salary found for employee ID: " + emID);
+                }
 
                 // Delete from Employees
-                ps2.setString(1, emID);
-                int rowsAffected = ps2.executeUpdate();
-
-                if (rowsAffected == 0) {
-                    throw new Exception("No employee found with ID: " + emID);
+                ps4.setString(1, emID);
+                int affectedRows4 = ps4.executeUpdate();
+                if (affectedRows4 == 0) {
+                    throw new SQLException("No employee found with ID: " + emID);
                 }
             }
             connection.commit();
             JOptionPane.showMessageDialog(null, "Employee deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
         } catch (SQLException e) {
-            try {                
+            try {
                 connection.rollback();
                 JOptionPane.showMessageDialog(null, "Error deleting employee:\n" + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
             } catch (SQLException rollbackEx) {
@@ -339,7 +366,7 @@ public class EmployeeDAO {
             }
             Validator.printSQLExceptionMessage(e);
         } finally {
-            try {             
+            try {
                 connection.setAutoCommit(true);
             } catch (SQLException autoCommitEx) {
                 JOptionPane.showMessageDialog(null, "Error restoring auto-commit mode:\n" + autoCommitEx.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
@@ -356,21 +383,6 @@ public class EmployeeDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return rs.getInt("pos_id");
-                }
-            }
-        }
-        return -1;
-    }
-    
-    public int getRoleID(String role) throws SQLException {
-        String query = "SELECT role_id FROM Roles WHERE em_id = ?";
-
-        try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setString(1, role);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt("role_id");
                 }
             }
         }

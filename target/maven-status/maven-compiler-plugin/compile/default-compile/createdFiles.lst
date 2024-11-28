@@ -29,6 +29,7 @@ com\myschoolprj\employeems\UI\LoginForm$1.class
 com\myschoolprj\employeems\dao\EmployeeDAO$count_em.class
 com\myschoolprj\employeems\UI\MainForm$14.class
 com\myschoolprj\employeems\utils\connectDB.class
+com\myschoolprj\employeems\dao\RoleDAO.class
 com\myschoolprj\employeems\Barchart.class
 com\myschoolprj\employeems\UI\MainForm.class
 com\myschoolprj\employeems\UI\MainForm$11.class
@@ -41,6 +42,7 @@ com\myschoolprj\employeems\UI\LoginForm$9.class
 com\myschoolprj\employeems\UI\LoginForm$2.class
 com\myschoolprj\employeems\model\Admin.class
 com\myschoolprj\employeems\UI\LoginForm$13.class
+com\myschoolprj\employeems\model\Role.class
 com\myschoolprj\employeems\UI\MainForm$7.class
 com\myschoolprj\employeems\UI\LoginForm$20.class
 com\myschoolprj\employeems\utils\PlaceholderUtils.class
