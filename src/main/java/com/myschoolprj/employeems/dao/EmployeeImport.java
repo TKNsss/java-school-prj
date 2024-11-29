@@ -61,7 +61,7 @@ public class EmployeeImport {
                 String pos = posCell != null ? posCell.getStringCellValue().trim() : "";
 
                 // Tạo đối tượng Employee và thêm vào danh sách
-                employees.add(new Employee(emId, firstName, lastName, phone, gender, dob, address, role, pos));
+                //employees.add(new Employee(emId, firstName, lastName, phone, gender, dob, address, role, pos));
             }
         } catch (IOException e) {
             e.printStackTrace();

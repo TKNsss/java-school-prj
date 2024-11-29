@@ -4,21 +4,13 @@ import com.myschoolprj.employeems.model.Employee;
 import com.myschoolprj.employeems.model.Role;
 import com.myschoolprj.employeems.utils.Validator;
 import com.myschoolprj.employeems.utils.connectDB;
-import javax.swing.JLabel;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.sql.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
-
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Cell;
+import javax.swing.JLabel;
 
 public class EmployeeDAO {
 
@@ -30,10 +22,9 @@ public class EmployeeDAO {
 
     // Phương thức để lấy tổng số nhân viên từ cơ sở dữ liệu và hiển thị lên JLabel
     public class count_em {
-
-        private JLabel totalLabel;
-        private JLabel staffLabel;  // JLabel cho role_id = 1
-        private JLabel leaderLabel; // JLabel cho role_id = 2
+        final private JLabel totalLabel;
+        final private JLabel staffLabel;  // JLabel cho role_id = 1
+        final private JLabel leaderLabel; // JLabel cho role_id = 2
 
         public count_em(JLabel totalLabel, JLabel staffLabel, JLabel leaderLabel) {
             this.totalLabel = totalLabel;
@@ -45,17 +36,17 @@ public class EmployeeDAO {
         public void TotalEmployee() {
             String sql = "SELECT COUNT(*) AS totalEmployees FROM Employees";
 
-            try (Connection connect = connectDB.getConnection(); PreparedStatement prepare = connect.prepareStatement(sql); ResultSet result = prepare.executeQuery()) {
+            try (Connection connect = connectDB.getConnection(); 
+                 PreparedStatement ps = connect.prepareStatement(sql); 
+                 ResultSet result = ps.executeQuery()) {
 
                 int totalCount = 0;
 
                 if (result.next()) {
                     totalCount = result.getInt("totalEmployees");
                 }
-
                 // Cập nhật JLabel cho tổng số nhân viên
-                totalLabel.setText("--" + totalCount + "--");
-
+                totalLabel.setText(String.valueOf(totalCount));
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -63,10 +54,11 @@ public class EmployeeDAO {
 
         // Phương thức để lấy số lượng nhân viên có role_id và cập nhật JLabel
         public void TotalEmployeeWithRole(String roleName) {
-            String sql = "SELECT COUNT(*) AS totalStaff FROM Roles WHERE role_name = ?";
+            String query = "SELECT COUNT(*) AS totalStaff FROM Roles WHERE role_name = ?";
 
             // Sử dụng try-with-resources
-            try (Connection connect = connectDB.getConnection(); PreparedStatement prepare = connect.prepareStatement(sql)) {
+            try (Connection connect = connectDB.getConnection(); 
+                 PreparedStatement prepare = connect.prepareStatement(query)) {
 
                 prepare.setString(1, roleName);
 
@@ -74,48 +66,27 @@ public class EmployeeDAO {
                     if (result.next()) {
                         int totalCount = result.getInt("totalStaff");
 
-                        if (roleName == "Staff") {
-                            staffLabel.setText("--" + totalCount + "--");
-                        } else if (roleName == "Leader") {
-                            leaderLabel.setText("--" + totalCount + "--");
+                        if (roleName.equals("Staff")) {
+                            staffLabel.setText(String.valueOf(totalCount));
+                        } else if (roleName.equals("Leader")) {
+                            leaderLabel.setText(String.valueOf(totalCount));
                         }
                     }
                 }
-
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
     }
-//    public ArrayList<EmployeeSalary> readSalary() throws SQLException {
-//        ArrayList<EmployeeSalary> salaries = new ArrayList<>();
-//        String sql = "SELECT * FROM employees_salaries";
-//        
-//        try (PreparedStatement preparedStatement = connection.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
-//            while (resultSet.next()) {
-//                EmployeeSalary salary = new EmployeeSalary();
-//                salary.setID(resultSet.getString("id"));
-//                salary.setFirstName(resultSet.getString("first_name"));
-//                salary.setLastName(resultSet.getString("last_name"));
-//                salary.setSalary(resultSet.getFloat("salary"));
-//                salaries.add(salary);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new Exception("Error reading Salaries: " + e);
-//        }
-//        return salaries;
-//    }
 
     public ArrayList<Employee> getEmployeeData() {
         ArrayList<Employee> employees = new ArrayList<>();
-        String query = "SELECT em.em_id AS eID, firstname, lastname, phone, gender, dob, address, base_salary, net_salary, title, sal_col_level, role_name, al_level\n"
-                + "FROM Employees AS em\n"
-                + "LEFT JOIN Positions AS pos ON em.pos_id = pos.pos_id\n"
-                + "LEFT JOIN Salaries AS sal ON sal.em_id = em.em_id\n"
-                + "LEFT JOIN Roles AS ro ON em.em_id = ro.em_id\n"
-                + "LEFT JOIN Allowances AS al ON ro.role_id = al.role_id\n"
-                + "GROUP BY em.em_id, firstname, lastname, phone, gender, dob, address, base_salary, net_salary, title, sal_col_level, role_name, al_level;";
+        String query = "SELECT DISTINCT em.em_id AS eID, firstname, lastname, phone, gender, dob, address, base_salary, net_salary, title, sal_col_level, role_name, al_level "
+                + "FROM Employees AS em "
+                + "LEFT JOIN Positions AS pos ON em.pos_id = pos.pos_id "
+                + "LEFT JOIN Salaries AS sal ON sal.em_id = em.em_id "
+                + "LEFT JOIN Roles AS ro ON em.em_id = ro.em_id "
+                + "LEFT JOIN Allowances AS al ON ro.role_id = al.role_id";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             try (ResultSet rs = ps.executeQuery()) {
@@ -131,8 +102,8 @@ public class EmployeeDAO {
                     em.setAddress(rs.getString("address"));
                     em.setRole(rs.getString("role_name"));
                     em.setPosition(rs.getString("title"));
-                    em.setBaseSalary(rs.getInt("base_salary"));
-                    em.setNetSalary(rs.getInt("net_salary"));
+                    em.setBaseSalary(rs.getFloat("base_salary"));
+                    em.setNetSalary(rs.getFloat("net_salary"));
                     em.setAllowanceLevel(rs.getFloat("al_level"));
                     em.setCoefLevel(rs.getFloat("sal_col_level"));
 
@@ -146,8 +117,6 @@ public class EmployeeDAO {
         return employees;
     }
     
-
-
     public void addEmployeeData(Employee em, Role roleObj) {
         if (isPhoneExists(em.getPhone(), null) || isIDExists(em.getID())) {
             JOptionPane.showMessageDialog(null, "Phone number/ID has existed, please choose another one!", "Input Error", JOptionPane.ERROR_MESSAGE);
@@ -160,7 +129,8 @@ public class EmployeeDAO {
             // Disable auto-commit to start a transaction
             connection.setAutoCommit(false);
 
-            try (PreparedStatement ps1 = connection.prepareStatement(query1); PreparedStatement ps2 = connection.prepareStatement(query2)) {
+            try (PreparedStatement ps1 = connection.prepareStatement(query1); 
+                 PreparedStatement ps2 = connection.prepareStatement(query2)) {
                 // Insert into Employees
                 ps1.setString(1, em.getID());
                 ps1.setString(2, em.getFirstName());
@@ -199,59 +169,6 @@ public class EmployeeDAO {
         }
     }
 
-// Import dữ liệu từ file excel vào db
-//    private void importExcel(File file) throws Exception {
-//        String sql = "INSERT INTO Employees (em_id, firstname, lastname, phone, gender, dob, address, role_id, pos_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-//
-//        try (FileInputStream fis = new FileInputStream(file); Workbook workbook = WorkbookFactory.create(fis); Connection connection = connectDB.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-//
-//            Sheet sheet = workbook.getSheetAt(0); // Lấy sheet đầu tiên
-//            for (Row row : sheet) {
-//                if (row.getRowNum() == 0) {
-//                    continue; // Bỏ qua tiêu đề
-//                }
-//                try {
-//                    // Kiểm tra và đọc dữ liệu từng ô
-//                    String emId = row.getCell(0).getStringCellValue();
-//                    String firstName = row.getCell(1).getStringCellValue();
-//                    String lastName = row.getCell(2).getStringCellValue();
-//                    String phone = row.getCell(3).getStringCellValue();
-//                    String gender = row.getCell(4).getStringCellValue();
-//
-//                    // Kiểm tra và xử lý ô ngày
-//                    Cell dobCell = row.getCell(5);
-//                    Date dob = null;
-//                    if (dobCell != null && dobCell.getCellType() == CellType.NUMERIC) {
-//                        dob = dobCell.getDateCellValue();
-//                    }
-//
-//                    String address = row.getCell(6).getStringCellValue();
-//                    int roleId = (int) row.getCell(7).getNumericCellValue();
-//                    int posId = (int) row.getCell(8).getNumericCellValue();
-//
-//                    // Thiết lập các tham số
-//                    preparedStatement.setString(1, emId);
-//                    preparedStatement.setString(2, firstName);
-//                    preparedStatement.setString(3, lastName);
-//                    preparedStatement.setString(4, phone);
-//                    preparedStatement.setString(5, gender);
-//                    if (dob != null) {
-//                        preparedStatement.setDate(6, new java.sql.Date(dob.getTime()));
-//                    } else {
-//                        preparedStatement.setNull(6, java.sql.Types.DATE);
-//                    }
-//                    preparedStatement.setString(7, address);
-//                    preparedStatement.setInt(8, roleId);
-//                    preparedStatement.setInt(9, posId);
-//
-//                    preparedStatement.addBatch(); // Thêm vào batch
-//                } catch (Exception e) {
-//                    System.err.println("Lỗi tại hàng " + row.getRowNum() + ": " + e.getMessage());
-//                }
-//            }
-//            preparedStatement.executeBatch(); // Thực hiện batch
-//        }
-//    }
     public void updateEmployeeData(Employee em, Role roleObj) {
         if (isPhoneExists(em.getPhone(), em.getID())) {
             JOptionPane.showMessageDialog(null, "Phone number has existed, please choose another one!", "Input Error", JOptionPane.ERROR_MESSAGE);

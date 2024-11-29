@@ -24,6 +24,7 @@ import java.util.HashMap;
 
 import java.awt.Color;
 import java.sql.SQLException;
+import java.time.Year;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -63,7 +64,6 @@ public class MainForm extends javax.swing.JFrame {
                     JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
-
         loadDataIntoEmTable();
         loadDataIntoSalaryTable();
         loadDataIntoMonSalTable();
@@ -300,7 +300,7 @@ public class MainForm extends javax.swing.JFrame {
                 .addComponent(homeBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(addEmBtn)
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addGap(0, 4, Short.MAX_VALUE)
                 .addComponent(salaryBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -385,12 +385,12 @@ public class MainForm extends javax.swing.JFrame {
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-staff-48.png"))); // NOI18N
 
-        total.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
+        total.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
         total.setForeground(new java.awt.Color(255, 255, 255));
         total.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         total.setText("0");
 
-        jLabel7.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("Total Employees");
 
@@ -405,14 +405,13 @@ public class MainForm extends javax.swing.JFrame {
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                        .addGap(0, 112, Short.MAX_VALUE)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(25, 25, 25))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                                .addComponent(total, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap())))))
+                        .addGap(0, 193, Short.MAX_VALUE)
+                        .addComponent(total, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel7)
+                .addGap(18, 18, 18))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -428,13 +427,13 @@ public class MainForm extends javax.swing.JFrame {
 
         jPanel7.setPreferredSize(new java.awt.Dimension(267, 134));
 
-        jLabel8.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Total Leader");
 
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icons8-leader-48.png"))); // NOI18N
 
-        total_leader.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
+        total_leader.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
         total_leader.setForeground(new java.awt.Color(255, 255, 255));
         total_leader.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         total_leader.setText("0");
@@ -450,7 +449,7 @@ public class MainForm extends javax.swing.JFrame {
                         .addComponent(jLabel9)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addGap(0, 161, Short.MAX_VALUE)
+                        .addGap(0, 151, Short.MAX_VALUE)
                         .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(total_leader, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel8))))
@@ -470,13 +469,13 @@ public class MainForm extends javax.swing.JFrame {
 
         jPanel9.setPreferredSize(new java.awt.Dimension(267, 134));
 
-        jLabel11.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
+        jLabel11.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel11.setForeground(new java.awt.Color(255, 255, 255));
         jLabel11.setText("Total Staff");
 
         jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/user-icon-50px.png"))); // NOI18N
 
-        total_staff.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
+        total_staff.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
         total_staff.setForeground(new java.awt.Color(255, 255, 255));
         total_staff.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         total_staff.setText("0");
@@ -496,7 +495,7 @@ public class MainForm extends javax.swing.JFrame {
                         .addComponent(total_staff, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
-                .addContainerGap(163, Short.MAX_VALUE)
+                .addContainerGap(156, Short.MAX_VALUE)
                 .addComponent(jLabel11)
                 .addGap(25, 25, 25))
         );
@@ -792,7 +791,6 @@ public class MainForm extends javax.swing.JFrame {
                         .addComponent(deleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(85, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(bttn_import))))
@@ -1155,7 +1153,7 @@ public class MainForm extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.Float.class, java.lang.Integer.class, java.lang.Integer.class
+                java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.Float.class, java.lang.Float.class, java.lang.Float.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false, false, false
@@ -1379,9 +1377,10 @@ public class MainForm extends javax.swing.JFrame {
             float baseSalary = numberFormat.parse(emSalBaseTF.getText()).floatValue();
             float netSalary = numberFormat.parse(emSalNetTF.getText()).floatValue();
             float monSalary = numberFormat.parse(emMonthSalTF.getText()).floatValue();
-            int workday = numberFormat.parse(totalWorkDayTF.getText()).intValue();
-            int month = numberFormat.parse(monthTF.getText()).intValue();
-            int year = numberFormat.parse(yearTF.getText()).intValue();
+
+            int workday = Integer.parseInt(totalWorkDayTF.getText());
+            int month = Integer.parseInt(monthTF.getText());
+            int year = Integer.parseInt(yearTF.getText());
 
             // get specific employee's role data
             Role role = roleDAO.getSingleRoleData(emID);
@@ -1400,7 +1399,7 @@ public class MainForm extends javax.swing.JFrame {
 
             if (role.getRoleName().equals("Leader") && (allowance < 0.9 || allowance > 1.5)) {
                 JOptionPane.showMessageDialog(this, "Leader salary coef number must be in range of [0.9, 1.5]", "Input Error", JOptionPane.ERROR_MESSAGE);
-
+                resetSalSectionToDefault();
                 return;
             }
             // update allowance
@@ -1415,41 +1414,33 @@ public class MainForm extends javax.swing.JFrame {
             salary.setMonth(month);
             salary.setYear(year);
 
-       try {
-            // Bắt đầu giao dịch với DAO
-            salaryDAO.beginTransaction();
-
-            // Thực hiện các thao tác trong giao dịch
-            salaryDAO.insertSalary(salary, role);  // Thêm dữ liệu lương
-            salaryDAO.updateSalary(salary, role);  // Cập nhật dữ liệu lương
-
-            // Commit giao dịch nếu tất cả thành công
-            salaryDAO.commitTransaction();
-
-            // Cập nhật bảng lương trên giao diện
-            loadDataIntoMonSalTable();
-            loadDataIntoSalaryTable();
-
-        } catch (SQLException e) {
-            // Nếu có lỗi, rollback giao dịch
-            salaryDAO.rollbackTransaction();
-            JOptionPane.showMessageDialog(this, "Error updating Salary: " + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
-        }
+            try {
+                // Thực hiện các thao tác trong giao dịch
+                salaryDAO.insertSalary(salary, role);  // Thêm dữ liệu lương
+                salaryDAO.updateSalary(salary, role);  // Cập nhật dữ liệu lương
+               
+                // Cập nhật bảng lương trên giao diện
+                loadDataIntoSalaryTable();
+                loadDataIntoMonSalTable();
+            } catch (Exception e) {          
+                JOptionPane.showMessageDialog(this, "An unexpected error occurred: " + e.getMessage(), "Error",
+                    JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
+            }
 
             // clear fields after updating
-//            emSalIdTF.setText("");
-//            emSalRoleIDTF.setText("");
-//            emSalFirstnameTF.setText("");
-//            emSalLastnameTF.setText("");
-//            totalWorkDayTF.setText("");
-//            monthTF.setText("");
-//            emSalCoefTF.setText("");
-//            emSalAllowanceTF.setText("");
-//            emSalBaseTF.setText("");
-//            emSalNetTF.setText("");
-//            emMonthSalTF.setText("");
-//            updateSalaryBtn.setEnabled(false);
+            emSalIdTF.setText("");
+            emSalRoleIDTF.setText("");
+            emSalFirstnameTF.setText("");
+            emSalLastnameTF.setText("");
+            totalWorkDayTF.setText("");
+            monthTF.setText("");
+            emSalCoefTF.setText("");
+            emSalAllowanceTF.setText("");
+            emSalBaseTF.setText("");
+            emSalNetTF.setText("");
+            emMonthSalTF.setText("");
+            updateSalaryBtn.setEnabled(false);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "An unexpected error occurred: " + e.getMessage(), "Error",
                     JOptionPane.ERROR_MESSAGE);
@@ -1465,7 +1456,7 @@ public class MainForm extends javax.swing.JFrame {
     private void calculateBaseNetBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateBaseNetBtnActionPerformed
         StringBuilder sb = new StringBuilder();
 
-        Validator.checkEmptyFields(emSalCoefTF, sb, "Coef can not be blank!");
+        Validator.checkNumericFields(emSalCoefTF, sb);
         Validator.checkNumericFields(emSalAllowanceTF, sb);
 
         if (sb.length() > 0) {
@@ -1492,6 +1483,7 @@ public class MainForm extends javax.swing.JFrame {
 
         emSalBaseTF.setText(numberFormat.format(baseSalary));
         emSalNetTF.setText(numberFormat.format(netSalary));
+        emSalCoefTF.setBackground(Color.decode("#D3D3D3"));
         updateSalaryBtn.setEnabled(true);
     }//GEN-LAST:event_calculateBaseNetBtnActionPerformed
 
@@ -1517,14 +1509,14 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_bttn_importActionPerformed
 
     private void calculateMonBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateMonBtnActionPerformed
-        // TODO add your handling code here:
         StringBuilder sb = new StringBuilder();
 
         Validator.checkNumericFields(emSalCoefTF, sb);
         Validator.checkNumericFields(emSalAllowanceTF, sb);
-        Validator.checkIntegerAndEmpty(totalWorkDayTF, sb, "The field -Work day- cannot be left blank", "The value entered into -Work day- must be an integer", 0, 26);
-        Validator.checkIntegerAndEmpty(monthTF, sb, "The field -Month- cannot be left blank", "The value entered into -Month- must be an integer", 1, 12);
-        Validator.checkYearInRange(yearTF, sb, "The field -Year- cannot be left blank", "Invalid year entered");
+        Validator.checkValidRange(totalWorkDayTF, sb, 0, 26);
+        Validator.checkValidRange(monthTF, sb, 1, 12);
+        // công ty thành lập từ năm 2023 :>
+        Validator.checkValidRange(yearTF, sb, 2023, Year.now().getValue());
 
         if (sb.length() > 0) {
             JOptionPane.showMessageDialog(this, sb.toString(), "Input Error", JOptionPane.ERROR_MESSAGE);
@@ -1533,9 +1525,9 @@ public class MainForm extends javax.swing.JFrame {
 
         if (Float.parseFloat(emSalAllowanceTF.getText()) <= 0 || Float.parseFloat(emSalCoefTF.getText()) <= 0) {
             JOptionPane.showMessageDialog(this, "Please enter value greater than 0", "Input Error", JOptionPane.ERROR_MESSAGE);
+            emSalCoefTF.setBackground(Color.decode("#D3D3D3"));
             return;
         }
-
         float allowance = Float.parseFloat(emSalAllowanceTF.getText());
         float coef = Float.parseFloat(emSalCoefTF.getText());
         int workday = Integer.parseInt(totalWorkDayTF.getText());
@@ -1564,8 +1556,13 @@ public class MainForm extends javax.swing.JFrame {
             String last_name = salaryTB.getValueAt(selectedRow, 3).toString();
             String coef = salaryTB.getValueAt(selectedRow, 4).toString();
             String allowance = salaryTB.getValueAt(selectedRow, 5).toString();
-            String baseSalary = salaryTB.getValueAt(selectedRow, 6).toString();
-            String netSalary = salaryTB.getValueAt(selectedRow, 7).toString();
+            // Get and format Float values for baseSalary and netSalary
+            Float baseSalary = (Float) salaryTB.getValueAt(selectedRow, 6);
+            Float netSalary = (Float) salaryTB.getValueAt(selectedRow, 7);
+
+            // Use String.format() for consistent formatting
+            String baseSalaryFormatted = String.format("%,.2f", baseSalary);
+            String netSalaryFormatted = String.format("%,.2f", netSalary);
 
             // Điền dữ liệu vào các trường nhập liệu
             emSalIdTF.setText(id);
@@ -1575,9 +1572,9 @@ public class MainForm extends javax.swing.JFrame {
             emSalCoefTF.setText(coef);
             emSalCoefTF.setBackground(Color.decode("#D3D3D3"));
             emSalAllowanceTF.setText(allowance);
-            emSalBaseTF.setText(baseSalary);
+            emSalBaseTF.setText(baseSalaryFormatted);
             emSalBaseTF.setBackground(Color.decode("#D3D3D3"));
-            emSalNetTF.setText(netSalary);
+            emSalNetTF.setText(netSalaryFormatted);
             emSalNetTF.setBackground(Color.decode("#D3D3D3"));
         }
     }//GEN-LAST:event_salaryTBMouseClicked
@@ -1649,6 +1646,8 @@ public class MainForm extends javax.swing.JFrame {
 
     private void clearEmDataBtnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_clearEmDataBtnActionPerformed
         txtEmID.setText("");
+        txtEmID.setEditable(true);
+        txtEmID.setBackground(Color.WHITE);
         txtFirstName.setText("");
         txtLastName.setText("");
         cbGender.setSelectedItem(null);
@@ -1658,36 +1657,7 @@ public class MainForm extends javax.swing.JFrame {
         cbAddress.setSelectedItem(null);
         cbPosition.setSelectedItem(null);
         lblStatus.setText("Status: Clear");
-
-        txtEmID.setEditable(true);
-        txtEmID.setBackground(Color.WHITE);
     }
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton3ActionPerformed
-//        // TODO add your handling code here:
-//        JFileChooser fileChooser = new JFileChooser();
-//        FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files", "jpg", "jpeg", "png", "gif");
-//        fileChooser.setFileFilter(filter);
-//
-//        // Hiển thị hộp thoại chọn tệp
-//        int result = fileChooser.showOpenDialog(this);
-//        if (result == JFileChooser.APPROVE_OPTION) {formWindowGainedFocus
-//            // Lấy tệp đã chọn
-//            File selectedFile = fileChooser.getSelectedFile();
-//            try {
-//                // Tạo ImageIcon từ tệp đã chọn
-//                ImageIcon icon = new ImageIcon(selectedFile.getAbsolutePath());
-//
-//                // Tùy chọn: Thay đổi kích thước hình ảnh để vừa với JLabel
-//                Image img = icon.getImage();
-//                Image scaledImg = img.getScaledInstance(106, 106, Image.SCALE_SMOOTH); // Thay đổi kích thước theo ý
-//                // muốn
-////                lblImage.setIcon(new ImageIcon(scaledImg)); // Đặt hình ảnh đã thay đổi kích thước vào JLabel
-//            } catch (Exception ex) {
-//                JOptionPane.showMessageDialog(this, "Error loading image: " + ex.getMessage());
-//            }
-//        }
-    }// GEN-LAST:event_jButton3ActionPerformed
 
     private void emTBMouseClicked(java.awt.event.MouseEvent evt) {
         lblStatus.setText("Status: Data Selected");
@@ -1829,6 +1799,7 @@ public class MainForm extends javax.swing.JFrame {
                     emDAO.deleteEmployee(emID, roleID); // Gọi phương thức xóa
                     loadDataIntoEmTable();
                     loadDataIntoSalaryTable();
+                    loadDataIntoMonSalTable();
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
                 }
@@ -1928,50 +1899,46 @@ public class MainForm extends javax.swing.JFrame {
 
     private void loadDataIntoSalaryTable() {
         try {
-            // Lấy dữ liệu nhân viên từ DAO (đảm bảo truy vấn SQL đã được cập nhật để lọc trùng lặp)
             ArrayList<Employee> employees = emDAO.getEmployeeData();
-
             // Lấy model của JTable
             DefaultTableModel model = (DefaultTableModel) salaryTB.getModel();
             model.setRowCount(0); // Xóa tất cả các hàng hiện có trong bảng
-
+            
             // Sử dụng Map để đảm bảo chỉ có một bản ghi cho mỗi em_id
             Map<String, Employee> uniqueEmployees = new HashMap<>();
+            
             for (Employee employee : employees) {
                 // Lọc dữ liệu để chỉ có một bản ghi duy nhất cho mỗi em_id
                 if (!uniqueEmployees.containsKey(employee.getID())) {
                     uniqueEmployees.put(employee.getID(), employee);
                 }
             }
-
-            // Thêm dữ liệu vào bảng từ các nhân viên đã lọc
-            for (Employee employee : uniqueEmployees.values()) {
+            
+            // Thêm dữ liệu vào bảng
+            for (Employee employee : employees) {
                 Role role = roleDAO.getSingleRoleData(employee.getID());
 
-                // Thêm dữ liệu vào bảng với định dạng mong muốn
                 Object[] rowData = {
                     employee.getID(),
-                    role != null ? role.getRoleId() : "N/A", // Đảm bảo có giá trị hợp lý nếu không tìm thấy role
+                    role.getRoleId(),
                     employee.getFirstName(),
                     employee.getLastName(),
                     employee.getCoefLevel(),
                     employee.getAllowanceLevel(),
-                    String.format("%.2f", employee.getBaseSalary()), // Loại bỏ \n để hiển thị gọn gàng
-                    String.format("%.2f", employee.getNetSalary()) // Loại bỏ \n để hiển thị gọn gàng
+                    employee.getBaseSalary(),
+                    employee.getNetSalary()
                 };
                 model.addRow(rowData);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error loading data: " + e.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
         }
     }
 
     private void loadDataIntoMonSalTable() {
-        try {
-            salaryDAO = new SalaryDAO();
-            ArrayList<Salary> salaries = salaryDAO.getMonSalData(); // Phương thức này có thể ném SQLException
+        try {        
+            ArrayList<Salary> salaries = salaryDAO.getMonthSalData(); 
             DefaultTableModel model = (DefaultTableModel) monthSalTB.getModel();
             model.setRowCount(0);
 
@@ -1985,7 +1952,6 @@ public class MainForm extends javax.swing.JFrame {
                     sal.getMonSalary(),
                     sal.getMonth(),
                     sal.getYear()
-
                 };
                 model.addRow(rowData);
             }
@@ -2017,7 +1983,7 @@ public class MainForm extends javax.swing.JFrame {
                 model.addRow(rowData);
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error loading data b: " + e.getMessage(), "Error",
+            JOptionPane.showMessageDialog(this, "Error loading data: " + e.getMessage(), "Error",
                     JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -2040,6 +2006,8 @@ public class MainForm extends javax.swing.JFrame {
         emSalBaseTF.setBackground(Color.decode("#D3D3D3"));
         emSalNetTF.setText("");
         emSalNetTF.setBackground(Color.decode("#D3D3D3"));
+        emMonthSalTF.setText("");
+        emMonthSalTF.setBackground(Color.decode("#D3D3D3"));
         updateSalaryBtn.setEnabled(false);
     }
 

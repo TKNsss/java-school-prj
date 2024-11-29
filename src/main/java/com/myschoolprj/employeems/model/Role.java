@@ -6,7 +6,6 @@ public class Role {
     private String roleName;
     private double allowance;
 
-    
     public Role(int roleId, String emID, String roleName, double allowance) {
         this.roleId = roleId;
         this.emID = emID;

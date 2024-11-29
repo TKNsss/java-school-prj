@@ -18,7 +18,6 @@ public class Employee {
     private float allowanceLevel;
     private float coefLevel;
     private int posID;
-    private int roleID;
 
     // Constructor
     public Employee(String ID, String firstName, String lastName, String phone, String gender, Date dob, String address, String position, String role, float baseSalary, float netSalary, int posID) {
@@ -34,19 +33,6 @@ public class Employee {
         this.baseSalary = baseSalary;
         this.netSalary = netSalary;
         this.posID = posID;
-    }
-
-    public Employee(String emId, String firstName, String lastName, String phone, String gender, Date dob, String address, String role, String pos) {
-        this.ID = emId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phone = phone;
-        this.gender = gender;
-        this.dob = dob;
-        this.address = address;
-        this.role = role;
-        this.position = pos;
-
     }
 
     // Default constructor
@@ -133,14 +119,6 @@ public class Employee {
         this.role = role;
     }
 
-    public int getRoleID() {
-        return roleID;
-    }
-
-    public void setRoleID(int posID) {
-        this.roleID = posID;
-    }
-
     public float getBaseSalary() {
         return baseSalary;
     }
@@ -172,5 +150,4 @@ public class Employee {
     public float getCoefLevel() {
         return coefLevel;
     }
-
 }
