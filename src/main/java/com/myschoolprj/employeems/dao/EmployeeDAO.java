@@ -145,8 +145,6 @@ public class EmployeeDAO {
         }
         return employees;
     }
-    
-
 
     public void addEmployeeData(Employee em, Role roleObj) {
         if (isPhoneExists(em.getPhone(), null) || isIDExists(em.getID())) {
@@ -199,59 +197,6 @@ public class EmployeeDAO {
         }
     }
 
-// Import dữ liệu từ file excel vào db
-//    private void importExcel(File file) throws Exception {
-//        String sql = "INSERT INTO Employees (em_id, firstname, lastname, phone, gender, dob, address, role_id, pos_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-//
-//        try (FileInputStream fis = new FileInputStream(file); Workbook workbook = WorkbookFactory.create(fis); Connection connection = connectDB.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-//
-//            Sheet sheet = workbook.getSheetAt(0); // Lấy sheet đầu tiên
-//            for (Row row : sheet) {
-//                if (row.getRowNum() == 0) {
-//                    continue; // Bỏ qua tiêu đề
-//                }
-//                try {
-//                    // Kiểm tra và đọc dữ liệu từng ô
-//                    String emId = row.getCell(0).getStringCellValue();
-//                    String firstName = row.getCell(1).getStringCellValue();
-//                    String lastName = row.getCell(2).getStringCellValue();
-//                    String phone = row.getCell(3).getStringCellValue();
-//                    String gender = row.getCell(4).getStringCellValue();
-//
-//                    // Kiểm tra và xử lý ô ngày
-//                    Cell dobCell = row.getCell(5);
-//                    Date dob = null;
-//                    if (dobCell != null && dobCell.getCellType() == CellType.NUMERIC) {
-//                        dob = dobCell.getDateCellValue();
-//                    }
-//
-//                    String address = row.getCell(6).getStringCellValue();
-//                    int roleId = (int) row.getCell(7).getNumericCellValue();
-//                    int posId = (int) row.getCell(8).getNumericCellValue();
-//
-//                    // Thiết lập các tham số
-//                    preparedStatement.setString(1, emId);
-//                    preparedStatement.setString(2, firstName);
-//                    preparedStatement.setString(3, lastName);
-//                    preparedStatement.setString(4, phone);
-//                    preparedStatement.setString(5, gender);
-//                    if (dob != null) {
-//                        preparedStatement.setDate(6, new java.sql.Date(dob.getTime()));
-//                    } else {
-//                        preparedStatement.setNull(6, java.sql.Types.DATE);
-//                    }
-//                    preparedStatement.setString(7, address);
-//                    preparedStatement.setInt(8, roleId);
-//                    preparedStatement.setInt(9, posId);
-//
-//                    preparedStatement.addBatch(); // Thêm vào batch
-//                } catch (Exception e) {
-//                    System.err.println("Lỗi tại hàng " + row.getRowNum() + ": " + e.getMessage());
-//                }
-//            }
-//            preparedStatement.executeBatch(); // Thực hiện batch
-//        }
-//    }
     public void updateEmployeeData(Employee em, Role roleObj) {
         if (isPhoneExists(em.getPhone(), em.getID())) {
             JOptionPane.showMessageDialog(null, "Phone number has existed, please choose another one!", "Input Error", JOptionPane.ERROR_MESSAGE);
@@ -307,60 +252,56 @@ public class EmployeeDAO {
         }
     }
 
-    public void deleteEmployee(String emID, int roleID) throws Exception {
-        // Since the Roles table likely has a foreign key relationship with the Employees table, we must 
-        // delete from Roles first to avoid foreign key constraint violations.
-        String query1 = "DELETE FROM Allowances WHERE role_id = ?";
-        String query2 = "DELETE FROM Roles WHERE em_id = ?";
-        String query3 = "DELETE FROM Salaries WHERE em_id = ?";
-        String query4 = "DELETE FROM Employees WHERE em_id = ?";
+    public void deleteEmployee(String emID) {
+        // Các truy vấn để xóa dữ liệu liên quan trong các bảng phụ
+        String deleteAllowancesQuery = "DELETE FROM Allowances WHERE role_id IN (SELECT role_id FROM Roles WHERE em_id = ?)";
+        String deleteRolesQuery = "DELETE FROM Roles WHERE em_id = ?";
+        String deleteSalariesQuery = "DELETE FROM Salaries WHERE em_id = ?";
+        String deleteEmployeeQuery = "DELETE FROM Employees WHERE em_id = ?";
 
         try {
-            connection.setAutoCommit(false);
+            connection.setAutoCommit(false); // Bắt đầu transaction
 
-            try (PreparedStatement ps1 = connection.prepareStatement(query1); PreparedStatement ps2 = connection.prepareStatement(query2); PreparedStatement ps3 = connection.prepareStatement(query3); PreparedStatement ps4 = connection.prepareStatement(query4)) {
+            // Xóa dữ liệu từ bảng Allowances
+            try (PreparedStatement ps1 = connection.prepareStatement(deleteAllowancesQuery)) {
+                ps1.setString(1, emID);
+                ps1.executeUpdate();
+            }
 
-                // Delete from Allowances
-                ps1.setInt(1, roleID);
-                int affectedRows1 = ps1.executeUpdate();
-                if (affectedRows1 == 0) {
-                    throw new SQLException("No allowances found for role_id: " + roleID);
-                }
-
-                // Delete from Roles
+            // Xóa dữ liệu từ bảng Roles
+            try (PreparedStatement ps2 = connection.prepareStatement(deleteRolesQuery)) {
                 ps2.setString(1, emID);
-                int affectedRows2 = ps2.executeUpdate();
-                if (affectedRows2 == 0) {
-                    throw new SQLException("No role found for employee ID: " + emID);
-                }
+                ps2.executeUpdate();
+            }
 
-                // Delete from Salaries
+            // Xóa dữ liệu từ bảng Salaries
+            try (PreparedStatement ps3 = connection.prepareStatement(deleteSalariesQuery)) {
                 ps3.setString(1, emID);
-                int affectedRows3 = ps3.executeUpdate();
-                if (affectedRows3 == 0) {
-                    throw new SQLException("No salary found for employee ID: " + emID);
-                }
+                ps3.executeUpdate();
+            }
 
-                // Delete from Employees
+            // Xóa dữ liệu từ bảng Employees
+            try (PreparedStatement ps4 = connection.prepareStatement(deleteEmployeeQuery)) {
                 ps4.setString(1, emID);
-                int affectedRows4 = ps4.executeUpdate();
-                if (affectedRows4 == 0) {
+                int affectedRows = ps4.executeUpdate();
+                if (affectedRows == 0) {
                     throw new SQLException("No employee found with ID: " + emID);
                 }
             }
-            connection.commit();
-            JOptionPane.showMessageDialog(null, "Employee deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+            connection.commit(); // Commit transaction nếu mọi thứ thành công
+            JOptionPane.showMessageDialog(null, "Employee and related data deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
         } catch (SQLException e) {
             try {
-                connection.rollback();
+                connection.rollback(); // Rollback transaction nếu xảy ra lỗi
                 JOptionPane.showMessageDialog(null, "Error deleting employee:\n" + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
             } catch (SQLException rollbackEx) {
                 JOptionPane.showMessageDialog(null, "Error rolling back transaction:\n" + rollbackEx.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
             }
-            Validator.printSQLExceptionMessage(e);
+            Validator.printSQLExceptionMessage(e); // Ghi log lỗi
         } finally {
             try {
-                connection.setAutoCommit(true);
+                connection.setAutoCommit(true); // Khôi phục chế độ auto-commit
             } catch (SQLException autoCommitEx) {
                 JOptionPane.showMessageDialog(null, "Error restoring auto-commit mode:\n" + autoCommitEx.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
             }

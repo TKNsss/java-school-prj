@@ -1826,9 +1826,11 @@ public class MainForm extends javax.swing.JFrame {
                     }
                     int roleID = role.getRoleId();
                     // Xóa bản ghi khỏi cơ sở dữ liệu
-                    emDAO.deleteEmployee(emID, roleID); // Gọi phương thức xóa
+                    emDAO.deleteEmployee(emID); // Gọi phương thức xóa
                     loadDataIntoEmTable();
                     loadDataIntoSalaryTable();
+                            loadDataIntoMonSalTable();
+
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
                 }

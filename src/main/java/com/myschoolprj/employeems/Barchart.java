@@ -26,7 +26,7 @@ public class Barchart extends JPanel {
         System.out.println("Khởi tạo Barchart...");
 
         // Tạo dataset cho biểu đồ từ cơ sở dữ liệu, lọc theo tháng và năm
-        CategoryDataset dataset = createDatasetFromDB(11, 2024); // Lọc theo tháng 11 năm 2024
+        CategoryDataset dataset = createDatasetFromDB(); 
 
         // Tạo biểu đồ
         chart = ChartFactory.createBarChart(
@@ -74,7 +74,7 @@ public class Barchart extends JPanel {
     // Phương thức cập nhật dataset và biểu đồ
     public void updateChart(int month, int year) {
         // Lấy dữ liệu mới từ cơ sở dữ liệu
-        CategoryDataset newDataset = createDatasetFromDB(month, year);
+        CategoryDataset newDataset = createDatasetFromDB();
 
         // Cập nhật dataset cho biểu đồ
         chart.getCategoryPlot().setDataset(newDataset);
@@ -83,35 +83,30 @@ public class Barchart extends JPanel {
     }
 
     // Cập nhật dữ liệu từ cơ sở dữ liệu
-    private CategoryDataset createDatasetFromDB(int month, int year) {
+    private CategoryDataset createDatasetFromDB() {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
-        // Cấu hình kết nối cơ sở dữ liệu
         String url = "jdbc:sqlserver://localhost:1433;databaseName=EmployeeMS;encrypt=true;trustServerCertificate=true;";
-        String user = "sa";  // Thay bằng username của bạn
-        String password = "matkhaudongian"; // Thay bằng password của bạn
+        String user = "sa";
+        String password = "matkhaudongian";
 
-        // Câu lệnh SQL để lấy dữ liệu của các nhân viên trong tháng và năm cụ thể
-        String query = "SELECT em_id, month_salary FROM Salaries WHERE month = ? AND year = ?";
+        // Query to get net_salary for all employees
+        String query =  "SELECT em_id, MAX(net_salary) AS net_salary FROM Salaries GROUP BY em_id";
 
-        try (Connection conn = DriverManager.getConnection(url, user, password); PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, month); // Gắn giá trị tháng vào câu truy vấn
-            stmt.setInt(2, year);  // Gắn giá trị năm vào câu truy vấn
+        try (Connection conn = DriverManager.getConnection(url, user, password);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
 
             try (ResultSet rs = stmt.executeQuery()) {
-                // Lấy dữ liệu từ ResultSet và thêm vào dataset
                 while (rs.next()) {
-                    String employeeId = rs.getString("em_id"); // Mã nhân viên
-                    double monthSalary = rs.getDouble("month_salary"); // Lương tháng
-                    System.out.println("Employee: " + employeeId + ", Net Salary: " + monthSalary); // Debug line
+                    String employeeId = rs.getString("em_id");
+                    double netSalary = rs.getDouble("net_salary");
 
-                    // Thêm dữ liệu vào dataset
-                    dataset.addValue(monthSalary, "Month Salary", employeeId);
+                    System.out.println("Employee: " + employeeId + ", Net Salary: " + netSalary);
+                    dataset.addValue(netSalary, "Net Salary", employeeId);
                 }
             }
-
         } catch (SQLException e) {
-            e.printStackTrace(); // In ra thông báo lỗi nếu có sự cố
+            e.printStackTrace();
         }
 
         return dataset;
