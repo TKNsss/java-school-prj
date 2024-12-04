@@ -29,7 +29,7 @@ public class Validator {
             return false;
         }
         int value = Integer.parseInt(tf.getText().trim());
-        
+
         // Kiểm tra giá trị có nằm trong khoảng không
         if (value < min || value > max) {
             sb.append("The input value must be within the range " + min + " - " + max + ".\n");
@@ -151,7 +151,7 @@ public class Validator {
     }
 
     public static boolean checkNumericFields(JTextField tf, StringBuilder sb) {
-        if (!Validator.checkEmptyFields(tf, sb, "Do not leave fields blank!")) {
+        if (!checkEmptyFields(tf, sb, "Do not leave fields blank!")) {
             return false;
         }
 
@@ -169,7 +169,7 @@ public class Validator {
             tf.setBackground(Color.decode("#FFCDD2"));
             return false;
         }
-        tf.setBackground(Color.WHITE);
+        tf.setBackground(Color.WHITE); 
         return true;
     }
 }

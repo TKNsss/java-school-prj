@@ -159,7 +159,7 @@ public class SalaryDAO {
         }
     }
 
-    private boolean isSalaryRecordExists(String emId, int month, int year) {
+    public boolean isSalaryRecordExists(String emId, int month, int year) {
         String query = "SELECT COUNT(*) FROM Salaries WHERE em_id = ? AND month = ? AND year = ?";
         
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -171,7 +171,7 @@ public class SalaryDAO {
                 return rs.getInt(1) > 0; // Nếu số lượng bản ghi lớn hơn 0, tức là đã có bản ghi tồn tại
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Error fetching salary data:\n" + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error fetching month salary data:\n" + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
             Validator.printSQLExceptionMessage(e);
         }
         return false; // Nếu không có bản ghi tồn tại

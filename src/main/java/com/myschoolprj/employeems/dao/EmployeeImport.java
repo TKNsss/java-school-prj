@@ -61,20 +61,30 @@ public class EmployeeImport {
                 String pos = posCell != null ? posCell.getStringCellValue().trim() : "";
 
                 // Tạo đối tượng Employee và thêm vào danh sách
-                //employees.add(new Employee(emId, firstName, lastName, phone, gender, dob, address, role, pos));
+                Employee em = new Employee();
+                em.setID(emId);
+                em.setFirstName(firstName);
+                em.setLastName(lastName);
+                em.setPhone(phone);
+                em.setGender(gender);
+                em.setDob(dob);
+                em.setAddress(address);
+                em.setRole(role);
+                em.setPosition(pos);
+                
+                employees.add(em);
             }
         } catch (IOException e) {
             e.printStackTrace();
             throw new Exception("error: " + e.getMessage());
         }
-
         return employees;
     }
 
     public void saveEmployeeToDatabase(List<Employee> employees) {
+        String positionQuery = "SELECT pos_id FROM Positions WHERE title = ?"; // Lấy pos_id từ bảng Positions
         String employeeQuery = "INSERT INTO Employees (em_id, firstname, lastname, phone, gender, dob, address, pos_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         String roleQuery = "INSERT INTO Roles (em_id, role_name) VALUES (?, ?)";
-        String positionQuery = "SELECT pos_id FROM Positions WHERE title = ?"; // Lấy pos_id từ bảng Positions
 
         try (PreparedStatement employeePs = connection.prepareStatement(employeeQuery); PreparedStatement rolePs = connection.prepareStatement(roleQuery); PreparedStatement posPs = connection.prepareStatement(positionQuery)) {
 
@@ -83,7 +93,9 @@ public class EmployeeImport {
                 // Lấy pos_id từ bảng Positions
                 posPs.setString(1, employee.getPosition());
                 ResultSet posRs = posPs.executeQuery();
+                
                 int posId = 0;
+                
                 if (posRs.next()) {
                     posId = posRs.getInt("pos_id");
                 }
@@ -108,11 +120,9 @@ public class EmployeeImport {
             // Thực thi các câu lệnh thêm nhân viên và vai trò
             employeePs.executeBatch();
             rolePs.executeBatch();
-
         } catch (SQLException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
 }

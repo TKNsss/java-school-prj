@@ -22,6 +22,7 @@ public class EmployeeDAO {
 
     // Phương thức để lấy tổng số nhân viên từ cơ sở dữ liệu và hiển thị lên JLabel
     public class count_em {
+
         final private JLabel totalLabel;
         final private JLabel staffLabel;  // JLabel cho role_id = 1
         final private JLabel leaderLabel; // JLabel cho role_id = 2
@@ -36,9 +37,7 @@ public class EmployeeDAO {
         public void TotalEmployee() {
             String sql = "SELECT COUNT(*) AS totalEmployees FROM Employees";
 
-            try (Connection connect = connectDB.getConnection(); 
-                 PreparedStatement ps = connect.prepareStatement(sql); 
-                 ResultSet result = ps.executeQuery()) {
+            try (Connection connect = connectDB.getConnection(); PreparedStatement ps = connect.prepareStatement(sql); ResultSet result = ps.executeQuery()) {
 
                 int totalCount = 0;
 
@@ -57,8 +56,7 @@ public class EmployeeDAO {
             String query = "SELECT COUNT(*) AS totalStaff FROM Roles WHERE role_name = ?";
 
             // Sử dụng try-with-resources
-            try (Connection connect = connectDB.getConnection(); 
-                 PreparedStatement prepare = connect.prepareStatement(query)) {
+            try (Connection connect = connectDB.getConnection(); PreparedStatement prepare = connect.prepareStatement(query)) {
 
                 prepare.setString(1, roleName);
 
@@ -116,7 +114,7 @@ public class EmployeeDAO {
         }
         return employees;
     }
-    
+
     public void addEmployeeData(Employee em, Role roleObj) {
         if (isPhoneExists(em.getPhone(), null) || isIDExists(em.getID())) {
             JOptionPane.showMessageDialog(null, "Phone number/ID has existed, please choose another one!", "Input Error", JOptionPane.ERROR_MESSAGE);
@@ -129,8 +127,7 @@ public class EmployeeDAO {
             // Disable auto-commit to start a transaction
             connection.setAutoCommit(false);
 
-            try (PreparedStatement ps1 = connection.prepareStatement(query1); 
-                 PreparedStatement ps2 = connection.prepareStatement(query2)) {
+            try (PreparedStatement ps1 = connection.prepareStatement(query1); PreparedStatement ps2 = connection.prepareStatement(query2)) {
                 // Insert into Employees
                 ps1.setString(1, em.getID());
                 ps1.setString(2, em.getFirstName());
@@ -225,59 +222,55 @@ public class EmployeeDAO {
     }
 
     public void deleteEmployee(String emID, int roleID) throws Exception {
-        // Since the Roles table likely has a foreign key relationship with the Employees table, we must 
-        // delete from Roles first to avoid foreign key constraint violations.
-        String query1 = "DELETE FROM Allowances WHERE role_id = ?";
-        String query2 = "DELETE FROM Roles WHERE em_id = ?";
-        String query3 = "DELETE FROM Salaries WHERE em_id = ?";
-        String query4 = "DELETE FROM Employees WHERE em_id = ?";
+        // Các truy vấn để xóa dữ liệu liên quan trong các bảng phụ
+        String deleteAllowancesQuery = "DELETE FROM Allowances WHERE role_id IN (SELECT role_id FROM Roles WHERE em_id = ?)";
+        String deleteRolesQuery = "DELETE FROM Roles WHERE em_id = ?";
+        String deleteSalariesQuery = "DELETE FROM Salaries WHERE em_id = ?";
+        String deleteEmployeeQuery = "DELETE FROM Employees WHERE em_id = ?";
 
         try {
-            connection.setAutoCommit(false);
+            connection.setAutoCommit(false); // Bắt đầu transaction
 
-            try (PreparedStatement ps1 = connection.prepareStatement(query1); PreparedStatement ps2 = connection.prepareStatement(query2); PreparedStatement ps3 = connection.prepareStatement(query3); PreparedStatement ps4 = connection.prepareStatement(query4)) {
+            // Xóa dữ liệu từ bảng Allowances
+            try (PreparedStatement ps1 = connection.prepareStatement(deleteAllowancesQuery)) {
+                ps1.setString(1, emID);
+                ps1.executeUpdate();
+            }
 
-                // Delete from Allowances
-                ps1.setInt(1, roleID);
-                int affectedRows1 = ps1.executeUpdate();
-                if (affectedRows1 == 0) {
-                    throw new SQLException("No allowances found for role_id: " + roleID);
-                }
-
-                // Delete from Roles
+            // Xóa dữ liệu từ bảng Roles
+            try (PreparedStatement ps2 = connection.prepareStatement(deleteRolesQuery)) {
                 ps2.setString(1, emID);
-                int affectedRows2 = ps2.executeUpdate();
-                if (affectedRows2 == 0) {
-                    throw new SQLException("No role found for employee ID: " + emID);
-                }
+                ps2.executeUpdate();
+            }
 
-                // Delete from Salaries
+            // Xóa dữ liệu từ bảng Salaries
+            try (PreparedStatement ps3 = connection.prepareStatement(deleteSalariesQuery)) {
                 ps3.setString(1, emID);
-                int affectedRows3 = ps3.executeUpdate();
-                if (affectedRows3 == 0) {
-                    throw new SQLException("No salary found for employee ID: " + emID);
-                }
+                ps3.executeUpdate();
+            }
 
-                // Delete from Employees
+            // Xóa dữ liệu từ bảng Employees
+            try (PreparedStatement ps4 = connection.prepareStatement(deleteEmployeeQuery)) {
                 ps4.setString(1, emID);
-                int affectedRows4 = ps4.executeUpdate();
-                if (affectedRows4 == 0) {
+                int affectedRows = ps4.executeUpdate();
+                if (affectedRows == 0) {
                     throw new SQLException("No employee found with ID: " + emID);
                 }
             }
-            connection.commit();
-            JOptionPane.showMessageDialog(null, "Employee deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+            connection.commit(); // Commit transaction nếu mọi thứ thành công
+            JOptionPane.showMessageDialog(null, "Employee and related data deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
         } catch (SQLException e) {
             try {
-                connection.rollback();
+                connection.rollback(); // Rollback transaction nếu xảy ra lỗi
                 JOptionPane.showMessageDialog(null, "Error deleting employee:\n" + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
             } catch (SQLException rollbackEx) {
                 JOptionPane.showMessageDialog(null, "Error rolling back transaction:\n" + rollbackEx.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
             }
-            Validator.printSQLExceptionMessage(e);
+            Validator.printSQLExceptionMessage(e); 
         } finally {
             try {
-                connection.setAutoCommit(true);
+                connection.setAutoCommit(true); 
             } catch (SQLException autoCommitEx) {
                 JOptionPane.showMessageDialog(null, "Error restoring auto-commit mode:\n" + autoCommitEx.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
             }

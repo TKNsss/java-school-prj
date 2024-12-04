@@ -9,10 +9,13 @@ import com.myschoolprj.employeems.utils.Validator;
 import java.awt.CardLayout;
 import java.sql.SQLException;
 import java.awt.Color;
+import java.util.Properties;
+import java.util.Random;
 import javax.swing.JOptionPane;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class LoginForm extends javax.swing.JFrame {
+    int randomCode;
 
     private AdminDAO adDAO;
     
@@ -94,7 +97,7 @@ public class LoginForm extends javax.swing.JFrame {
                         .addComponent(lfLeftIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(lfLeftTitle, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
         lfLeftPanelLayout.setVerticalGroup(
             lfLeftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -103,7 +106,7 @@ public class LoginForm extends javax.swing.JFrame {
                 .addComponent(lfLeftIcon)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lfLeftTitle)
-                .addContainerGap(232, Short.MAX_VALUE))
+                .addContainerGap(238, Short.MAX_VALUE))
         );
 
         getContentPane().add(lfLeftPanel);
@@ -206,6 +209,7 @@ public class LoginForm extends javax.swing.JFrame {
                         .addComponent(closeBtn))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lfRightTitle2)
                             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
                                     .addComponent(switchToRegBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -217,8 +221,7 @@ public class LoginForm extends javax.swing.JFrame {
                                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(passwordTF, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(usernameTF, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addComponent(loginBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addComponent(lfRightTitle2))
+                                        .addComponent(loginBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addGap(0, 30, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -227,7 +230,7 @@ public class LoginForm extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(closeBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 109, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 115, Short.MAX_VALUE)
                 .addComponent(lfRightTitle2)
                 .addGap(34, 34, 34)
                 .addComponent(usernameTF, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -377,7 +380,7 @@ public class LoginForm extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(regCloseBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
                 .addComponent(lfRightTitle1)
                 .addGap(44, 44, 44)
                 .addComponent(regUsernameTF, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)

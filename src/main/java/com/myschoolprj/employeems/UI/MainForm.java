@@ -56,6 +56,14 @@ public class MainForm extends javax.swing.JFrame {
             emDAO = new EmployeeDAO();
             roleDAO = new RoleDAO();
             salaryDAO = new SalaryDAO();
+
+            Barchart barchart = new Barchart();
+            jPanel10.setLayout(new BorderLayout()); // Đặt layout cho jPanel7
+
+            jPanel10.add(barchart, BorderLayout.CENTER); // Thêm biểu đồ vào jPanel7
+            jPanel10.setPreferredSize(new Dimension(600, 300)); // Đặt kích thước cho jPanel7
+            jPanel10.revalidate(); // Cập nhật lại panel
+            jPanel10.repaint(); // Vẽ lại panel
         } catch (SQLException e) {
             Validator.printSQLExceptionMessage(e);
             e.printStackTrace();
@@ -69,13 +77,6 @@ public class MainForm extends javax.swing.JFrame {
         loadDataIntoMonSalTable();
 
         // Khởi tạo Barchart
-        Barchart barchart = new Barchart();
-        jPanel10.setLayout(new BorderLayout()); // Đặt layout cho jPanel7
-
-        jPanel10.add(barchart, BorderLayout.CENTER); // Thêm biểu đồ vào jPanel7
-        jPanel10.setPreferredSize(new Dimension(600, 300)); // Đặt kích thước cho jPanel7
-        jPanel10.revalidate(); // Cập nhật lại panel
-        jPanel10.repaint(); // Vẽ lại panel
     }
 
     /**
@@ -1363,7 +1364,7 @@ public class MainForm extends javax.swing.JFrame {
             Validator.checkNumericFields(emSalAllowanceTF, sb);
             Validator.checkEmptyFields(emSalBaseTF, sb, "Do not leave Base salary blank!");
             Validator.checkEmptyFields(emSalNetTF, sb, "Do not leave Net salary blank!");
-            Validator.checkEmptyFields(emMonthSalTF, sb, "Do not leave Net salary blank!");
+            Validator.checkEmptyFields(emMonthSalTF, sb, "Do not leave Month salary blank!");
 
             if (sb.length() > 0) {
                 JOptionPane.showMessageDialog(this, sb.toString(), "Input Error", JOptionPane.ERROR_MESSAGE);
@@ -1418,13 +1419,13 @@ public class MainForm extends javax.swing.JFrame {
                 // Thực hiện các thao tác trong giao dịch
                 salaryDAO.insertSalary(salary, role);  // Thêm dữ liệu lương
                 salaryDAO.updateSalary(salary, role);  // Cập nhật dữ liệu lương
-               
+
                 // Cập nhật bảng lương trên giao diện
                 loadDataIntoSalaryTable();
                 loadDataIntoMonSalTable();
-            } catch (Exception e) {          
+            } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "An unexpected error occurred: " + e.getMessage(), "Error",
-                    JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
             }
 
@@ -1483,7 +1484,6 @@ public class MainForm extends javax.swing.JFrame {
 
         emSalBaseTF.setText(numberFormat.format(baseSalary));
         emSalNetTF.setText(numberFormat.format(netSalary));
-        emSalCoefTF.setBackground(Color.decode("#D3D3D3"));
         updateSalaryBtn.setEnabled(true);
     }//GEN-LAST:event_calculateBaseNetBtnActionPerformed
 
@@ -1493,6 +1493,7 @@ public class MainForm extends javax.swing.JFrame {
 
     private void bttn_importActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttn_importActionPerformed
         JFileChooser fileChooser = new JFileChooser();
+
         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             String filePath = fileChooser.getSelectedFile().getAbsolutePath();
             try {
@@ -1903,19 +1904,19 @@ public class MainForm extends javax.swing.JFrame {
             // Lấy model của JTable
             DefaultTableModel model = (DefaultTableModel) salaryTB.getModel();
             model.setRowCount(0); // Xóa tất cả các hàng hiện có trong bảng
-            
+
             // Sử dụng Map để đảm bảo chỉ có một bản ghi cho mỗi em_id
             Map<String, Employee> uniqueEmployees = new HashMap<>();
-            
+
             for (Employee employee : employees) {
                 // Lọc dữ liệu để chỉ có một bản ghi duy nhất cho mỗi em_id
                 if (!uniqueEmployees.containsKey(employee.getID())) {
                     uniqueEmployees.put(employee.getID(), employee);
                 }
             }
-            
+
             // Thêm dữ liệu vào bảng
-            for (Employee employee : employees) {
+            for (Employee employee : uniqueEmployees.values()) {
                 Role role = roleDAO.getSingleRoleData(employee.getID());
 
                 Object[] rowData = {
@@ -1937,8 +1938,8 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     private void loadDataIntoMonSalTable() {
-        try {        
-            ArrayList<Salary> salaries = salaryDAO.getMonthSalData(); 
+        try {
+            ArrayList<Salary> salaries = salaryDAO.getMonthSalData();
             DefaultTableModel model = (DefaultTableModel) monthSalTB.getModel();
             model.setRowCount(0);
 
