@@ -7,6 +7,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.util.Date;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
@@ -24,6 +26,93 @@ public class EmployeeImport {
 
     public EmployeeImport() throws SQLException {
         this.connection = connectDB.getConnection();
+    }
+    
+    // Phương thức xuất dữ liệu lương vào file Excel
+    public void exportSalaryToExcel(String filePath) throws SQLException, IOException {
+        String query = "SELECT s.sal_id, e.em_id, e.firstname, e.lastname, s.work_day, s.month, s.year, s.base_salary, s.net_salary, s.month_salary " +
+                       "FROM Salaries s " +
+                       "JOIN Employees e ON s.em_id = e.em_id";
+
+        try (PreparedStatement ps = connection.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
+            Workbook workbook = new XSSFWorkbook();
+            Sheet sheet = workbook.createSheet("Salaries");
+
+            // Tạo hàng tiêu đề
+            Row headerRow = sheet.createRow(0);
+            String[] headers = {"Salary ID", "Employee ID", "First Name", "Last Name", "Work Days", "Month", "Year", "Base Salary", "Net Salary", "Month Salary"};
+            for (int i = 0; i < headers.length; i++) {
+                headerRow.createCell(i).setCellValue(headers[i]);
+            }
+
+            // Thêm dữ liệu vào các dòng tiếp theo
+            int rowNum = 1;
+            while (rs.next()) {
+                Row row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(rs.getInt("sal_id"));
+                row.createCell(1).setCellValue(rs.getString("em_id"));
+                row.createCell(2).setCellValue(rs.getString("firstname"));
+                row.createCell(3).setCellValue(rs.getString("lastname"));
+                row.createCell(4).setCellValue(rs.getInt("work_day"));
+                row.createCell(5).setCellValue(rs.getInt("month"));
+                row.createCell(6).setCellValue(rs.getInt("year"));
+                row.createCell(7).setCellValue(rs.getDouble("base_salary"));
+                row.createCell(8).setCellValue(rs.getDouble("net_salary"));
+                row.createCell(9).setCellValue(rs.getDouble("month_salary"));
+            }
+
+            // Lưu file Excel
+            try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
+                workbook.write(fileOut);
+            }
+            workbook.close();
+        }
+    }
+
+    // Phương thức export dữ liệu từ cơ sở dữ liệu ra Excel
+    public void exportToExcel(String filePath) {
+        String query = "SELECT e.em_id, e.firstname, e.lastname, e.phone, e.gender, e.dob, e.address, p.title, r.role_name "
+                + "FROM Employees e "
+                + "JOIN Roles r ON e.em_id = r.em_id "
+                + "JOIN Positions p ON e.pos_id = p.pos_id";
+
+        try (PreparedStatement stmt = connection.prepareStatement(query); ResultSet rs = stmt.executeQuery(); XSSFWorkbook workbook = new XSSFWorkbook()) {
+
+            // Tạo sheet và header
+            Sheet sheet = workbook.createSheet("Employee Data");
+            Row headerRow = sheet.createRow(0);
+            String[] columns = {"Employee ID", "First Name", "Last Name", "Phone", "Gender", "Date of Birth", "Address", "Position", "Role"};
+
+            for (int i = 0; i < columns.length; i++) {
+                Cell cell = headerRow.createCell(i);
+                cell.setCellValue(columns[i]);
+            }
+
+            // Thêm dữ liệu vào sheet
+            int rowNum = 1;
+            while (rs.next()) {
+                Row row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(rs.getString("em_id"));
+                row.createCell(1).setCellValue(rs.getString("firstname"));
+                row.createCell(2).setCellValue(rs.getString("lastname"));
+                row.createCell(3).setCellValue(rs.getString("phone"));
+                row.createCell(4).setCellValue(rs.getString("gender"));
+                row.createCell(5).setCellValue(rs.getDate("dob"));
+                row.createCell(6).setCellValue(rs.getString("address"));
+                row.createCell(7).setCellValue(rs.getString("title"));
+                row.createCell(8).setCellValue(rs.getString("role_name"));
+            }
+
+            // Ghi dữ liệu vào file
+            try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
+                workbook.write(fileOut);
+                JOptionPane.showMessageDialog(null, "Data exported successfully!", "Export Success", JOptionPane.INFORMATION_MESSAGE);
+            }
+
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error exporting data: " + e.getMessage(), "Export Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     // Đọc dữ liệu từ file Excel
@@ -71,7 +160,7 @@ public class EmployeeImport {
                 em.setAddress(address);
                 em.setRole(role);
                 em.setPosition(pos);
-                
+
                 employees.add(em);
             }
         } catch (IOException e) {
@@ -93,9 +182,9 @@ public class EmployeeImport {
                 // Lấy pos_id từ bảng Positions
                 posPs.setString(1, employee.getPosition());
                 ResultSet posRs = posPs.executeQuery();
-                
+
                 int posId = 0;
-                
+
                 if (posRs.next()) {
                     posId = posRs.getInt("pos_id");
                 }
